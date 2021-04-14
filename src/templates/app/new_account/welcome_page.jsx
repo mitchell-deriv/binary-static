@@ -1,46 +1,65 @@
-import React             from 'react';
+import React from 'react';
 import { SeparatorLine } from '../../_common/components/separator_line.jsx';
 
-const WelcomePage = () => (
-    <div id='welcome_container' className='center-text static_full invisible'>
-        <span className='account-created' />
+const WelcomePage = () => {
 
-        <SeparatorLine className='gr-padding-5' invisible />
+    const dropdown = 'images/pages/welcome/ddown.svg';
+    const options = [
+        {
+            icon_list: ['images/pages/welcome/cfd.svg'],
+            title    : it.L('CFD'),
+            desc     : it.L('<strong>Maximise returns</strong> by risking more.'),
+            url      : it.url_for('trading'),
+        },
+        {
+            icon_list: ['images/pages/welcome/doptions.svg'],
+            title    : it.L('Digital Options'),
+            desc     : it.L('Earn <strong>fixed returns</strong> by risking only what you put in'),
+            url      : it.url_for('user/metatrader'),
+        },
+        {
+            icon_list: ['images/pages/welcome/notsure.svg'],
+            title    : it.L('Not Sure?'),
+            desc     : it.L('Let us introduce you to trading on Binary.'),
+            url      : it.url_for('trading'),
+        },
+    ];
 
-        <h1>{it.L('Congratulations!')}</h1>
-        <p>{it.L('You have successfully created your Virtual Account.')}</p>
-
-        <SeparatorLine className='gr-padding-10' invisible />
-
-        <div className='gr-8 gr-10-p gr-12-m gr-centered'>
-            <div className='container gr-row box-grid'>
-                <div className='gr-6 gr-12-p gr-12-m gr-parent'>
-                    <div className='box border-gray gr-padding-10'>
-                        <div>
-                            <strong id='upgrade_title' />
-                            <p id='upgrade_text' className='font-s'>{it.L('Upgrade your account and start trading using real money.')}</p>
-                        </div>
-                        <div className='box-item-end'>
-                            <p><a id='upgrade_btn' href='javascript:;' className='button button-disabled' /></p>
-                        </div>
-                    </div>
-                </div>
-                <div className='gr-6 gr-12-p gr-12-m gr-parent'>
-                    <div className='box border-gray gr-padding-10'>
-                        <div>
-                            <strong>{it.L('Virtual Account')}</strong>
-                            <p className='font-s'>{it.L('Practice your trading strategies in a risk-free environment by using virtual funds.')}</p>
-                        </div>
-                        <div className='box-item-end'>
-                            <p><a className='button-secondary' href={it.url_for('trading')}><span>{it.L('Start trading')}</span></a></p>
-                        </div>
-                    </div>
-                </div>
+    return (
+        <div id='welcome_container' className='center-text welcome-content'>
+            <h1>{it.L('Where would you like to start?')}</h1>
+            <SeparatorLine className='gr-padding-5' invisible />
+            <div className='welcome-content-container'>
+                {options.map(option => (<RenderOption
+                    key={option.title}
+                    option={option}
+                    dropdown={dropdown}
+                />))}
             </div>
+            <SeparatorLine className='gr-padding-20' invisible />
         </div>
+        
+    );
+};
 
-        <SeparatorLine className='gr-padding-10' invisible />
+const RenderOption = ({ option, dropdown }) => (
+    <div className='gr-12 gr-12-p gr-12-m gr-parent'>
+        <a className='box border-gray welcome-content-box' href={option.url}>
+            <div className='welcome-content-box-icon-container'>
+                {option.icon_list.map((icon) =>
+                    <img key={icon} className='welcome-content-box-icon' src={it.url_for(icon)} />
+                )}
+            </div>
+            <div className='welcome-content-box-desc'>
+                <p id='upgrade_text' className='welcome-content-title'>{option.title}</p>
+                <p >{option.desc}</p>
+            </div>
+            <div className='welcome-content-box-arrow'>
+                <img  src={it.url_for(dropdown)} />
+            </div>
+        </a>
     </div>
 );
-
+  
 export default WelcomePage;
+
