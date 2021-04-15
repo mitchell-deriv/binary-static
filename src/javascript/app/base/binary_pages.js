@@ -44,6 +44,7 @@ const FinancialAccOpening     = require('../pages/user/new_account/financial_acc
 const RealAccOpening          = require('../pages/user/new_account/real_acc_opening');
 const VirtualAccOpening       = require('../pages/user/new_account/virtual_acc_opening');
 const WelcomePage             = require('../pages/user/new_account/welcome_page');
+const ChooseAccount           = require('../pages/user/new_account/choose_account');
 const ResetPassword           = require('../pages/user/reset_password');
 const SetCurrency             = require('../pages/user/set_currency');
 const TelegramBot             = require('../pages/user/telegram_bot');
@@ -132,6 +133,7 @@ const pages_config = {
     two_factor_authentication: { module: TwoFactorAuthentication,    is_authenticated: true },
     virtualws                : { module: VirtualAccOpening,          not_authenticated: true },
     welcome                  : { module: WelcomePage,                is_authenticated: true, only_virtual: true },
+    choose_account           : { module: ChooseAccount,              is_authenticated: true, only_virtual: true },
     withdrawws               : { module: PaymentAgentWithdraw,       is_authenticated: true, only_real: true },
 
     'affiliate-ib'           : { module: AffiliatesIBLanding },

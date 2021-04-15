@@ -1366,6 +1366,82 @@ body #not_authenticated_financial ul.checked > li {
     }
 }
 
+.choose-account {
+    &-container {
+        max-width: 1500px;
+        margin-top: 3rem;
+        display: flex;
+        @media (max-width: 480px) {
+            display: block;
+        }
+    }
+    &-title {
+        color: $COLOR_BLUE;
+        font-size: $FONT_SIZE_XL;
+        margin-bottom: 0;
+    }
+    &-box {
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+
+        &-icon {
+            margin: 0 0.5rem;
+
+            &-container {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+    &-platform {
+        padding-left: 1rem;
+
+        &-container {
+            position: relative;
+            display: block;
+            @media (min-width: 780px) {
+                min-height: 340px;
+            }
+        }
+        &-list-container {
+            display: flex;
+            margin-top: 2rem;
+            align-items: flex-start;
+        }
+        &-title {
+            margin: 0;
+            font-size: $FONT_SIZE_L;
+            text-align: start;
+        }
+        &-description {
+            margin: 5px 0;
+            color: $COLOR_GRAY_SHADE;
+            text-align: start;
+        }
+    }
+    &-action {
+        width: stretch;
+
+        &-container {
+            width: 100%;
+            margin-top: 1rem;
+            @media (min-width: 780px) {
+                position: absolute;
+                bottom: 0px;
+            }
+        }
+    }
+}
+
+.password-input {
+    width: 260px;
+
+    &-hint {
+        margin-top: 1.5rem !important;
+        max-width: 380px;
+    }
+}
+
 .welcome-content {
     a:hover {
         text-decoration: none;

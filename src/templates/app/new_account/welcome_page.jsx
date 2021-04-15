@@ -9,19 +9,22 @@ const WelcomePage = () => {
             icon_list: ['images/pages/welcome/cfd.svg'],
             title    : it.L('CFD'),
             desc     : it.L('<strong>Maximise returns</strong> by risking more.'),
-            url      : it.url_for('trading'),
+            url      : it.url_for('user/metatrader'),
+            el_name  : 'cfd',
         },
         {
             icon_list: ['images/pages/welcome/doptions.svg'],
             title    : it.L('Digital Options'),
             desc     : it.L('Earn <strong>fixed returns</strong> by risking only what you put in'),
-            url      : it.url_for('user/metatrader'),
+            url      : it.url_for('trading'),
+            el_name  : 'd_ptions',
         },
         {
             icon_list: ['images/pages/welcome/notsure.svg'],
             title    : it.L('Not Sure?'),
             desc     : it.L('Let us introduce you to trading on Binary.'),
             url      : it.url_for('trading'),
+            el_name  : 'trading',
         },
     ];
 
@@ -36,7 +39,7 @@ const WelcomePage = () => {
                     dropdown={dropdown}
                 />))}
             </div>
-            <SeparatorLine className='gr-padding-20' invisible />
+            <SeparatorLine className='gr-padding-30' invisible />
         </div>
         
     );
@@ -44,7 +47,11 @@ const WelcomePage = () => {
 
 const RenderOption = ({ option, dropdown }) => (
     <div className='gr-12 gr-12-p gr-12-m gr-parent'>
-        <a className='box border-gray welcome-content-box' href={option.url}>
+        <a
+            className='box border-gray welcome-content-box'
+            id={option.el_name}
+            href={option.el_name === 'trading' ? option.url : ''}
+        >
             <div className='welcome-content-box-icon-container'>
                 {option.icon_list.map((icon) =>
                     <img key={icon} className='welcome-content-box-icon' src={it.url_for(icon)} />
