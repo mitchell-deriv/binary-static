@@ -1379,11 +1379,16 @@ body #not_authenticated_financial ul.checked > li {
         color: $COLOR_BLUE;
         font-size: $FONT_SIZE_XL;
         margin-bottom: 0;
+        font-weight: 300;
+        margin-top: 0.9rem;
     }
     &-box {
         padding: 1.5rem;
         border-radius: 0.5rem;
 
+        p:nth-of-type(2) {
+            margin-top: 0.2rem;
+        }
         &-icon {
             margin: 0 0.5rem;
 
@@ -1391,32 +1396,6 @@ body #not_authenticated_financial ul.checked > li {
                 display: flex;
                 justify-content: center;
             }
-        }
-    }
-    &-platform {
-        padding-left: 1rem;
-
-        &-container {
-            position: relative;
-            display: block;
-            @media (min-width: 780px) {
-                min-height: 340px;
-            }
-        }
-        &-list-container {
-            display: flex;
-            margin-top: 2rem;
-            align-items: flex-start;
-        }
-        &-title {
-            margin: 0;
-            font-size: $FONT_SIZE_L;
-            text-align: start;
-        }
-        &-description {
-            margin: 5px 0;
-            color: $COLOR_GRAY_SHADE;
-            text-align: start;
         }
     }
     &-action {
@@ -1430,6 +1409,16 @@ body #not_authenticated_financial ul.checked > li {
                 bottom: 0px;
             }
         }
+    }
+    &-footer {
+        span {
+            width: 100%;
+            line-height: 22px;
+            font-weight: 400;
+            text-align: center;
+            color: $COLOR_GRAY;
+        }
+
     }
 }
 
