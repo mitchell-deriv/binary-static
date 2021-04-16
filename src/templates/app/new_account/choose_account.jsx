@@ -16,7 +16,7 @@ const ChooseAccount = () => {
             title       : it.L('Financial'),
             desc        : it.L('Get trading forex, commodities, and cryptocurrencies'),
             action_title: it.L('Get started'),
-            action_id   : 'default',
+            action_id   : 'financial',
         },
     ];
 

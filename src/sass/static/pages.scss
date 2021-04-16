@@ -1431,6 +1431,12 @@ body #not_authenticated_financial ul.checked > li {
     }
 }
 
+.welcome-content-box-desc:not(:first-of-type) {
+    p:first-of-type {
+        margin-top: 0.5em;
+    }
+}
+
 .welcome-content {
     a:hover {
         text-decoration: none;
@@ -1438,6 +1444,9 @@ body #not_authenticated_financial ul.checked > li {
     &-container {
         margin: 0 auto;
         width: 80%;
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+        }
     }
     &-box {
         display: flex;
@@ -1446,9 +1455,9 @@ body #not_authenticated_financial ul.checked > li {
         margin-top: 10px;
 
         &-desc {
-            flex-grow: 4;
             text-align: left;
             margin-left: 15px;
+            width: 85%;
 
             p:first-of-type {
                 margin-top: 1em;
@@ -1460,7 +1469,7 @@ body #not_authenticated_financial ul.checked > li {
         }
         &-arrow {
             position: relative;
-            flex-grow: 1;
+            width: 15%;
 
             img {
                 position: absolute;
@@ -1468,7 +1477,6 @@ body #not_authenticated_financial ul.checked > li {
                 right: 20%;
             }
         }
-
     }
     .box-grid .box {
         display: flex;

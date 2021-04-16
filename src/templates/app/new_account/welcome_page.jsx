@@ -10,21 +10,21 @@ const WelcomePage = () => {
             title    : it.L('CFD'),
             desc     : it.L('<strong>Maximise returns</strong> by risking more.'),
             url      : it.url_for('user/metatrader'),
-            el_name  : 'cfd',
+            action_id: 'cfd',
         },
         {
             icon_list: ['images/pages/welcome/doptions.svg'],
             title    : it.L('Digital Options'),
             desc     : it.L('Earn <strong>fixed returns</strong> by risking only what you put in'),
             url      : it.url_for('trading'),
-            el_name  : 'd_ptions',
+            action_id: 'd_ptions',
         },
         {
             icon_list: ['images/pages/welcome/notsure.svg'],
             title    : it.L('Not Sure?'),
             desc     : it.L('Let us introduce you to trading on Binary.'),
             url      : it.url_for('trading'),
-            el_name  : 'trading',
+            action_id: 'default',
         },
     ];
 
@@ -49,8 +49,8 @@ const RenderOption = ({ option, dropdown }) => (
     <div className='gr-12 gr-12-p gr-12-m gr-parent'>
         <a
             className='box border-gray welcome-content-box'
-            id={option.el_name}
-            href={option.el_name === 'trading' ? option.url : ''}
+            id={option.action_id}
+            href='javascript:;'
         >
             <div className='welcome-content-box-icon-container'>
                 {option.icon_list.map((icon) =>
