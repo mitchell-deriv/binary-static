@@ -1431,12 +1431,6 @@ body #not_authenticated_financial ul.checked > li {
     }
 }
 
-.welcome-content-box-desc:not(:first-of-type) {
-    p:first-of-type {
-        margin-top: 0.5em;
-    }
-}
-
 .welcome-content {
     a:hover {
         text-decoration: none;
@@ -1449,15 +1443,21 @@ body #not_authenticated_financial ul.checked > li {
         }
     }
     &-box {
+        max-height: 86px;
         display: flex;
         flex-direction: row;
         border-radius: 9px;
         margin-top: 10px;
 
         &-desc {
+            overflow: hidden;
             text-align: left;
             margin-left: 15px;
             width: 85%;
+
+            @media only screen and (max-width: 576px) {
+                font-size: smaller;
+            }
 
             p:first-of-type {
                 margin-top: 1em;
