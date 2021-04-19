@@ -35,9 +35,9 @@ const WelcomePage = (() => {
 
             getElementById('cfd').addEventListener('click', () => {
                 if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg'))window.location.href = Url.urlFor('/user/metatrader');
-                    if (getCanUpgrade('maltainvest'))window.location.href = Client.defaultRedirectUrl();
-                    if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/user/metatrader');
+                    if (getCanUpgrade('svg')){window.location.href = Url.urlFor('/user/metatrader'); return;}
+                    if (getCanUpgrade('maltainvest')){window.location.href = Client.defaultRedirectUrl(); return;}
+                    if (getCanUpgrade('iom'))window.location.href = Url.urlFor('/user/metatrader');
                 }
             });
 
