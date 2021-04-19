@@ -28,22 +28,22 @@ const WelcomePage = (() => {
 
             getElementById('default').addEventListener('click', () => {
                 (getCanUpgrade('iom'))
-                    ? url = Url.urlFor('/new_account/realws')
-                    : url = Client.defaultRedirectUrl();
+                    ? window.location.href = Url.urlFor('/new_account/realws')
+                    : window.location.href = Client.defaultRedirectUrl();
             });
 
             getElementById('cfd').addEventListener('click', () => {
                 if (is_virtual && upgrade_info.can_upgrade_to.length) {
                     if (getCanUpgrade('svg'))window.location.href = Url.urlFor('/user/metatrader');
-                    if (getCanUpgrade('maltainvest'))window.location.href = Url.urlFor('new_account/choose_account');
+                    if (getCanUpgrade('maltainvest'))window.location.href = Client.defaultRedirectUrl();
                     if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/user/metatrader');
                 }
             });
 
             getElementById('d_ptions').addEventListener('click', () => {
                 if (is_virtual && upgrade_info.can_upgrade_to.length){
-                    if (getCanUpgrade('svg'))window.location.href = Url.urlFor('/user/metatrader');
-                    if (getCanUpgrade('maltainvest'))window.location.href = Url.urlFor('new_account/choose_account');
+                    if (getCanUpgrade('svg'))window.location.href = Client.defaultRedirectUrl();
+                    if (getCanUpgrade('maltainvest'))window.location.href = Url.urlFor('new_account/digital_options');
                     if (getCanUpgrade('iom'))window.location.href = Url.urlFor('/new_account/realws');
                 }
             });

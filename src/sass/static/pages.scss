@@ -1366,7 +1366,7 @@ body #not_authenticated_financial ul.checked > li {
     }
 }
 
-.choose-account {
+.digital-options {
     &-container {
         max-width: 1500px;
         margin-top: 3rem;
@@ -1419,15 +1419,6 @@ body #not_authenticated_financial ul.checked > li {
             color: $COLOR_GRAY;
         }
 
-    }
-}
-
-.password-input {
-    width: 260px;
-
-    &-hint {
-        margin-top: 1.5rem !important;
-        max-width: 380px;
     }
 }
 

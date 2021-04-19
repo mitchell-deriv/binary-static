@@ -3,7 +3,7 @@ const Client           = require('../../../base/client');
 const getElementById   = require('../../../../_common/common_functions').getElementById;
 const Url              = require('../../../../_common/url');
 
-const ChooseAccount = (() => {
+const DigitalOptions = (() => {
 
     let is_virtual,
         upgrade_info;
@@ -29,7 +29,7 @@ const ChooseAccount = (() => {
             getElementById('financial').addEventListener('click', () => {
                 if (is_virtual && upgrade_info.can_upgrade_to.length){
                     if (getCanUpgrade('svg'))window.location.href = Url.urlFor('/user/metatrader');
-                    if (getCanUpgrade('maltainvest'))window.location.href = Url.urlFor('new_account/maltainvestws');
+                    if (getCanUpgrade('maltainvest'))window.location.href = Client.defaultRedirectUrl();
                     if (getCanUpgrade('iom'))window.location.href = Url.urlFor('/user/metatrader');
                 }
             });
@@ -40,4 +40,4 @@ const ChooseAccount = (() => {
         onLoad,
     };
 })();
-module.exports = ChooseAccount;
+module.exports = DigitalOptions;
