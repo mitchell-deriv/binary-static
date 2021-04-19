@@ -27,6 +27,7 @@ const WelcomePage = (() => {
             }
 
             getElementById('default').addEventListener('click', () => {
+                /* eslint no-unused-expressions: ["error", { "allowTernary": true }] */
                 (getCanUpgrade('iom'))
                     ? window.location.href = Url.urlFor('/new_account/realws')
                     : window.location.href = Client.defaultRedirectUrl();
