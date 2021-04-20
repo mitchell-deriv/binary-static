@@ -3,6 +3,7 @@ const Client           = require('../../../base/client');
 const getElementById   = require('../../../../_common/common_functions').getElementById;
 const Url              = require('../../../../_common/url');
 const showLoadingImage = require('../../../../_common/utility').showLoadingImage;
+const ClientBase         = require('../../../../_common/base/client_base');
 
 const WelcomePage = (() => {
 
@@ -11,7 +12,7 @@ const WelcomePage = (() => {
         upgrade_info;
 
     const init = () => {
-        upgrade_info      = Client.getUpgradeInfo();
+        upgrade_info      = ClientBase.getBasicUpgradeInfo();
         is_virtual        = Client.get('is_virtual');
         el_welcome_container  = getElementById('welcome_container');
     };

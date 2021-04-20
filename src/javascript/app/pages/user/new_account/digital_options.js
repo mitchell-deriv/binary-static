@@ -2,6 +2,7 @@ const BinarySocket     = require('../../../base/socket');
 const Client           = require('../../../base/client');
 const getElementById   = require('../../../../_common/common_functions').getElementById;
 const Url              = require('../../../../_common/url');
+const ClientBase         = require('../../../../_common/base/client_base');
 
 const DigitalOptions = (() => {
 
@@ -10,7 +11,7 @@ const DigitalOptions = (() => {
 
     const init = () => {
         is_virtual        = Client.get('is_virtual');
-        upgrade_info      = Client.getUpgradeInfo();
+        upgrade_info      = ClientBase.getBasicUpgradeInfo();
     };
 
     const getCanUpgrade = (upgrade_type ,  { can_upgrade_to } = upgrade_info) => can_upgrade_to.includes(upgrade_type);
