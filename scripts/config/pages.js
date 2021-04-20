@@ -21,11 +21,11 @@ module.exports = [
 
     ['trading',                                 'app/trade/trading',                           'default',    'SmartTrader'],
 
+    ['new_account/digital_options',             'app/new_account/digital_options',             'default',    'Digital Options'],
     ['new_account/maltainvestws',               'app/new_account/financial',                   'default',    'Financial Account Opening'],
     ['new_account/realws',                      'app/new_account/real',                        'default',    'Real Money Account Opening'],
     ['new_account/virtualws',                   'app/new_account/virtual',                     'default',    'Create New Virtual-money Account'],
     ['new_account/welcome',                     'app/new_account/welcome_page',                'default',    'Welcome to Binary.com'],
-    ['new_account/digital_options',             'app/new_account/digital_options',             'default',    'Digital Options'],
 
     ['resources',                               'app/resources/index',                         'default',    'Resources'],
     ['resources/asset_indexws',                 'app/resources/asset_index',                   'full_width', 'Asset Index'],

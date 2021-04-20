@@ -89,6 +89,7 @@ const pages_config = {
     cryptocurrencies         : { module: GetStarted.Cryptocurrencies },
     cyberjaya                : { module: StaticPages.Locations },
     detailsws                : { module: PersonalDetails,            is_authenticated: true, needs_currency: true },
+    digital_options          : { module: DigitalOptions,             is_authenticated: true, only_virtual: true },
     download                 : { module: MetatraderDownloadUI },
     dp2p                     : { module: DP2P,                       is_authenticated: true },
     dubai                    : { module: StaticPages.Locations },
@@ -134,7 +135,6 @@ const pages_config = {
     two_factor_authentication: { module: TwoFactorAuthentication,    is_authenticated: true },
     virtualws                : { module: VirtualAccOpening,          not_authenticated: true },
     welcome                  : { module: WelcomePage,                is_authenticated: true, only_virtual: true },
-    digital_options          : { module: DigitalOptions,             is_authenticated: true, only_virtual: true },
     withdrawws               : { module: PaymentAgentWithdraw,       is_authenticated: true, only_real: true },
 
     'affiliate-ib'           : { module: AffiliatesIBLanding },
