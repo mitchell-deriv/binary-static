@@ -20,7 +20,7 @@ const DepositWithdrawButton = ({ is_payment_agent, is_virtual }) => (
         <div className='gr-row gr-row-align-left gr-row-align-right-m'>
             { is_virtual ?
                 <div className='gr-adapt'>
-                    <Button className='toggle button' id='VRT_topup_link' text={it.L('Reset my virtual balance')} />
+                    <Button className='toggle button' id='VRT_topup_link' text={it.L('Reset my demo balance')} />
                 </div>
                 :
                 <React.Fragment>

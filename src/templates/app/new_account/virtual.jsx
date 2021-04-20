@@ -4,7 +4,7 @@ import FormVerificationCode from '../_includes/form_verification_code.jsx';
 
 const Virtual = () => (
     <div className='gr-12 static_full'>
-        <h1>{it.L('Create New Virtual-money Account')}</h1>
+        <h1>{it.L('Create New Demo-money Account')}</h1>
 
         <FormVerificationCode />
 
@@ -36,7 +36,7 @@ const Virtual = () => (
             </Fieldset>
 
             <div className='center-text'>
-                <button className='button' type='submit'>{it.L('Create new virtual-money account')}</button>
+                <button className='button' type='submit'>{it.L('Create new demo-money account')}</button>
                 <p className='errorfield invisible' id='error-account-opening' />
             </div>
         </form>

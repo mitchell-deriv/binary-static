@@ -215,7 +215,7 @@ const Home = () => {
                                     mobile_header={it.L('Binary Options')}
                                     image='images/pages/home/binary_options.svg'
                                     image_one='images/pages/home/icons/demo.svg'
-                                    list_header_one={it.L('Virtual Account')}
+                                    list_header_one={it.L('Demo Account')}
                                     list_text_one={it.L('Practice account with replenishable 10,000 USD virtual credit.')}
                                     image_two='images/pages/home/icons/real.svg'
                                     list_header_two={it.L('Real Account')}
