@@ -2,7 +2,7 @@ const BinarySocket     = require('../../../base/socket');
 const Client           = require('../../../base/client');
 const getElementById   = require('../../../../_common/common_functions').getElementById;
 const Url              = require('../../../../_common/url');
-const ClientBase         = require('../../../../_common/base/client_base');
+const ClientBase       = require('../../../../_common/base/client_base');
 const showLoadingImage = require('../../../../_common/utility').showLoadingImage;
 const State            = require('../../../../_common/storage').State;
 
