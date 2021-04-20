@@ -17858,7 +17858,6 @@ module.exports = AssetIndexUI;
 
 var loadScript = __webpack_require__(/*! scriptjs */ "./node_modules/scriptjs/dist/script.js");
 var BinarySocket = __webpack_require__(/*! ../../../../app/base/socket */ "./src/javascript/app/base/socket.js");
-var isEuCountry = __webpack_require__(/*! ../../../../app/common/country_base */ "./src/javascript/app/common/country_base.js").isEuCountry;
 var getLanguage = __webpack_require__(/*! ../../../../_common/language */ "./src/javascript/_common/language.js").get;
 
 var EconomicCalendar = function () {
@@ -17884,7 +17883,7 @@ var EconomicCalendar = function () {
         if (loader) loader.remove();
 
         BinarySocket.wait('website_status', 'authorize', 'landing_company').then(function () {
-            $('.calendar-footer').setVisibility(isEuCountry());
+            $('.calendar-footer').setVisibility(true);
         });
     };
 
@@ -35912,6 +35911,7 @@ var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javasc
 var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
 var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
 var Url = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js");
+var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
 
 var DigitalOptions = function () {
 
@@ -35920,7 +35920,7 @@ var DigitalOptions = function () {
 
     var init = function init() {
         is_virtual = Client.get('is_virtual');
-        upgrade_info = Client.getUpgradeInfo();
+        upgrade_info = ClientBase.getBasicUpgradeInfo();
     };
 
     var getCanUpgrade = function getCanUpgrade(upgrade_type) {
@@ -35943,8 +35943,12 @@ var DigitalOptions = function () {
 
             getElementById('financial').addEventListener('click', function () {
                 if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) window.location.href = Url.urlFor('/user/metatrader');
-                    if (getCanUpgrade('maltainvest')) window.location.href = Client.defaultRedirectUrl();
+                    if (getCanUpgrade('svg')) {
+                        window.location.href = Url.urlFor('/user/metatrader');return;
+                    }
+                    if (getCanUpgrade('maltainvest')) {
+                        window.location.href = Client.defaultRedirectUrl();return;
+                    }
                     if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/user/metatrader');
                 }
             });
@@ -36428,6 +36432,7 @@ var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/a
 var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
 var Url = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js");
 var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").showLoadingImage;
+var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
 
 var WelcomePage = function () {
 
@@ -36436,7 +36441,7 @@ var WelcomePage = function () {
         upgrade_info = void 0;
 
     var init = function init() {
-        upgrade_info = Client.getUpgradeInfo();
+        upgrade_info = ClientBase.getBasicUpgradeInfo();
         is_virtual = Client.get('is_virtual');
         el_welcome_container = getElementById('welcome_container');
     };
@@ -36463,8 +36468,12 @@ var WelcomePage = function () {
 
             getElementById('cfd').addEventListener('click', function () {
                 if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) window.location.href = Url.urlFor('/user/metatrader');
-                    if (getCanUpgrade('maltainvest')) window.location.href = Client.defaultRedirectUrl();
+                    if (getCanUpgrade('svg')) {
+                        window.location.href = Url.urlFor('/user/metatrader');return;
+                    }
+                    if (getCanUpgrade('maltainvest')) {
+                        window.location.href = Client.defaultRedirectUrl();return;
+                    }
                     if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/user/metatrader');
                 }
             });
