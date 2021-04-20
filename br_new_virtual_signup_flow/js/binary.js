@@ -10146,7 +10146,6 @@ var FinancialAccOpening = __webpack_require__(/*! ../pages/user/new_account/fina
 var RealAccOpening = __webpack_require__(/*! ../pages/user/new_account/real_acc_opening */ "./src/javascript/app/pages/user/new_account/real_acc_opening.js");
 var VirtualAccOpening = __webpack_require__(/*! ../pages/user/new_account/virtual_acc_opening */ "./src/javascript/app/pages/user/new_account/virtual_acc_opening.js");
 var WelcomePage = __webpack_require__(/*! ../pages/user/new_account/welcome_page */ "./src/javascript/app/pages/user/new_account/welcome_page.js");
-var DigitalOptions = __webpack_require__(/*! ../pages/user/new_account/digital_options */ "./src/javascript/app/pages/user/new_account/digital_options.js");
 var ResetPassword = __webpack_require__(/*! ../pages/user/reset_password */ "./src/javascript/app/pages/user/reset_password.js");
 var SetCurrency = __webpack_require__(/*! ../pages/user/set_currency */ "./src/javascript/app/pages/user/set_currency.js");
 var TelegramBot = __webpack_require__(/*! ../pages/user/telegram_bot */ "./src/javascript/app/pages/user/telegram_bot.js");
@@ -10236,7 +10235,6 @@ var pages_config = {
     two_factor_authentication: { module: TwoFactorAuthentication, is_authenticated: true },
     virtualws: { module: VirtualAccOpening, not_authenticated: true },
     welcome: { module: WelcomePage, is_authenticated: true, only_virtual: true },
-    digital_options: { module: DigitalOptions, is_authenticated: true, only_virtual: true },
     withdrawws: { module: PaymentAgentWithdraw, is_authenticated: true, only_real: true },
 
     'affiliate-ib': { module: AffiliatesIBLanding },
@@ -10949,6 +10947,8 @@ module.exports = Footer;
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var BinaryPjax = __webpack_require__(/*! ./binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
@@ -11023,6 +11023,13 @@ var Header = function () {
         Client.sendLogoutRequest();
     };
 
+    var getLocalizedType = function getLocalizedType(_ref) {
+        var currency = _ref.currency,
+            is_real = _ref.is_real,
+            account_title = _ref.account_title;
+        return localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
+    };
+
     var populateAccountsList = function populateAccountsList() {
         if (!Client.isLoggedIn()) return;
         BinarySocket.wait('authorize').then(function () {
@@ -11032,11 +11039,12 @@ var Header = function () {
                     var account_title = Client.getAccountTitle(loginid);
                     var is_real = !Client.getAccountType(loginid); // this function only returns virtual/gaming/financial types
                     var currency = Client.get('currency', loginid);
-                    var localized_type = localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
+                    var data = { currency: currency, is_real: is_real, account_title: account_title };
+                    var localized_type = getLocalizedType(data);
                     if (loginid === Client.get('loginid')) {
                         // default account
                         applyToAllElements('.account-type', function (el) {
-                            elementInnerHtml(el, localized_type);
+                            elementInnerHtml(el, getLocalizedType(_extends({}, data, { account_title: 'Demo' })));
                         });
                         applyToAllElements('.account-id', function (el) {
                             elementInnerHtml(el, loginid);
@@ -35897,72 +35905,6 @@ module.exports = TypesOfAccounts;
 
 /***/ }),
 
-/***/ "./src/javascript/app/pages/user/new_account/digital_options.js":
-/*!**********************************************************************!*\
-  !*** ./src/javascript/app/pages/user/new_account/digital_options.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javascript/app/base/socket.js");
-var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
-var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
-var Url = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js");
-var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
-
-var DigitalOptions = function () {
-
-    var is_virtual = void 0,
-        upgrade_info = void 0;
-
-    var init = function init() {
-        is_virtual = Client.get('is_virtual');
-        upgrade_info = ClientBase.getBasicUpgradeInfo();
-    };
-
-    var getCanUpgrade = function getCanUpgrade(upgrade_type) {
-        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : upgrade_info,
-            can_upgrade_to = _ref.can_upgrade_to;
-
-        return can_upgrade_to.includes(upgrade_type);
-    };
-
-    var onLoad = function onLoad() {
-        BinarySocket.wait('authorize', 'landing_company', 'get_settings').then(function () {
-            init();
-            if (Client.hasAccountType('real')) {
-                window.location.href = Client.defaultRedirectUrl();
-            }
-
-            getElementById('default').addEventListener('click', function () {
-                window.location.href = Client.defaultRedirectUrl();
-            });
-
-            getElementById('financial').addEventListener('click', function () {
-                if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) {
-                        window.location.href = Url.urlFor('/user/metatrader');return;
-                    }
-                    if (getCanUpgrade('maltainvest')) {
-                        window.location.href = Client.defaultRedirectUrl();return;
-                    }
-                    if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/user/metatrader');
-                }
-            });
-        });
-    };
-
-    return {
-        onLoad: onLoad
-    };
-}();
-module.exports = DigitalOptions;
-
-/***/ }),
-
 /***/ "./src/javascript/app/pages/user/new_account/financial_acc_opening.js":
 /*!****************************************************************************!*\
   !*** ./src/javascript/app/pages/user/new_account/financial_acc_opening.js ***!
@@ -36430,61 +36372,41 @@ module.exports = VirtualAccOpening;
 var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javascript/app/base/socket.js");
 var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
 var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
+var localize = __webpack_require__(/*! ../../../../_common/localize */ "./src/javascript/_common/localize.js").localize;
 var Url = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js");
+var createElement = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").createElement;
 var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").showLoadingImage;
-var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
 
 var WelcomePage = function () {
-
-    var el_welcome_container = void 0,
-        is_virtual = void 0,
-        upgrade_info = void 0;
-
-    var init = function init() {
-        upgrade_info = ClientBase.getBasicUpgradeInfo();
-        is_virtual = Client.get('is_virtual');
-        el_welcome_container = getElementById('welcome_container');
-    };
-
-    var getCanUpgrade = function getCanUpgrade(upgrade_type) {
-        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : upgrade_info,
-            can_upgrade_to = _ref.can_upgrade_to;
-
-        return can_upgrade_to.includes(upgrade_type);
-    };
-
     var onLoad = function onLoad() {
         BinarySocket.wait('authorize', 'landing_company', 'get_settings').then(function () {
-            init();
+            var el_welcome_container = getElementById('welcome_container');
             if (Client.hasAccountType('real')) {
                 window.location.href = Client.defaultRedirectUrl();
                 showLoadingImage(el_welcome_container, 'dark');
             }
 
-            getElementById('default').addEventListener('click', function () {
-                /* eslint no-unused-expressions: ["error", { "allowTernary": true }] */
-                getCanUpgrade('iom') ? window.location.href = Url.urlFor('/new_account/realws') : window.location.href = Client.defaultRedirectUrl();
-            });
+            var upgrade_info = Client.getUpgradeInfo();
+            var el_upgrade_title = getElementById('upgrade_title');
+            var upgrade_btn_txt = '';
 
-            getElementById('cfd').addEventListener('click', function () {
-                if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) {
-                        window.location.href = Url.urlFor('/user/metatrader');return;
-                    }
-                    if (getCanUpgrade('maltainvest')) {
-                        window.location.href = Client.defaultRedirectUrl();return;
-                    }
-                    if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/user/metatrader');
-                }
-            });
+            if (upgrade_info.can_upgrade_to.length > 1) {
+                upgrade_btn_txt = localize('Real Account');
+            } else if (upgrade_info.can_upgrade_to.length === 1) {
+                upgrade_btn_txt = upgrade_info.type[0] === 'financial' ? localize('Financial Account') : localize('Real Account');
+            }
+            el_upgrade_title.html(upgrade_btn_txt);
+            el_welcome_container.setVisibility(1);
 
-            getElementById('d_ptions').addEventListener('click', function () {
-                if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) window.location.href = Client.defaultRedirectUrl();
-                    if (getCanUpgrade('maltainvest')) window.location.href = Url.urlFor('new_account/digital_options');
-                    if (getCanUpgrade('iom')) window.location.href = Url.urlFor('/new_account/realws');
+            var upgrade_url = upgrade_info.can_upgrade_to.length > 1 ? 'user/accounts' : Object.values(upgrade_info.upgrade_links)[0];
+
+            if (upgrade_info.can_upgrade) {
+                var upgrade_btn = getElementById('upgrade_btn');
+                if (upgrade_btn) {
+                    upgrade_btn.html(createElement('span', { text: localize('Upgrade now') })).setAttribute('href', Url.urlFor(upgrade_url));
+                    upgrade_btn.classList.remove('button-disabled');
                 }
-            });
+            }
         });
     };
 
