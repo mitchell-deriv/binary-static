@@ -262,7 +262,7 @@ const Metatrader = () => (
                                     <TypeGroup
                                         title={it.L('Step 1: Choose demo or real account')}
                                         types={[
-                                            { type: 'demo', id: 'rbtn_demo', title: it.L('Demo'), desc: it.L('Practise your trading strategy with virtual funds in a risk-free environment.') },
+                                            { type: 'demo', id: 'rbtn_demo', title: it.L('Demo'), desc: it.L('Practise your trading strategy with demo funds in a risk-free environment.') },
                                             { type: 'real', id: 'rbtn_real', title: it.L('Real'), desc: it.L('Trade with real funds and access to competitive trading conditions.') },
                                         ]}
                                     />

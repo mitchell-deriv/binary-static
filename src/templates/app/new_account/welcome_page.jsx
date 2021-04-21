@@ -29,7 +29,7 @@ const WelcomePage = () => (
                     <div className='box border-gray gr-padding-10'>
                         <div>
                             <strong>{it.L('Demo Account')}</strong>
-                            <p className='font-s'>{it.L('Practice your trading strategies in a risk-free environment by using virtual funds.')}</p>
+                            <p className='font-s'>{it.L('Practice your trading strategies in a risk-free environment by using demo funds.')}</p>
                         </div>
                         <div className='box-item-end'>
                             <p><a className='button-secondary' href={it.url_for('trading')}><span>{it.L('Start trading')}</span></a></p>
