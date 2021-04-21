@@ -427,7 +427,7 @@ var ClientBase = function () {
                 default: localize('Real'),
                 financial: localize('Investment'),
                 gaming: localize('Gaming'),
-                virtual: localize('Virtual')
+                virtual: localize('Demo')
             };
         };
 
@@ -1355,29 +1355,30 @@ module.exports = GTM;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _require = __webpack_require__(/*! @livechat/customer-sdk */ "./node_modules/@livechat/customer-sdk/dist/customer-sdk.esm.js"),
-    init = _require.init;
-
 var BinarySocket = __webpack_require__(/*! ./socket_base */ "./src/javascript/_common/base/socket_base.js");
 var ClientBase = __webpack_require__(/*! ./client_base */ "./src/javascript/_common/base/client_base.js");
+var TrafficSource = __webpack_require__(/*! ../../app/common/traffic_source */ "./src/javascript/app/common/traffic_source.js");
+var licenseID = __webpack_require__(/*! ../utility */ "./src/javascript/_common/utility.js").lc_licenseID;
 
 var LiveChat = function () {
-    var licenseID = 12049137;
-    var clientID = '66aa088aad5a414484c1fd1fa8a5ace7';
-    var session_variables = { loginid: '', landing_company_shortcode: '', currency: '', residence: '', email: '' };
+    var utm_data = TrafficSource.getData();
+    var utm_source = TrafficSource.getSource(utm_data) || '';
+    var utm_campaign = utm_data.utm_campaign || '';
+    var utm_medium = utm_data.utm_medium || '';
+    var session_variables = { is_logged_in: false, loginid: '', landing_company_shortcode: '', currency: '', residence: '', email: '', utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign };
     var client_email = void 0,
         first_name = void 0,
         last_name = void 0;
 
     var setSessionVariables = function setSessionVariables() {
+        var is_logged_in = !!ClientBase.isLoggedIn();
         var loginid = ClientBase.get('loginid');
         var landing_company_shortcode = ClientBase.get('landing_company_shortcode');
         var currency = ClientBase.get('currency');
         var residence = ClientBase.get('residence');
         var email = ClientBase.get('email');
 
-        session_variables = _extends({}, loginid && { loginid: loginid }, landing_company_shortcode && { landing_company_shortcode: landing_company_shortcode }, currency && { currency: currency }, residence && { residence: residence }, email && { email: email });
-
+        session_variables = _extends({}, is_logged_in && { is_logged_in: is_logged_in }, loginid && { loginid: loginid }, landing_company_shortcode && { landing_company_shortcode: landing_company_shortcode }, currency && { currency: currency }, residence && { residence: residence }, email && { email: email }, utm_source && { utm_source: utm_source }, utm_campaign && { utm_campaign: utm_campaign }, utm_medium && { utm_medium: utm_medium });
         window.LiveChatWidget.call('set_session_variables', session_variables);
     };
 
@@ -1432,39 +1433,6 @@ var LiveChat = function () {
                 });
             });
         }
-    };
-
-    // Called when logging out to end ongoing chats if there is any
-    var endLiveChat = function endLiveChat() {
-        return new Promise(function (resolve) {
-            session_variables = { loginid: '', landing_company_shortcode: '', currency: '', residence: '', email: '' };
-            window.LiveChatWidget.call('set_session_variables', session_variables);
-            window.LiveChatWidget.call('set_customer_email', ' ');
-            window.LiveChatWidget.call('set_customer_name', ' ');
-
-            try {
-                var customerSDK = init({
-                    licenseId: licenseID,
-                    clientId: clientID
-                });
-                customerSDK.on('connected', function () {
-                    if (window.LiveChatWidget.get('chat_data')) {
-                        var _window$LiveChatWidge = window.LiveChatWidget.get('chat_data'),
-                            chatId = _window$LiveChatWidge.chatId,
-                            threadId = _window$LiveChatWidge.threadId;
-
-                        if (threadId) {
-                            customerSDK.deactivateChat({ chatId: chatId }).catch(function () {
-                                return null;
-                            });
-                        }
-                    }
-                    resolve();
-                });
-            } catch (e) {
-                resolve();
-            }
-        });
     };
 
     // Delete existing LiveChat instance when there is no chat running
@@ -1523,7 +1491,6 @@ var LiveChat = function () {
     };
 
     return {
-        endLiveChat: endLiveChat,
         initialize: initialize,
         livechatDeletion: livechatDeletion,
         livechatFallback: livechatFallback,
@@ -9823,6 +9790,9 @@ var PromiseClass = function PromiseClass() {
     });
 };
 
+var lc_licenseID = 12049137;
+var lc_clientID = '66aa088aad5a414484c1fd1fa8a5ace7';
+
 module.exports = {
     showLoadingImage: showLoadingImage,
     getHighestZIndex: getHighestZIndex,
@@ -9842,7 +9812,9 @@ module.exports = {
     findParent: findParent,
     getStaticHash: getStaticHash,
     PromiseClass: PromiseClass,
-    removeObjProperties: removeObjProperties
+    removeObjProperties: removeObjProperties,
+    lc_licenseID: lc_licenseID,
+    lc_clientID: lc_clientID
 };
 
 /***/ }),
@@ -10530,22 +10502,26 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var _require = __webpack_require__(/*! @livechat/customer-sdk */ "./node_modules/@livechat/customer-sdk/dist/customer-sdk.esm.js"),
+    init = _require.init;
+
 var BinarySocket = __webpack_require__(/*! ./socket */ "./src/javascript/app/base/socket.js");
 var Defaults = __webpack_require__(/*! ../pages/trade/defaults */ "./src/javascript/app/pages/trade/defaults.js");
 var RealityCheckData = __webpack_require__(/*! ../pages/user/reality_check/reality_check.data */ "./src/javascript/app/pages/user/reality_check/reality_check.data.js");
 var ClientBase = __webpack_require__(/*! ../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
 var GTM = __webpack_require__(/*! ../../_common/base/gtm */ "./src/javascript/_common/base/gtm.js");
 var SocketCache = __webpack_require__(/*! ../../_common/base/socket_cache */ "./src/javascript/_common/base/socket_cache.js");
-var LiveChat = __webpack_require__(/*! ../../_common/base/livechat */ "./src/javascript/_common/base/livechat.js");
 
-var _require = __webpack_require__(/*! ../../_common/utility */ "./src/javascript/_common/utility.js"),
-    isBinaryDomain = _require.isBinaryDomain;
+var _require2 = __webpack_require__(/*! ../../_common/utility */ "./src/javascript/_common/utility.js"),
+    isBinaryDomain = _require2.isBinaryDomain;
 
 var getElementById = __webpack_require__(/*! ../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
 var removeCookies = __webpack_require__(/*! ../../_common/storage */ "./src/javascript/_common/storage.js").removeCookies;
 var urlFor = __webpack_require__(/*! ../../_common/url */ "./src/javascript/_common/url.js").urlFor;
 var applyToAllElements = __webpack_require__(/*! ../../_common/utility */ "./src/javascript/_common/utility.js").applyToAllElements;
 var getPropertyValue = __webpack_require__(/*! ../../_common/utility */ "./src/javascript/_common/utility.js").getPropertyValue;
+var licenseID = __webpack_require__(/*! ../../_common/utility */ "./src/javascript/_common/utility.js").lc_licenseID;
+var clientID = __webpack_require__(/*! ../../_common/utility */ "./src/javascript/_common/utility.js").lc_clientID;
 
 var Client = function () {
 
@@ -10625,6 +10601,39 @@ var Client = function () {
         }
     };
 
+    // Called when logging out to end ongoing chats if there is any
+    var endLiveChat = function endLiveChat() {
+        return new Promise(function (resolve) {
+            var session_variables = { loginid: '', landing_company_shortcode: '', currency: '', residence: '', email: '' };
+            window.LiveChatWidget.call('set_session_variables', session_variables);
+            window.LiveChatWidget.call('set_customer_email', ' ');
+            window.LiveChatWidget.call('set_customer_name', ' ');
+
+            try {
+                var customerSDK = init({
+                    licenseId: licenseID,
+                    clientId: clientID
+                });
+                customerSDK.on('connected', function () {
+                    if (window.LiveChatWidget.get('chat_data')) {
+                        var _window$LiveChatWidge = window.LiveChatWidget.get('chat_data'),
+                            chatId = _window$LiveChatWidge.chatId,
+                            threadId = _window$LiveChatWidge.threadId;
+
+                        if (threadId) {
+                            customerSDK.deactivateChat({ chatId: chatId }).catch(function () {
+                                return null;
+                            });
+                        }
+                    }
+                    resolve();
+                });
+            } catch (e) {
+                resolve();
+            }
+        });
+    };
+
     var doLogout = function doLogout(response) {
 
         if (response.logout !== 1) return;
@@ -10640,7 +10649,7 @@ var Client = function () {
         SocketCache.clear();
         RealityCheckData.clear();
         if (isBinaryDomain()) {
-            LiveChat.endLiveChat().then(function () {
+            endLiveChat().then(function () {
                 redirection(response);
             });
         } else {
@@ -10947,8 +10956,6 @@ module.exports = Footer;
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var BinaryPjax = __webpack_require__(/*! ./binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
@@ -11023,13 +11030,6 @@ var Header = function () {
         Client.sendLogoutRequest();
     };
 
-    var getLocalizedType = function getLocalizedType(_ref) {
-        var currency = _ref.currency,
-            is_real = _ref.is_real,
-            account_title = _ref.account_title;
-        return localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
-    };
-
     var populateAccountsList = function populateAccountsList() {
         if (!Client.isLoggedIn()) return;
         BinarySocket.wait('authorize').then(function () {
@@ -11039,12 +11039,11 @@ var Header = function () {
                     var account_title = Client.getAccountTitle(loginid);
                     var is_real = !Client.getAccountType(loginid); // this function only returns virtual/gaming/financial types
                     var currency = Client.get('currency', loginid);
-                    var data = { currency: currency, is_real: is_real, account_title: account_title };
-                    var localized_type = getLocalizedType(data);
+                    var localized_type = localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
                     if (loginid === Client.get('loginid')) {
                         // default account
                         applyToAllElements('.account-type', function (el) {
-                            elementInnerHtml(el, getLocalizedType(_extends({}, data, { account_title: 'Demo' })));
+                            elementInnerHtml(el, localized_type);
                         });
                         applyToAllElements('.account-id', function (el) {
                             elementInnerHtml(el, loginid);
@@ -17866,7 +17865,6 @@ module.exports = AssetIndexUI;
 
 var loadScript = __webpack_require__(/*! scriptjs */ "./node_modules/scriptjs/dist/script.js");
 var BinarySocket = __webpack_require__(/*! ../../../../app/base/socket */ "./src/javascript/app/base/socket.js");
-var isEuCountry = __webpack_require__(/*! ../../../../app/common/country_base */ "./src/javascript/app/common/country_base.js").isEuCountry;
 var getLanguage = __webpack_require__(/*! ../../../../_common/language */ "./src/javascript/_common/language.js").get;
 
 var EconomicCalendar = function () {
@@ -17892,7 +17890,7 @@ var EconomicCalendar = function () {
         if (loader) loader.remove();
 
         BinarySocket.wait('website_status', 'authorize', 'landing_company').then(function () {
-            $('.calendar-footer').setVisibility(isEuCountry());
+            $('.calendar-footer').setVisibility(true);
         });
     };
 
