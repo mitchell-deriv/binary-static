@@ -69,9 +69,7 @@ const Header = (() => {
     const logoutOnClick = () => {
         Client.sendLogoutRequest();
     };
-
-    const getLocalizedType = ({ currency , is_real , account_title }) => localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
-
+    
     const populateAccountsList = () => {
         if (!Client.isLoggedIn()) return;
         BinarySocket.wait('authorize').then(() => {
@@ -81,10 +79,9 @@ const Header = (() => {
                     const account_title  = Client.getAccountTitle(loginid);
                     const is_real        = !Client.getAccountType(loginid); // this function only returns virtual/gaming/financial types
                     const currency       = Client.get('currency', loginid);
-                    const data = { currency , is_real , account_title };
-                    const localized_type = getLocalizedType(data);
+                    const localized_type = localize('[_1] Account', is_real && currency ? getCurrencyDisplayCode(currency) : account_title);
                     if (loginid === Client.get('loginid')) { // default account
-                        applyToAllElements('.account-type', (el) => { elementInnerHtml(el, getLocalizedType({ ...data , account_title: 'Demo' })); });
+                        applyToAllElements('.account-type', (el) => { elementInnerHtml(el, localized_type); });
                         applyToAllElements('.account-id', (el) => { elementInnerHtml(el, loginid); });
                     } else {
                         const link    = createElement('a', { href: `${'javascript:;'}`, 'data-value': loginid });
