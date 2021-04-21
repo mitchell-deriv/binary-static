@@ -6,20 +6,20 @@ const ClientBase       = require('../../../../_common/base/client_base');
 const showLoadingImage = require('../../../../_common/utility').showLoadingImage;
 const State            = require('../../../../_common/storage').State;
 
-
-
 const DigitalOptions = (() => {
 
     let is_virtual,
+        el_welcome_container,
         upgrade_info,
         is_uk,
         is_unwelcome_uk;
 
     const init = () => {
-        is_virtual        = Client.get('is_virtual');
-        upgrade_info      = ClientBase.getBasicUpgradeInfo();
-        is_uk             = Boolean(Client.get('residence') === 'gb');
-        is_unwelcome_uk   = State.getResponse('get_account_status.status').some(status => status === 'unwelcome') && (/gb/.test(Client.get('residence')));
+        is_virtual            = Client.get('is_virtual');
+        upgrade_info          = ClientBase.getBasicUpgradeInfo();
+        el_welcome_container  = getElementById('welcome_container');
+        is_uk                 = Boolean(Client.get('residence') === 'gb');
+        is_unwelcome_uk       = State.getResponse('get_account_status.status').some(status => status === 'unwelcome') && (/gb/.test(Client.get('residence')));
     };
 
     const getCanUpgrade = (upgrade_type ,  { can_upgrade_to } = upgrade_info) => can_upgrade_to.includes(upgrade_type);
