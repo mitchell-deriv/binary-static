@@ -69,7 +69,7 @@ const Header = (() => {
     const logoutOnClick = () => {
         Client.sendLogoutRequest();
     };
-    
+
     const populateAccountsList = () => {
         if (!Client.isLoggedIn()) return;
         BinarySocket.wait('authorize').then(() => {
