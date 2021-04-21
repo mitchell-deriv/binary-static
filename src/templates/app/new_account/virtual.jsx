@@ -36,7 +36,7 @@ const Virtual = () => (
             </Fieldset>
 
             <div className='center-text'>
-                <button className='button' type='submit'>{it.L('Create new Demo account')}</button>
+                <button className='button' type='submit'>{it.L('Create new demo account')}</button>
                 <p className='errorfield invisible' id='error-account-opening' />
             </div>
         </form>
