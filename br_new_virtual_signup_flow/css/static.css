@@ -1962,6 +1962,99 @@ body #not_authenticated_financial ul.checked > li {
       #content.economic_calendar-content .calendar-container .calendar-footer .right a {
         padding: 0 2px; }
 
+.digital-options-container {
+  max-width: 1500px;
+  margin-top: 3rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
+  @media (max-width: 480px) {
+    .digital-options-container {
+      display: block; } }
+
+.digital-options-title {
+  color: #2a3052;
+  font-size: 1.3225rem;
+  margin-bottom: 0;
+  font-weight: 300;
+  margin-top: 0.9rem; }
+
+.digital-options-box {
+  padding: 1.5rem;
+  border-radius: 0.5rem; }
+  .digital-options-box p:nth-of-type(2) {
+    margin-top: 0.2rem; }
+  .digital-options-box-icon {
+    margin: 0 0.5rem; }
+    .digital-options-box-icon-container {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center; }
+
+.digital-options-action {
+  width: -webkit-fill-available;
+  width: -moz-available;
+  width: stretch; }
+  .digital-options-action-container {
+    width: 100%;
+    margin-top: 1rem; }
+    @media (min-width: 780px) {
+      .digital-options-action-container {
+        position: absolute;
+        bottom: 0px; } }
+
+.digital-options-footer span {
+  width: 100%;
+  line-height: 22px;
+  font-weight: 400;
+  text-align: center;
+  color: #dedede; }
+
+.welcome-content a:hover {
+  text-decoration: none; }
+
+.welcome-content-container {
+  margin: 0 auto;
+  width: 80%; }
+  @media only screen and (max-width: 768px) {
+    .welcome-content-container {
+      width: 100%; } }
+
+.welcome-content-box {
+  max-height: 86px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  border-radius: 9px;
+  margin-top: 10px; }
+  .welcome-content-box-desc {
+    overflow: hidden;
+    text-align: left;
+    margin-left: 15px;
+    width: 85%; }
+    @media only screen and (max-width: 576px) {
+      .welcome-content-box-desc {
+        font-size: smaller; } }
+    .welcome-content-box-desc p:first-of-type {
+      margin-top: 1em; }
+    .welcome-content-box-desc p {
+      margin: 0.4em 0;
+      line-height: 1.2em; }
+  .welcome-content-box-arrow {
+    position: relative;
+    width: 15%; }
+    .welcome-content-box-arrow img {
+      position: absolute;
+      top: 50%;
+      right: 20%; }
+
 .welcome-content .box-grid .box {
   display: -webkit-box;
   display: -ms-flexbox;
