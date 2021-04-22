@@ -379,6 +379,12 @@ var ClientBase = function () {
         return !isEmptyObject(getAccountOfType(type, only_enabled));
     };
 
+    var isUnwelcomeUk = function isUnwelcomeUk() {
+        return State.getResponse('get_account_status.status').some(function (status) {
+            return status === 'unwelcome';
+        }) && /gb/.test(get('residence'));
+    };
+
     // only considers currency of real money accounts
     // @param {String} type = crypto|fiat
     var hasCurrencyType = function hasCurrencyType(type) {
@@ -705,6 +711,7 @@ var ClientBase = function () {
         getAccountType: getAccountType,
         isAccountOfType: isAccountOfType,
         isAuthenticationAllowed: isAuthenticationAllowed,
+        isUnwelcomeUk: isUnwelcomeUk,
         getAccountOfType: getAccountOfType,
         hasAccountType: hasAccountType,
         hasCurrencyType: hasCurrencyType,
@@ -16165,7 +16172,7 @@ var Cashier = function () {
             new_el.class = 'toggle button button-disabled';
             new_el.href = '';
         }
-        el_virtual_topup_info.innerText = localize('Reset the balance of your demo account to [_1] anytime.', [Client.get('currency') + ' 10,000.00']);
+        el_virtual_topup_info.innerText = localize('Reset the balance of your virtual account to [_1] anytime.', [Client.get('currency') + ' 10,000.00']);
         $a.replaceWith($('<a/>', new_el));
         $(top_up_id).parent().setVisibility(1);
     };
@@ -35917,12 +35924,12 @@ module.exports = TypesOfAccounts;
 
 
 var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javascript/app/base/socket.js");
+var BinaryPjax = __webpack_require__(/*! ../../../base/binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
 var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
 var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
-var Url = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js");
 var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
+var urlFor = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js").urlFor;
 var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").showLoadingImage;
-var State = __webpack_require__(/*! ../../../../_common/storage */ "./src/javascript/_common/storage.js").State;
 
 var DigitalOptions = function () {
 
@@ -35930,16 +35937,18 @@ var DigitalOptions = function () {
         el_welcome_container = void 0,
         upgrade_info = void 0,
         is_uk = void 0,
-        is_unwelcome_uk = void 0;
+        is_unwelcome_uk = void 0,
+        synthetics = void 0,
+        financial = void 0;
 
     var init = function init() {
         is_virtual = Client.get('is_virtual');
         upgrade_info = ClientBase.getBasicUpgradeInfo();
         el_welcome_container = getElementById('welcome_container');
-        is_uk = Boolean(Client.get('residence') === 'gb');
-        is_unwelcome_uk = State.getResponse('get_account_status.status').some(function (status) {
-            return status === 'unwelcome';
-        }) && /gb/.test(Client.get('residence'));
+        is_uk = Client.get('residence') === 'gb';
+        is_unwelcome_uk = Client.isUnwelcomeUk();
+        synthetics = getElementById('default');
+        financial = getElementById('financial');
     };
 
     var getCanUpgrade = function getCanUpgrade(upgrade_type) {
@@ -35952,33 +35961,49 @@ var DigitalOptions = function () {
     var onLoad = function onLoad() {
         BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(function () {
             init();
+
             if (Client.hasAccountType('real')) {
-                window.location.href = Client.defaultRedirectUrl();
+                BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
             }
 
-            getElementById('default').addEventListener('click', function () {
-                window.location.href = Client.defaultRedirectUrl();
-            });
+            synthetics.addEventListener('click', onSynthethics);
 
-            getElementById('financial').addEventListener('click', function () {
-                if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) {
-                        window.location.href = Url.urlFor('/user/metatrader');return;
-                    }
-                    if (getCanUpgrade('maltainvest')) {
-                        window.location.href = Client.defaultRedirectUrl();return;
-                    }
-                    if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) window.location.href = Url.urlFor('/user/metatrader');
-                }
-            });
+            financial.addEventListener('click', onFinancials);
         });
     };
 
+    var onSynthethics = function onSynthethics() {
+        BinaryPjax.load(Client.defaultRedirectUrl());
+    };
+
+    var onFinancials = function onFinancials() {
+        if (is_virtual && upgrade_info.can_upgrade_to.length) {
+            if (getCanUpgrade('svg')) {
+                BinaryPjax.load(urlFor('/user/metatrader'));
+                return;
+            }
+            if (getCanUpgrade('maltainvest')) {
+                BinaryPjax.load(Client.defaultRedirectUrl());
+                return;
+            }
+            if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) BinaryPjax.load(urlFor('/user/metatrader'));
+        } else {
+            BinaryPjax.load(Client.defaultRedirectUrl());
+        }
+    };
+
+    var onUnload = function onUnload() {
+        synthetics.removeEventListener('click', onSynthethics);
+        financial.removeEventListener('click', onFinancials);
+    };
+
     return {
-        onLoad: onLoad
+        onLoad: onLoad,
+        onUnload: onUnload
     };
 }();
+
 module.exports = DigitalOptions;
 
 /***/ }),
@@ -36448,12 +36473,12 @@ module.exports = VirtualAccOpening;
 
 
 var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javascript/app/base/socket.js");
+var BinaryPjax = __webpack_require__(/*! ../../../base/binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
 var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
 var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
-var Url = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js");
 var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").showLoadingImage;
 var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
-var State = __webpack_require__(/*! ../../../../_common/storage */ "./src/javascript/_common/storage.js").State;
+var urlFor = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js").urlFor;
 
 var WelcomePage = function () {
 
@@ -36461,16 +36486,20 @@ var WelcomePage = function () {
         is_virtual = void 0,
         upgrade_info = void 0,
         is_uk = void 0,
-        is_unwelcome_uk = void 0;
+        is_unwelcome_uk = void 0,
+        cfd = void 0,
+        d_options = void 0,
+        not_sure = void 0;
 
     var init = function init() {
         upgrade_info = ClientBase.getBasicUpgradeInfo();
         is_virtual = Client.get('is_virtual');
         el_welcome_container = getElementById('welcome_container');
-        is_uk = Boolean(Client.get('residence') === 'gb');
-        is_unwelcome_uk = State.getResponse('get_account_status.status').some(function (status) {
-            return status === 'unwelcome';
-        }) && /gb/.test(Client.get('residence'));
+        is_uk = Client.get('residence') === 'gb';
+        is_unwelcome_uk = Client.isUnwelcomeUk();
+        not_sure = getElementById('default');
+        cfd = getElementById('cfd');
+        d_options = getElementById('d_ptions');
     };
 
     var getCanUpgrade = function getCanUpgrade(upgrade_type) {
@@ -36483,40 +36512,65 @@ var WelcomePage = function () {
     var onLoad = function onLoad() {
         BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(function () {
             init();
+
             if (Client.hasAccountType('real')) {
-                window.location.href = Client.defaultRedirectUrl();
+                BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
             }
+            not_sure.addEventListener('click', onNotSure);
 
-            getElementById('default').addEventListener('click', function () {
-                /* eslint no-unused-expressions: ["error", { "allowTernary": true }] */
-                getCanUpgrade('iom') || is_uk && is_unwelcome_uk ? window.location.href = Url.urlFor('/new_account/realws') : window.location.href = Client.defaultRedirectUrl();
-            });
+            cfd.addEventListener('click', onCFD);
 
-            getElementById('cfd').addEventListener('click', function () {
-                if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) {
-                        window.location.href = Url.urlFor('/user/metatrader');return;
-                    }
-                    if (getCanUpgrade('maltainvest')) {
-                        window.location.href = Client.defaultRedirectUrl();return;
-                    }
-                    if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) window.location.href = Url.urlFor('/user/metatrader');
-                }
-            });
-
-            getElementById('d_ptions').addEventListener('click', function () {
-                if (is_virtual && upgrade_info.can_upgrade_to.length) {
-                    if (getCanUpgrade('svg')) window.location.href = Client.defaultRedirectUrl();
-                    if (getCanUpgrade('maltainvest')) window.location.href = Url.urlFor('new_account/digital_options');
-                    if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) window.location.href = Url.urlFor('/new_account/realws');
-                }
-            });
+            d_options.addEventListener('click', onDOptions);
         });
     };
 
+    var onNotSure = function onNotSure() {
+        /* eslint no-unused-expressions: ["error", { "allowTernary": true }] */
+        getCanUpgrade('iom') || is_uk && is_unwelcome_uk ? BinaryPjax.load(urlFor('/new_account/realws')) : BinaryPjax.load(Client.defaultRedirectUrl());
+    };
+
+    var onCFD = function onCFD() {
+        if (is_virtual && upgrade_info.can_upgrade_to.length) {
+            if (getCanUpgrade('svg')) {
+                BinaryPjax.load(urlFor('/user/metatrader'));
+                return;
+            }
+            if (getCanUpgrade('maltainvest')) {
+                BinaryPjax.load(Client.defaultRedirectUrl());
+                return;
+            }
+            if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) BinaryPjax.load(urlFor('/user/metatrader'));
+        } else {
+            BinaryPjax.load(Client.defaultRedirectUrl());
+        }
+    };
+
+    var onDOptions = function onDOptions() {
+        if (is_virtual && upgrade_info.can_upgrade_to.length) {
+            if (getCanUpgrade('svg')) {
+                BinaryPjax.load(Client.defaultRedirectUrl());
+                return;
+            }
+            if (getCanUpgrade('maltainvest')) {
+                BinaryPjax.load(urlFor('new_account/digital_options'));
+                return;
+            }
+            if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) BinaryPjax.load(urlFor('/new_account/realws'));
+        } else {
+            BinaryPjax.load(Client.defaultRedirectUrl());
+        }
+    };
+
+    var onUnload = function onUnload() {
+        cfd.removeEventListener('click', onCFD);
+        d_options.removeEventListener('click', onDOptions);
+        not_sure.removeEventListener('click', onNotSure);
+    };
+
     return {
-        onLoad: onLoad
+        onLoad: onLoad,
+        onUnload: onUnload
     };
 }();
 
