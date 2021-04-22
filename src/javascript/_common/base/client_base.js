@@ -98,6 +98,8 @@ const ClientBase = (() => {
 
     const hasAccountType = (type, only_enabled) => !isEmptyObject(getAccountOfType(type, only_enabled));
 
+    const isUnwelcomeUk = () => State.getResponse('get_account_status.status').some(status => status === 'unwelcome') && (/gb/.test(get('residence')));
+
     // only considers currency of real money accounts
     // @param {String} type = crypto|fiat
     const hasCurrencyType = (type) => {
@@ -404,6 +406,7 @@ const ClientBase = (() => {
         getAccountType,
         isAccountOfType,
         isAuthenticationAllowed,
+        isUnwelcomeUk,
         getAccountOfType,
         hasAccountType,
         hasCurrencyType,
