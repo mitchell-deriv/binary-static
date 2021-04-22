@@ -9938,10 +9938,10 @@ var BinaryLoader = function () {
             return localize('Please [_1]log in[_2] or [_3]sign up[_4] to view this page.', ['<a href="' + 'javascript:;' + '">', '</a>', '<a href="' + urlFor('new-account') + '">', '</a>']);
         },
         only_virtual: function only_virtual() {
-            return localize('Sorry, this feature is available to virtual accounts only.');
+            return localize('Sorry, this feature is available to demo accounts only.');
         },
         only_real: function only_real() {
-            return localize('This feature is not relevant to virtual-money accounts.');
+            return localize('This feature is not relevant to demo-money accounts.');
         },
         not_authenticated: function not_authenticated() {
             return localize('This page is only available to logged out clients.');
@@ -16163,7 +16163,7 @@ var Cashier = function () {
             new_el.class = 'toggle button button-disabled';
             new_el.href = '';
         }
-        el_virtual_topup_info.innerText = localize('Reset the balance of your virtual account to [_1] anytime.', [Client.get('currency') + ' 10,000.00']);
+        el_virtual_topup_info.innerText = localize('Reset the balance of your demo account to [_1] anytime.', [Client.get('currency') + ' 10,000.00']);
         $a.replaceWith($('<a/>', new_el));
         $(top_up_id).parent().setVisibility(1);
     };
