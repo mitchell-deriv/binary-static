@@ -16740,7 +16740,7 @@ var DepositWithdraw = function () {
                                 if (cashier_type === 'withdraw') {
                                     var limit = State.getResponse('get_limits.remainder');
                                     if (typeof limit !== 'undefined' && +limit < Currency.getMinWithdrawal(Client.get('currency'))) {
-                                        showError('custom_error', localize('You have reached the withdrawal limit.'));
+                                        showError('custom_error', localize('You have reached the withdrawal limit. Please upload your proof of identity and address to lift your withdrawal limit and proceed with your withdrawal.'));
                                         return;
                                     }
                                 }
@@ -27616,6 +27616,7 @@ var Authenticate = function () {
 
             showCTAButton('document', 'pending');
             $('#upload_complete').setVisibility(1);
+            $('#msg_personal_details').setVisibility(0);
         });
     };
 
@@ -27761,6 +27762,7 @@ var Authenticate = function () {
             $('#authentication_loading').setVisibility(1);
             setTimeout(function () {
                 BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function () {
+                    $('#msg_personal_details').setVisibility(0);
                     $('#upload_complete').setVisibility(1);
                     Header.displayAccountStatus();
                     $('#authentication_loading').setVisibility(0);
@@ -27893,7 +27895,7 @@ var Authenticate = function () {
                             }
 
                             $('#personal_details_error').setVisibility(1);
-                            _context2.next = 64;
+                            _context2.next = 65;
                             break;
 
                         case 28:
@@ -27945,7 +27947,7 @@ var Authenticate = function () {
                                 });
                             }
 
-                            _context2.next = 64;
+                            _context2.next = 65;
                             break;
 
                         case 37:
@@ -27955,12 +27957,12 @@ var Authenticate = function () {
                             }
 
                             $('#limited_poi').setVisibility(1);
-                            _context2.next = 64;
+                            _context2.next = 65;
                             break;
 
                         case 41:
                             if (needs_verification.includes('identity')) {
-                                _context2.next = 63;
+                                _context2.next = 64;
                                 break;
                             }
 
@@ -27969,111 +27971,113 @@ var Authenticate = function () {
                                 Url.updateParamsWithoutReload({ authentication_tab: 'poa' }, true);
                             }
                             _context2.t0 = identity.status;
-                            _context2.next = _context2.t0 === 'none' ? 46 : _context2.t0 === 'pending' ? 48 : _context2.t0 === 'rejected' ? 51 : _context2.t0 === 'verified' ? 53 : _context2.t0 === 'expired' ? 56 : _context2.t0 === 'suspected' ? 58 : 60;
+                            _context2.next = _context2.t0 === 'none' ? 46 : _context2.t0 === 'pending' ? 49 : _context2.t0 === 'rejected' ? 52 : _context2.t0 === 'verified' ? 54 : _context2.t0 === 'expired' ? 57 : _context2.t0 === 'suspected' ? 59 : 61;
                             break;
 
                         case 46:
+                            $('#msg_personal_details').setVisibility(1);
                             if (onfido_unsupported) {
                                 $('#not_authenticated_uns').setVisibility(1);
                                 initUnsupported();
                             } else {
                                 initOnfido(service_token_response.token, documents_supported, country_code);
                             }
-                            return _context2.abrupt('break', 61);
+                            return _context2.abrupt('break', 62);
 
-                        case 48:
+                        case 49:
                             showCTAButton('document', 'pending');
 
                             $('#upload_complete').setVisibility(1);
-                            return _context2.abrupt('break', 61);
+                            return _context2.abrupt('break', 62);
 
-                        case 51:
+                        case 52:
                             $('#unverified').setVisibility(1);
-                            return _context2.abrupt('break', 61);
+                            return _context2.abrupt('break', 62);
 
-                        case 53:
+                        case 54:
                             showCTAButton('document', 'verified');
                             $('#verified').setVisibility(1);
-                            return _context2.abrupt('break', 61);
+                            return _context2.abrupt('break', 62);
 
-                        case 56:
+                        case 57:
                             $('#expired_poi').setVisibility(1);
-                            return _context2.abrupt('break', 61);
+                            return _context2.abrupt('break', 62);
 
-                        case 58:
+                        case 59:
                             $('#unverified').setVisibility(1);
-                            return _context2.abrupt('break', 61);
-
-                        case 60:
-                            return _context2.abrupt('break', 61);
+                            return _context2.abrupt('break', 62);
 
                         case 61:
-                            _context2.next = 64;
+                            return _context2.abrupt('break', 62);
+
+                        case 62:
+                            _context2.next = 65;
                             break;
 
-                        case 63:
+                        case 64:
                             // eslint-disable-next-line no-lonely-if
                             if (onfido_unsupported) {
                                 $('#not_authenticated_uns').setVisibility(1);
                                 initUnsupported();
                             } else {
+                                $('#msg_personal_details').setVisibility(1);
                                 initOnfido(service_token_response.token, documents_supported, country_code);
                             }
 
-                        case 64:
+                        case 65:
                             if (needs_verification.includes('document')) {
-                                _context2.next = 86;
+                                _context2.next = 87;
                                 break;
                             }
 
                             _context2.t1 = document.status;
-                            _context2.next = _context2.t1 === 'none' ? 68 : _context2.t1 === 'pending' ? 71 : _context2.t1 === 'rejected' ? 74 : _context2.t1 === 'suspected' ? 76 : _context2.t1 === 'verified' ? 78 : _context2.t1 === 'expired' ? 81 : 83;
+                            _context2.next = _context2.t1 === 'none' ? 69 : _context2.t1 === 'pending' ? 72 : _context2.t1 === 'rejected' ? 75 : _context2.t1 === 'suspected' ? 77 : _context2.t1 === 'verified' ? 79 : _context2.t1 === 'expired' ? 82 : 84;
                             break;
 
-                        case 68:
+                        case 69:
                             init();
                             $('#not_authenticated').setVisibility(1);
-                            return _context2.abrupt('break', 84);
+                            return _context2.abrupt('break', 85);
 
-                        case 71:
+                        case 72:
                             showCTAButton('identity', 'pending');
                             $('#pending_poa').setVisibility(1);
-                            return _context2.abrupt('break', 84);
+                            return _context2.abrupt('break', 85);
 
-                        case 74:
+                        case 75:
                             $('#unverified_poa').setVisibility(1);
-                            return _context2.abrupt('break', 84);
+                            return _context2.abrupt('break', 85);
 
-                        case 76:
+                        case 77:
                             $('#unverified_poa').setVisibility(1);
-                            return _context2.abrupt('break', 84);
+                            return _context2.abrupt('break', 85);
 
-                        case 78:
+                        case 79:
                             showCTAButton('document', 'verified');
                             $('#verified_poa').setVisibility(1);
-                            return _context2.abrupt('break', 84);
+                            return _context2.abrupt('break', 85);
 
-                        case 81:
+                        case 82:
                             $('#expired_poa').setVisibility(1);
-                            return _context2.abrupt('break', 84);
-
-                        case 83:
-                            return _context2.abrupt('break', 84);
+                            return _context2.abrupt('break', 85);
 
                         case 84:
-                            _context2.next = 88;
+                            return _context2.abrupt('break', 85);
+
+                        case 85:
+                            _context2.next = 89;
                             break;
 
-                        case 86:
+                        case 87:
                             init();
                             $('#not_authenticated').setVisibility(1);
 
-                        case 88:
+                        case 89:
 
                             $('#authentication_loading').setVisibility(0);
                             TabSelector.updateTabDisplay();
 
-                        case 90:
+                        case 91:
                         case 'end':
                             return _context2.stop();
                     }
@@ -36526,8 +36530,11 @@ var WelcomePage = function () {
     };
 
     var onNotSure = function onNotSure() {
-        /* eslint no-unused-expressions: ["error", { "allowTernary": true }] */
-        getCanUpgrade('iom') || is_uk && is_unwelcome_uk ? BinaryPjax.load(urlFor('/new_account/realws')) : BinaryPjax.load(Client.defaultRedirectUrl());
+        if (getCanUpgrade('iom') || is_uk && is_unwelcome_uk) {
+            BinaryPjax.load(urlFor('/new_account/realws'));
+        } else {
+            BinaryPjax.load(Client.defaultRedirectUrl());
+        }
     };
 
     var onCFD = function onCFD() {
