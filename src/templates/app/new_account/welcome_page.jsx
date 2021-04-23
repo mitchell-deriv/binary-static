@@ -8,14 +8,14 @@ const WelcomePage = () => {
         {
             icon_list: ['images/pages/welcome/cfd.svg'],
             title    : it.L('CFD'),
-            desc     : it.L('<strong>Maximise returns</strong> by risking more.'),
+            desc     : it.L('[_1]Maximise returns[_2] by risking more.', '<strong>', '</strong>'),
             url      : it.url_for('user/metatrader'),
             action_id: 'cfd',
         },
         {
             icon_list: ['images/pages/welcome/doptions.svg'],
             title    : it.L('Digital Options'),
-            desc     : it.L('Earn <strong>fixed returns</strong> by risking only what you put in'),
+            desc     : it.L('Earn [_1]fixed returns[_2] by risking only what you put in', '<strong>', '</strong>'),
             url      : it.url_for('trading'),
             action_id: 'd_ptions',
         },

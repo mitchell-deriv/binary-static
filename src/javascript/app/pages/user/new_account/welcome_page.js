@@ -47,10 +47,9 @@ const WelcomePage = (() => {
     };
 
     const onNotSure = () => {
-        /* eslint no-unused-expressions: ["error", { "allowTernary": true }] */
-        (getCanUpgrade('iom') || (is_uk && is_unwelcome_uk))
-            ?  BinaryPjax.load(urlFor('/new_account/realws'))
-            :  BinaryPjax.load(Client.defaultRedirectUrl());
+        if (getCanUpgrade('iom') || (is_uk && is_unwelcome_uk)){
+            BinaryPjax.load(urlFor('/new_account/realws'));
+        } else { BinaryPjax.load(Client.defaultRedirectUrl()); }
     };
 
     const onCFD = () => {
