@@ -396,6 +396,13 @@ const ClientBase = (() => {
         return is_current ? currency && !get('is_virtual') && has_account_criteria && !isCryptocurrency(currency) : has_account_criteria;
     };
 
+    const isOptionsBlocked = () => {
+        const options_blocked_countries = ['au'];
+        const country = State.getResponse('authorize.country');
+        
+        return options_blocked_countries.includes(country);
+    };
+
     return {
         init,
         isLoggedIn,
@@ -407,6 +414,7 @@ const ClientBase = (() => {
         isAccountOfType,
         isAuthenticationAllowed,
         isUnwelcomeUk,
+        isOptionsBlocked,
         getAccountOfType,
         hasAccountType,
         hasCurrencyType,
