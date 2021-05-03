@@ -7,21 +7,21 @@ const WelcomePage = () => {
     const options = [
         {
             icon_list: ['images/pages/welcome/cfd.svg'],
-            title    : it.L('CFD'),
-            desc     : it.L('[_1]Maximise returns[_2] by risking more.', '<strong>', '</strong>'),
+            title    : it.L('[_1]CFD[_2]','<strong>', '</strong>'),
+            desc     : it.L('[_1]Maximise returns[_2] by [_3]risking more[_4] than you put in.', '<strong>', '</strong>','<strong>', '</strong>'),
             url      : it.url_for('user/metatrader'),
             action_id: 'cfd',
         },
         {
             icon_list: ['images/pages/welcome/doptions.svg'],
-            title    : it.L('Digital Options'),
-            desc     : it.L('Earn [_1]fixed returns[_2] by risking only what you put in', '<strong>', '</strong>'),
+            title    : it.L('[_1]Digital Options[_1]','<strong>', '</strong>'),
+            desc     : it.L('Earn [_1]fixed returns[_2] by [_3]risking only[_4] what you put in', '<strong>', '</strong>', '<strong>', '</strong>'),
             url      : it.url_for('trading'),
             action_id: 'd_ptions',
         },
         {
             icon_list: ['images/pages/welcome/notsure.svg'],
-            title    : it.L('Not Sure?'),
+            title    : it.L('[_1]Not Sure?[_1]' ,'<strong>', '</strong>'),
             desc     : it.L('Let us introduce you to trading on Binary.'),
             url      : it.url_for('trading'),
             action_id: 'default',
