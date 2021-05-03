@@ -84,7 +84,7 @@ const VirtualAccOpening = (() => {
         const req = [
             { selector: '#client_password', validations: ['req', 'password'] },
 
-            { selector: '#residence' },
+            { selector: '#residence' , validations: ['req'] },
             { selector: '#email_consent' },
             { request_field: 'utm_source',          value: TrafficSource.getSource(utm_data) },
             { request_field: 'new_account_virtual', value: 1 },
