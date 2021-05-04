@@ -862,7 +862,9 @@ div.kineticjs-content {
   .home-content .center-text-m {
     text-align: center; }
   .home-content .gr-centered-m {
-    margin: 0 auto; } }
+    margin: 0 auto; }
+  .home-content .margin-top-10 {
+    margin-top: 10px; } }
 
 @media screen and (max-width: 480px) {
   .home-content .small-image {
@@ -2038,7 +2040,8 @@ body #not_authenticated_financial ul.checked > li {
     overflow: hidden;
     text-align: left;
     margin-left: 15px;
-    width: 85%; }
+    width: 85%;
+    font-weight: 500; }
     @media only screen and (max-width: 576px) {
       .welcome-content-box-desc {
         font-size: smaller; } }

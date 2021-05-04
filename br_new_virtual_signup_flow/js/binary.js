@@ -8405,10 +8405,12 @@ module.exports = {
 
 
 var Scroll = function () {
-    var $main_container = void 0;
+    var $main_container = void 0,
+        $window_location = void 0;
 
     var sidebarScroll = function sidebarScroll($container) {
         $main_container = $container;
+        $window_location = window.location.pathname;
 
         $container.on('click', '#sidebar-nav li', function () {
             var clicked_li = $(this);
@@ -8440,7 +8442,7 @@ var Scroll = function () {
                 if (scroll_top + $sidebar[0].offsetHeight > $sidebar_container[0].offsetHeight + $sidebar_container.offset().top) {
                     $sidebar.css({ position: 'absolute', bottom: 0, top: '', 'max-width': width, 'width': '100%' });
                 } else if (scroll_top > sticky_navigation_offset_top) {
-                    $sidebar.css({ position: 'fixed', top: 0, bottom: '', 'max-width': width, 'width': '100%' });
+                    $sidebar.css({ position: 'sticky', top: 0, bottom: '', 'max-width': width, 'width': '100%' });
                 } else {
                     $sidebar.css({ position: 'relative' });
                 }
@@ -8502,7 +8504,10 @@ var Scroll = function () {
         sidebarScroll: sidebarScroll,
         scrollToTop: scrollToTop,
         offScroll: function offScroll() {
-            $(window).off('scroll');
+            if (window.location.pathname !== $window_location) {
+                $(window).off('scroll');
+            }
+
             if ($main_container) {
                 $main_container.find('#sidebar-nav li').off('click');
                 $main_container = '';
@@ -9590,6 +9595,12 @@ var getHighestZIndex = function getHighestZIndex() {
     return all.length ? Math.max.apply(Math, all) : null;
 };
 
+var eu_countries = ['it', 'de', 'fr', 'lu', 'gr', 'mf', 'es', 'sk', 'lt', 'nl', 'at', 'bg', 'si', 'cy', 'be', 'ro', 'hr', 'pt', 'pl', 'lv', 'ee', 'cz', 'fi', 'hu', 'dk', 'se', 'ie', 'im', 'gb', 'mt'];
+// check if client is from EU
+var isEuCountrySelected = function isEuCountrySelected(selected_country) {
+    return eu_countries.includes(selected_country);
+};
+
 var downloadCSV = function downloadCSV(csv_contents) {
     var filename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'data.csv';
 
@@ -9817,6 +9828,7 @@ module.exports = {
     template: template,
     isBinaryDomain: isBinaryDomain,
     isEmptyObject: isEmptyObject,
+    isEuCountrySelected: isEuCountrySelected,
     isLoginPages: isLoginPages,
     cloneObject: cloneObject,
     isDeepEqual: isDeepEqual,
@@ -10004,11 +10016,12 @@ var BinaryLoader = function () {
                 return displayMessage(error_messages.no_mf());
             });
         }
-        if (config.no_blocked_country && Client.isLoggedIn() && Client.isOptionsBlocked()) {
-            BinarySocket.wait('authorize').then(function () {
-                return displayMessage(error_messages.options_blocked());
-            });
-        }
+
+        BinarySocket.wait('authorize').then(function () {
+            if (config.no_blocked_country && Client.isLoggedIn() && Client.isOptionsBlocked()) {
+                displayMessage(error_messages.options_blocked());
+            }
+        });
 
         BinarySocket.setOnDisconnect(active_script.onDisconnect);
     };
@@ -14173,7 +14186,7 @@ var FormManager = function () {
 
         fields.forEach(function (field) {
             if (!field.exclude_request) {
-                if (field.$.is(':visible') || field.value || field.$.attr('data-force')) {
+                if (field.$.attr('class') === 'hide-product-checkbox' || field.$.is(':visible') || field.value || field.$.attr('data-force')) {
                     val = field.$.val();
                     key = field.request_field || field.selector;
 
@@ -14184,6 +14197,8 @@ var FormManager = function () {
                         value = field.$.attr('data-value');
                     } else if (/lbl_/.test(key)) {
                         value = field.value || field.$.text();
+                    } else if (field.$.attr('class') === 'hide-product-checkbox') {
+                        value = field.$.attr('class') === 'hide-product-checkbox' ? 1 : 0;
                     } else if (field.$.is(':checkbox')) {
                         value = field.$.is(':checked') ? 1 : 0;
                     } else if (Array.isArray(val)) {
@@ -15170,28 +15185,28 @@ var TrafficSource = function () {
         var params = Url.paramsHash();
         var param_keys = ['utm_source', 'utm_medium', 'utm_campaign'];
 
-        if (params.utm_source) {
-            // url params can be stored only if utm_source is available
-            param_keys.map(function (key) {
-                if (params[key] && !current_values[key]) {
-                    cookie.set(key, params[key], { sameSite: 'none', secure: true });
-                }
+        // When the user comes to the site with URL params
+        if (params.utm_source || params.utm_medium || params.utm_campaign) {
+
+            // if url is missing one of required fields, do nothing
+            var has_all_params = param_keys.every(function (param) {
+                return param in params;
             });
+
+            if (has_all_params) {
+                param_keys.forEach(function (key) {
+                    if (params[key]) {
+                        cookie.set(key, params[key], { sameSite: 'none', secure: true });
+                    }
+                });
+            }
+        } else if (!current_values.utm_source) {
+            cookie.set('utm_source', 'binary_direct', { sameSite: 'none', secure: true });
         }
 
         // Store gclid
         if (params.gclid && !Client.isLoggedIn()) {
             LocalStore.set('gclid', params.gclid);
-        }
-
-        var doc_ref = document.referrer;
-        var referrer = localStorage.getItem('index_referrer') || doc_ref;
-        localStorage.removeItem('index_referrer');
-        if (doc_ref && !new RegExp(window.location.hostname, 'i').test(doc_ref)) {
-            referrer = doc_ref;
-        }
-        if (referrer && !current_values.referrer && !params.utm_source && !current_values.utm_source) {
-            cookie.set('referrer', Url.getLocation(referrer).hostname, { sameSite: 'none', secure: true });
         }
     };
 
@@ -16293,9 +16308,10 @@ var Cashier = function () {
     };
 
     var applyStateLockLogic = function applyStateLockLogic(status, deposit, withdraw) {
-        // statuses to check with their corresponding selectors
-        var statuses_to_check = [{ lock: 'cashier_locked', selectors: [deposit, withdraw] }, { lock: 'withdrawal_locked', selectors: [withdraw] }, { lock: 'no_withdrawal_or_trading', selectors: [withdraw] }, { lock: 'unwelcome', selectors: [deposit] }];
+        var is_uk_client = Client.get('residence') === 'gb';
 
+        // statuses to check with their corresponding selectors
+        var statuses_to_check = [{ lock: 'cashier_locked', selectors: is_uk_client ? [withdraw] : [deposit, withdraw] }, { lock: 'deposit_locked', selectors: [deposit] }, { lock: 'withdrawal_locked', selectors: [withdraw] }, { lock: 'no_withdrawal_or_trading', selectors: [withdraw] }, { lock: 'unwelcome', selectors: [deposit] }];
         statuses_to_check.forEach(function (item) {
             if (status.includes(item.lock)) {
                 item.selectors.forEach(function (selector) {
@@ -16686,23 +16702,42 @@ var DepositWithdraw = function () {
                             response_get_account_status = State.get(['response', 'get_account_status']);
 
                             if (response_get_account_status.error) {
-                                _context.next = 20;
+                                _context.next = 26;
                                 break;
                             }
 
                             if (!/cashier_locked/.test(response_get_account_status.get_account_status.status)) {
-                                _context.next = 16;
+                                _context.next = 22;
                                 break;
                             }
+
+                            if (!/ASK_UK_FUNDS_PROTECTION/.test(response_get_account_status.get_account_status.cashier_validation)) {
+                                _context.next = 17;
+                                break;
+                            }
+
+                            initUKGC();
+                            return _context.abrupt('return');
+
+                        case 17:
+                            if (!/ASK_SELF_EXCLUSION_MAX_TURNOVER_SET/.test(response_get_account_status.get_account_status.cashier_validation)) {
+                                _context.next = 20;
+                                break;
+                            }
+
+                            showError('limits_error');
+                            return _context.abrupt('return');
+
+                        case 20:
 
                             showError('custom_error', localize('Your cashier is locked.')); // Locked from BO
                             return _context.abrupt('return');
 
-                        case 16:
+                        case 22:
                             account_currency_config = getPropertyValue(response_get_account_status.get_account_status, ['currency_config', Client.get('currency')]) || {};
 
                             if (!(cashier_type === 'deposit' && account_currency_config.is_deposit_suspended || cashier_type === 'withdraw' && account_currency_config.is_withdrawal_suspended)) {
-                                _context.next = 20;
+                                _context.next = 26;
                                 break;
                             }
 
@@ -16710,20 +16745,20 @@ var DepositWithdraw = function () {
                             showError('custom_error', localize('Please note that the selected currency is allowed for limited accounts only.'));
                             return _context.abrupt('return');
 
-                        case 20:
-                            _context.next = 22;
+                        case 26:
+                            _context.next = 28;
                             return BinarySocket.wait('website_status');
 
-                        case 22:
+                        case 28:
                             currency_config = getPropertyValue(getCurrencies(), [Client.get('currency')]) || {};
 
                             if (!(cashier_type === 'deposit')) {
-                                _context.next = 29;
+                                _context.next = 35;
                                 break;
                             }
 
                             if (!currency_config.is_deposit_suspended) {
-                                _context.next = 27;
+                                _context.next = 33;
                                 break;
                             }
 
@@ -16731,13 +16766,13 @@ var DepositWithdraw = function () {
                             showError('custom_error', localize('Sorry, deposits for this currency are currently disabled.'));
                             return _context.abrupt('return');
 
-                        case 27:
-                            _context.next = 32;
+                        case 33:
+                            _context.next = 38;
                             break;
 
-                        case 29:
+                        case 35:
                             if (!currency_config.is_withdrawal_suspended) {
-                                _context.next = 32;
+                                _context.next = 38;
                                 break;
                             }
 
@@ -16746,7 +16781,7 @@ var DepositWithdraw = function () {
                             showError('custom_error', localize('Sorry, withdrawals for this currency are currently disabled.'));
                             return _context.abrupt('return');
 
-                        case 32:
+                        case 38:
                             promises = [];
 
                             if (cashier_type === 'deposit') {
@@ -16776,7 +16811,7 @@ var DepositWithdraw = function () {
                                 });
                             });
 
-                        case 35:
+                        case 41:
                         case 'end':
                             return _context.stop();
                     }
@@ -32803,7 +32838,7 @@ var StatementUI = function () {
         // create view button and append
         if (/^(buy|sell)$/i.test(statement_data.action_type)) {
             var $view_button = $('<button/>', { class: 'button open_contract_details', text: localize('View'), contract_id: statement_data.id });
-            $statement_row.children('.desc,.details').append($view_button);
+            $statement_row.children('.desc,.details').append('<br>').append($view_button);
         }
 
         return $statement_row[0]; // return DOM instead of jquery object
@@ -36005,7 +36040,7 @@ var DigitalOptions = function () {
     };
 
     var onSynthethics = function onSynthethics() {
-        BinaryPjax.load(Client.defaultRedirectUrl());
+        BinaryPjax.load(urlFor('trading') + '?market=synthetic-indices&formname=risefall&underlying=1HZ10V');
     };
 
     var onFinancials = function onFinancials() {
@@ -36015,7 +36050,7 @@ var DigitalOptions = function () {
                 return;
             }
             if (getCanUpgrade('maltainvest')) {
-                BinaryPjax.load(Client.defaultRedirectUrl());
+                BinaryPjax.load(urlFor('trading') + '?market=forex&formname=risefall');
                 return;
             }
             if (getCanUpgrade('iom') && is_uk && is_unwelcome_uk) BinaryPjax.load(urlFor('/user/metatrader'));
@@ -36330,6 +36365,7 @@ var LocalStore = __webpack_require__(/*! ../../../../_common/storage */ "./src/j
 var State = __webpack_require__(/*! ../../../../_common/storage */ "./src/javascript/_common/storage.js").State;
 var urlFor = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js").urlFor;
 var Utility = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js");
+var isEuCountrySelected = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").isEuCountrySelected;
 var isBinaryApp = __webpack_require__(/*! ../../../../config */ "./src/javascript/config.js").isBinaryApp;
 
 var VirtualAccOpening = function () {
@@ -36349,7 +36385,6 @@ var VirtualAccOpening = function () {
         BinarySocket.send({ residence_list: 1 }).then(function (response) {
             return handleResidenceList(response.residence_list);
         });
-
         bindValidation();
         FormManager.handleSubmit({
             form_selector: form,
@@ -36369,7 +36404,6 @@ var VirtualAccOpening = function () {
                 }));
             });
             $residence.html($options_with_disabled.html());
-
             BinarySocket.wait('website_status').then(function (response) {
                 return handleWebsiteStatus(response.website_status, $residence);
             });
@@ -36382,6 +36416,8 @@ var VirtualAccOpening = function () {
         var website_status = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         var $residence = arguments[1];
 
+        var consent_checkbox = document.getElementById('consent_checkbox');
+        var email_consent = document.getElementById('email_consent');
         if (!website_status || Utility.isEmptyObject(website_status)) return;
         var clients_country = website_status.clients_country;
 
@@ -36395,6 +36431,23 @@ var VirtualAccOpening = function () {
                 return SelectMatcher(params, data);
             }
         }).setVisibility(1);
+
+        var residence_dropdown = document.getElementById('residence');
+        if (!isEuCountrySelected(residence_dropdown.value)) {
+            email_consent.classList.add('hide-product-checkbox');
+            consent_checkbox.classList.add('hide-product-checkbox');
+        }
+        residence_dropdown.onchange = function () {
+            var updated_selected_value = document.getElementById('residence').value;
+            var eu_country = isEuCountrySelected(updated_selected_value);
+            if (eu_country) {
+                email_consent.classList.remove('hide-product-checkbox');
+                consent_checkbox.classList.remove('hide-product-checkbox');
+            } else {
+                email_consent.classList.add('hide-product-checkbox');
+                consent_checkbox.classList.add('hide-product-checkbox');
+            }
+        };
     };
 
     var bindValidation = function bindValidation() {
@@ -36583,7 +36636,7 @@ var WelcomePage = function () {
     var onDOptions = function onDOptions() {
         if (is_virtual && upgrade_info.can_upgrade_to.length) {
             if (getCanUpgrade('svg')) {
-                BinaryPjax.load(Client.defaultRedirectUrl());
+                BinaryPjax.load(urlFor('trading') + '?market=forex&formname=risefall');
                 return;
             }
             if (getCanUpgrade('maltainvest')) {
