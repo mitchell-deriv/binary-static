@@ -29,7 +29,7 @@ const DigitalOptions = (() => {
     const getCanUpgrade = (upgrade_type,  { can_upgrade_to } = upgrade_info) => can_upgrade_to.includes(upgrade_type);
 
     const onLoad = () => {
-        BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(() => {
+        BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then((resp) => {
             init();
             
             if (Client.hasAccountType('real')) {
@@ -42,9 +42,9 @@ const DigitalOptions = (() => {
             financial.addEventListener('click', onFinancials);
         });
     };
-
+    
     const onSynthethics = () => {
-        BinaryPjax.load(Client.defaultRedirectUrl());
+        BinaryPjax.load(`${urlFor('trading')}?market=synthetic-indices&formname=risefall&underlying=1HZ10V`);
     };
 
     const onFinancials = () => {
@@ -54,7 +54,7 @@ const DigitalOptions = (() => {
                 return;
             }
             if (getCanUpgrade('maltainvest')){
-                BinaryPjax.load(Client.defaultRedirectUrl());
+                BinaryPjax.load(`${urlFor('trading')}?market=forex&formname=risefall`);
                 return;
             }
             if (getCanUpgrade('iom') && (is_uk && is_unwelcome_uk)) BinaryPjax.load(urlFor('/user/metatrader'));

@@ -71,7 +71,7 @@ const WelcomePage = (() => {
     const onDOptions = () => {
         if (is_virtual && upgrade_info.can_upgrade_to.length){
             if (getCanUpgrade('svg')) {
-                BinaryPjax.load(Client.defaultRedirectUrl());
+                BinaryPjax.load(`${urlFor('trading')}?market=forex&formname=risefall`);
                 return;
             }
             if (getCanUpgrade('maltainvest')) {
