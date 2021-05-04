@@ -29,9 +29,9 @@ const DigitalOptions = (() => {
     const getCanUpgrade = (upgrade_type,  { can_upgrade_to } = upgrade_info) => can_upgrade_to.includes(upgrade_type);
 
     const onLoad = () => {
-        BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then((resp) => {
+        BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(() => {
             init();
-            
+
             if (Client.hasAccountType('real')) {
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
