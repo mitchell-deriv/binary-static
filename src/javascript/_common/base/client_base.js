@@ -240,6 +240,8 @@ const ClientBase = (() => {
     const getMT5AccountDisplays = (market_type, sub_account_type, is_demo) => {
         // needs to be declared inside because of localize
         // TODO: handle swap_free when ready
+
+        const account_market_type = market_type === 'synthetic' ? 'gaming' : market_type;
         const obj_display = {
             gaming: {
                 financial: {
@@ -260,7 +262,7 @@ const ClientBase = (() => {
         };
 
         // returns e.g. { short: 'Synthetic', full: 'Demo Synthetic' }
-        return obj_display[market_type][sub_account_type] || localize('MT5');
+        return obj_display[account_market_type][sub_account_type] || localize('MT5');
     };
 
     const getBasicUpgradeInfo = () => {
@@ -399,7 +401,7 @@ const ClientBase = (() => {
     const isOptionsBlocked = () => {
         const options_blocked_countries = ['au'];
         const country = State.getResponse('authorize.country');
-        
+
         return options_blocked_countries.includes(country);
     };
 
