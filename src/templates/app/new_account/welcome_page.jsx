@@ -15,7 +15,7 @@ const WelcomePage = () => {
         {
             icon_list: ['images/pages/welcome/doptions.svg'],
             title    : it.L('[_1]Digital Options[_1]','<strong>', '</strong>'),
-            desc     : it.L('Earn [_1]fixed returns[_2] by [_3]risking only[_4] what you put in', '<strong>', '</strong>', '<strong>', '</strong>'),
+            desc     : it.L('Earn [_1]fixed returns[_2] by [_3]risking only[_4] what you put in.', '<strong>', '</strong>', '<strong>', '</strong>'),
             url      : it.url_for('trading'),
             action_id: 'd_ptions',
         },
