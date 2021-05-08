@@ -1971,7 +1971,9 @@ body #not_authenticated_financial ul.checked > li {
   margin-top: 3rem;
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap; }
   @media (max-width: 480px) {
     .digital-options-container {
       display: block; } }

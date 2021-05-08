@@ -36081,7 +36081,7 @@ var DigitalOptions = function () {
                 BinaryPjax.load(urlFor('/user/metatrader'));
                 return;
             }
-            if (getCanUpgrade('maltainvest')) {
+            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')) {
                 BinaryPjax.load(urlFor('trading') + '?market=forex&formname=risefall');
                 return;
             }
@@ -36631,7 +36631,7 @@ var WelcomePage = function () {
         BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(function () {
             init();
 
-            if (Client.hasAccountType('real') || is_au) {
+            if (Client.hasAccountType('real')) {
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
             }
@@ -36659,7 +36659,7 @@ var WelcomePage = function () {
                 BinaryPjax.load(urlFor('/user/metatrader'));
                 return;
             }
-            if (getCanUpgrade('maltainvest')) {
+            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')) {
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 return;
             }
@@ -36675,7 +36675,7 @@ var WelcomePage = function () {
                 BinaryPjax.load(urlFor('trading') + '?market=forex&formname=risefall');
                 return;
             }
-            if (getCanUpgrade('maltainvest')) {
+            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')) {
                 BinaryPjax.load(urlFor('new_account/digital_options'));
                 return;
             }
