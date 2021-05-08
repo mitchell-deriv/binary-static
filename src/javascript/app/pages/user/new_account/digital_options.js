@@ -53,7 +53,7 @@ const DigitalOptions = (() => {
                 BinaryPjax.load(urlFor('/user/metatrader'));
                 return;
             }
-            if (getCanUpgrade('maltainvest')){
+            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')){
                 BinaryPjax.load(`${urlFor('trading')}?market=forex&formname=risefall`);
                 return;
             }

@@ -12,6 +12,7 @@ const WelcomePage = (() => {
         is_virtual,
         upgrade_info,
         is_uk,
+        is_au,
         is_unwelcome_uk,
         cfd,
         d_options,
@@ -22,6 +23,7 @@ const WelcomePage = (() => {
         is_virtual            = Client.get('is_virtual');
         el_welcome_container  = getElementById('welcome_container');
         is_uk                 = Client.get('residence') === 'gb';
+        is_au                 = Client.get('residence') === 'au';
         is_unwelcome_uk       = Client.isUnwelcomeUk();
         not_sure              = getElementById('default');
         cfd                   = getElementById('cfd');
@@ -38,6 +40,8 @@ const WelcomePage = (() => {
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
             }
+            if (is_au) BinaryPjax.load(urlFor('/user/metatrader'));
+
             not_sure.addEventListener('click', onNotSure);
 
             cfd.addEventListener('click', onCFD);
@@ -58,7 +62,7 @@ const WelcomePage = (() => {
                 BinaryPjax.load(urlFor('/user/metatrader'));
                 return;
             }
-            if (getCanUpgrade('maltainvest')){
+            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')){
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 return;
             }
@@ -74,7 +78,7 @@ const WelcomePage = (() => {
                 BinaryPjax.load(`${urlFor('trading')}?market=forex&formname=risefall`);
                 return;
             }
-            if (getCanUpgrade('maltainvest')) {
+            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')) {
                 BinaryPjax.load(urlFor('new_account/digital_options'));
                 return;
             }
