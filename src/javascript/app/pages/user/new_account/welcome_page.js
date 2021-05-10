@@ -63,7 +63,7 @@ const WelcomePage = (() => {
                 return;
             }
             if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')){
-                BinaryPjax.load(Client.defaultRedirectUrl());
+                BinaryPjax.load(urlFor('/user/metatrader'));
                 return;
             }
             if (getCanUpgrade('iom') && (is_uk && is_unwelcome_uk)) BinaryPjax.load(urlFor('/user/metatrader'));
