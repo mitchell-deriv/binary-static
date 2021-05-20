@@ -11750,9 +11750,16 @@ var Menu = function () {
         }
     };
 
+    var makeMobileMenuOnResize = function makeMobileMenuOnResize() {
+        $(window).resize(function () {
+            makeMobileMenu();
+        });
+    };
+
     return {
         init: init,
-        makeMobileMenu: makeMobileMenu
+        makeMobileMenu: makeMobileMenu,
+        makeMobileMenuOnResize: makeMobileMenuOnResize
     };
 }();
 
@@ -11928,6 +11935,7 @@ var Page = function () {
             Footer.onLoad();
             Language.setCookie();
             Menu.makeMobileMenu();
+            Menu.makeMobileMenuOnResize();
             updateLinksURL('body');
             recordAffiliateExposure();
             endpointNotification();
@@ -26927,7 +26935,6 @@ var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ ".
     To handle onfido unsupported country, we handle the functions separately,
     the name of the functions will be original name + uns abbreviation of `unsupported`
 */
-
 var Authenticate = function () {
     var is_any_upload_failed = false;
     var is_any_upload_failed_uns = false;
@@ -27780,9 +27787,15 @@ var Authenticate = function () {
                                                     }) ? {
                                                         country: country_code
                                                     } : false
-                                                }
+                                                },
+                                                useLiveDocumentCapture: true
                                             }
-                                        }, 'face']
+                                        }, {
+                                            type: 'face',
+                                            options: {
+                                                useLiveDocumentCapture: true
+                                            }
+                                        }]
                                     });
                                     $('#authentication_loading').setVisibility(0);
                                 } catch (err) {
