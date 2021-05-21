@@ -497,7 +497,7 @@ button .barspinner.white {
         max-width: 220px;
     }
     .hide-product-checkbox {
-        display: none;
+        visibility: hidden !important;
     }
 }
 
