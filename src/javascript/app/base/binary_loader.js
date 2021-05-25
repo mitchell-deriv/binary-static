@@ -6,7 +6,6 @@ const NetworkMonitor = require('./network_monitor');
 const Page = require('./page');
 const BinarySocket = require('./socket');
 const ContentVisibility = require('../common/content_visibility');
-const DerivBanner = require('../common/deriv_banner');
 const GTM = require('../../_common/base/gtm');
 const Login = require('../../_common/base/login');
 const LiveChat = require('../../_common/base/livechat');
@@ -42,7 +41,6 @@ const BinaryLoader = (() => {
 
         Client.init();
         NetworkMonitor.init();
-        DerivBanner.chooseBanner();
         container = getElementById('content-holder');
         container.addEventListener('binarypjax:before', beforeContentChange);
         window.addEventListener('beforeunload', beforeContentChange);
@@ -109,6 +107,7 @@ const BinaryLoader = (() => {
         not_authenticated: () => localize('This page is only available to logged out clients.'),
         no_mf            : () => localize('Sorry, but binary options trading is not available in your financial account.'),
         options_blocked  : () => localize('Sorry, but binary options trading is not available in your country.'),
+        residence_blocked: () => localize('Sorry, this page is not available in your country of residence.'),
     };
 
     const loadHandler = (this_page) => {
@@ -141,12 +140,22 @@ const BinaryLoader = (() => {
             loadActiveScript(config);
         }
         if (config.no_mf && Client.isLoggedIn() && Client.isAccountOfType('financial')) {
-            BinarySocket.wait('authorize').then(() => displayMessage(error_messages.no_mf()));
+            BinarySocket.wait('authorize').then(() => {
+                if (config.msg_residence_blocked) {
+                    displayMessage(error_messages.residence_blocked());
+                } else {
+                    displayMessage(error_messages.no_mf());
+                }
+            });
         }
 
         BinarySocket.wait('authorize').then(() => {
             if (config.no_blocked_country && Client.isLoggedIn() && Client.isOptionsBlocked()) {
-                displayMessage(error_messages.options_blocked());
+                if (config.msg_residence_blocked) {
+                    displayMessage(error_messages.residence_blocked());
+                } else {
+                    displayMessage(error_messages.options_blocked());
+                }
             }
         });
 
@@ -167,7 +176,8 @@ const BinaryLoader = (() => {
     };
 
     const displayMessage = (localized_message) => {
-        const content = container.querySelector('#content .container');
+        const content = container.querySelector('#content');
+
         if (!content) {
             return;
         }
