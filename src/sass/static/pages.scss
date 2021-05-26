@@ -1388,6 +1388,53 @@ body #not_authenticated_financial ul.checked > li {
 }
 
 .welcome-content {
+    a:hover {
+        text-decoration: none;
+    }
+    &-container {
+        margin: 0 auto;
+        width: 80%;
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+        }
+    }
+    &-box {
+        max-height: 86px;
+        display: flex;
+        flex-direction: row;
+        border-radius: 9px;
+        margin-top: 10px;
+
+        &-desc {
+            overflow: hidden;
+            text-align: left;
+            margin-left: 15px;
+            width: 85%;
+            font-weight: 500;
+
+            @media only screen and (max-width: 576px) {
+                font-size: smaller;
+            }
+
+            p:first-of-type {
+                margin-top: 1em;
+            }
+            p {
+                margin: 0.4em 0;
+                line-height: 1.2em;
+            }
+        }
+        &-arrow {
+            position: relative;
+            width: 15%;
+
+            img {
+                position: absolute;
+                top: 50%;
+                right: 20%;
+            }
+        }
+    }
     .box-grid .box {
         display: flex;
         flex-direction: column;

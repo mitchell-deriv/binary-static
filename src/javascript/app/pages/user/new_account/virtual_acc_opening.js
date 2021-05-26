@@ -15,6 +15,7 @@ const urlFor                   = require('../../../../_common/url').urlFor;
 const Utility                  = require('../../../../_common/utility');
 const isEuCountrySelected      = require('../../../../_common/utility').isEuCountrySelected;
 const isBinaryApp              = require('../../../../config').isBinaryApp;
+const ClientBase               = require('../../../../_common/base/client_base');
 
 const VirtualAccOpening = (() => {
     const form = '#virtual-form';
@@ -102,7 +103,7 @@ const VirtualAccOpening = (() => {
         const req = [
             { selector: '#client_password', validations: ['req', 'password'] },
 
-            { selector: '#residence' },
+            { selector: '#residence' , validations: ['req'] },
             { selector: '#email_consent' },
             { request_field: 'utm_source',          value: TrafficSource.getSource(utm_data) },
             { request_field: 'new_account_virtual', value: 1 },
@@ -135,12 +136,13 @@ const VirtualAccOpening = (() => {
                     LocalStore.remove('signup_device');
                     BinarySocket.send({ get_account_status: 1 }).then((account_status) => {
                         const is_unwelcome_uk = account_status.get_account_status.status.some(status => status === 'unwelcome') && (/gb/.test(residence));
+                        const upgrade_info    = ClientBase.getBasicUpgradeInfo();
                         Client.processNewAccount({
                             email       : new_account.email,
                             loginid     : new_account.client_id,
                             token       : new_account.oauth_token,
                             is_virtual  : true,
-                            redirect_url: is_unwelcome_uk ? urlFor('new_account/realws') : urlFor('new_account/welcome'),
+                            redirect_url: getRedirectUrl(is_unwelcome_uk, residence, upgrade_info),
                         });
                     });
                 }
@@ -173,6 +175,14 @@ const VirtualAccOpening = (() => {
         }
     };
 
+    const getRedirectUrl = (is_unwelcome_uk, residence,  upgrade_info) => {
+
+        const { can_upgrade_to } = upgrade_info;
+        if (is_unwelcome_uk) return urlFor('new_account/realws');
+        if (can_upgrade_to.includes('svg')) return urlFor('new_account/welcomecr');
+        
+        return urlFor('new_account/welcome');
+    };
     const showFormError = (message, url) => {
         $('#virtual-form').html($('<p/>', { html: Utility.template(message, [urlFor(url)]) }));
     };
