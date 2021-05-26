@@ -11,9 +11,6 @@ const WelcomePageCr = (() => {
     let el_welcome_container,
         is_virtual,
         upgrade_info,
-        is_uk,
-        is_au,
-        is_unwelcome_uk,
         cfd,
         d_options,
         not_sure;
@@ -22,9 +19,6 @@ const WelcomePageCr = (() => {
         upgrade_info          = ClientBase.getBasicUpgradeInfo();
         is_virtual            = Client.get('is_virtual');
         el_welcome_container  = getElementById('welcome_container');
-        is_uk                 = Client.get('residence') === 'gb';
-        is_au                 = Client.get('residence') === 'au';
-        is_unwelcome_uk       = Client.isUnwelcomeUk();
         not_sure              = getElementById('default');
         cfd                   = getElementById('cfd');
         d_options             = getElementById('d_ptions');
@@ -40,8 +34,6 @@ const WelcomePageCr = (() => {
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
             }
-            if (is_au) BinaryPjax.load(urlFor('/user/metatrader'));
-
             not_sure.addEventListener('click', onNotSure);
 
             cfd.addEventListener('click', onCFD);
@@ -51,22 +43,14 @@ const WelcomePageCr = (() => {
     };
 
     const onNotSure = () => {
-        if (getCanUpgrade('iom') || (is_uk && is_unwelcome_uk)){
-            BinaryPjax.load(urlFor('/new_account/realws'));
-        } else { BinaryPjax.load(Client.defaultRedirectUrl()); }
+        BinaryPjax.load(Client.defaultRedirectUrl());
     };
 
     const onCFD = () => {
         if (is_virtual && upgrade_info.can_upgrade_to.length) {
             if (getCanUpgrade('svg')) {
                 BinaryPjax.load(urlFor('/user/metatrader'));
-                return;
             }
-            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')){
-                BinaryPjax.load(urlFor('/user/metatrader'));
-                return;
-            }
-            if (getCanUpgrade('iom') && (is_uk && is_unwelcome_uk)) BinaryPjax.load(urlFor('/user/metatrader'));
         } else {
             BinaryPjax.load(Client.defaultRedirectUrl());
         }
@@ -76,13 +60,7 @@ const WelcomePageCr = (() => {
         if (is_virtual && upgrade_info.can_upgrade_to.length){
             if (getCanUpgrade('svg')) {
                 BinaryPjax.load(`${urlFor('trading')}?market=forex&formname=risefall`);
-                return;
             }
-            if (getCanUpgrade('maltainvest') || getCanUpgrade('malta')) {
-                BinaryPjax.load(urlFor('new_account/digital_options'));
-                return;
-            }
-            if (getCanUpgrade('iom') && (is_uk && is_unwelcome_uk)) BinaryPjax.load(urlFor('/new_account/realws'));
         } else {
             BinaryPjax.load(Client.defaultRedirectUrl());
         }

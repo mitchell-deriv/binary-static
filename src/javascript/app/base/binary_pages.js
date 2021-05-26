@@ -136,7 +136,7 @@ const pages_config = {
     two_factor_authentication: { module: TwoFactorAuthentication,    is_authenticated: true },
     virtualws                : { module: VirtualAccOpening,          not_authenticated: true },
     welcome                  : { module: WelcomePage,                is_authenticated: true, only_virtual: true },
-    welcome_cr               : { module: WelcomePageCr,              is_authenticated: true, only_virtual: true },
+    welcomecr                : { module: WelcomePageCr,              is_authenticated: true, only_virtual: true },
     withdrawws               : { module: PaymentAgentWithdraw,       is_authenticated: true, only_real: true },
 
     'affiliate-ib'           : { module: AffiliatesIBLanding },
