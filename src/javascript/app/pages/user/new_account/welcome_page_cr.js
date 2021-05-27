@@ -34,6 +34,9 @@ const WelcomePageCr = (() => {
                 BinaryPjax.load(Client.defaultRedirectUrl());
                 showLoadingImage(el_welcome_container, 'dark');
             }
+            if (!getCanUpgrade('svg')) {
+                BinaryPjax.load(Client.defaultRedirectUrl());
+            }
             not_sure.addEventListener('click', onNotSure);
 
             cfd.addEventListener('click', onCFD);
