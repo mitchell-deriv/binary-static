@@ -6,21 +6,23 @@ const WelcomePageCr = () => {
     const dropdown = 'images/pages/welcome/ddown.svg';
     const options = [
         {
-            icon_list: ['images/pages/welcome/cfd.svg'],
-            title    : it.L('[_1]CFD[_2]','<strong>', '</strong>'),
-            desc     : it.L('[_1]Maximise returns[_2] by [_3]risking more[_4] than you put in.', '<strong>', '</strong>','<strong>', '</strong>'),
-            url      : it.url_for('user/metatrader'),
-            action_id: 'cfd',
+            icon       : 'images/pages/welcome/cfd.svg',
+            title      : it.L('[_1]CFD[_2]','<strong>', '</strong>'),
+            desc       : it.L('[_1]Maximise returns[_2] by [_3]risking more[_4] than you put in.', '<strong>', '</strong>','<strong>', '</strong>'),
+            url        : it.url_for('user/metatrader'),
+            action_id  : 'cfd',
+            sub_options: ['Forex', 'Synthetics', 'Stocks and indices', 'Cryptocurrencies', 'Commodities'],
         },
         {
-            icon_list: ['images/pages/welcome/doptions.svg'],
-            title    : it.L('[_1]Digital Options[_1]','<strong>', '</strong>'),
-            desc     : it.L('Earn [_1]fixed returns[_2] by [_3]risking only[_4] what you put in.', '<strong>', '</strong>', '<strong>', '</strong>'),
-            url      : it.url_for('trading'),
-            action_id: 'd_ptions',
+            icon       : 'images/pages/welcome/doptions.svg',
+            title      : it.L('[_1]Digital Options[_1]','<strong>', '</strong>'),
+            desc       : it.L('Earn [_1]fixed returns[_2] by [_3]risking only[_4] what you put in.', '<strong>', '</strong>', '<strong>', '</strong>'),
+            url        : it.url_for('trading'),
+            action_id  : 'd_ptions',
+            sub_options: ['Forex', 'Synthetics', 'Stocks and indices', 'Cryptocurrencies', 'Commodities'],
         },
         {
-            icon_list: ['images/pages/welcome/notsure.svg'],
+            icon     : 'images/pages/welcome/notsure.svg',
             title    : it.L('[_1]Not Sure?[_1]' ,'<strong>', '</strong>'),
             desc     : it.L('Let us introduce you to trading on Binary.'),
             url      : it.url_for('trading'),
@@ -53,16 +55,21 @@ const RenderOption = ({ option, dropdown }) => (
             href='javascript:;'
         >
             <div className='welcome-content-box-icon-container'>
-                {option.icon_list.map((icon) =>
-                    <img key={icon} className='welcome-content-box-icon' src={it.url_for(icon)} />
-                )}
+                <img key={option.icon} className='welcome-content-box-icon' src={it.url_for(option.icon)} />
             </div>
             <div className='welcome-content-box-desc'>
-                <p id='upgrade_text' className='welcome-content-title'>{option.title}</p>
+                <p id='upgrade_text' className={`${option.action_id}`}>{option.title}</p>
                 <p >{option.desc}</p>
+                <div className='welcome-content-box-sub-options'>
+                    {option.sub_options && option.sub_options.map((icon) =>
+                        <span key={icon} alt={icon}>{icon}</span>
+                    )}
+                </div>
             </div>
             <div className='welcome-content-box-arrow'>
-                <img  src={it.url_for(dropdown)} />
+                <div className='welcome-content-box-arrow-image'>
+                    <img  src={it.url_for(dropdown)} />
+                </div>
             </div>
         </a>
     </div>

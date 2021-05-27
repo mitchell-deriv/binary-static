@@ -1401,6 +1401,7 @@ body #not_authenticated_financial ul.checked > li {
     &-box {
         max-height: 86px;
         display: flex;
+        flex-wrap: wrap;
         flex-direction: row;
         border-radius: 9px;
         margin-top: 10px;
@@ -1409,29 +1410,40 @@ body #not_authenticated_financial ul.checked > li {
             overflow: hidden;
             text-align: left;
             margin-left: 15px;
-            width: 85%;
+            width: 80%;
             font-weight: 500;
 
             @media only screen and (max-width: 576px) {
                 font-size: smaller;
             }
 
-            p:first-of-type {
-                margin-top: 1em;
-            }
             p {
                 margin: 0.4em 0;
                 line-height: 1.2em;
             }
+            p.default:first-of-type {
+                margin-top: 1em;
+            }
+        }
+        &-sub-options {
+            width: 100%;
+            font-size: 10px;
+            color: $COLOR_GRAY_SUB;
+
+            span {
+                padding: 0 0.5rem;
+                border-left: 0.5px solid $COLOR_GRAY_SUB;
+            }
         }
         &-arrow {
+            width: 5%;
             position: relative;
-            width: 15%;
 
-            img {
-                position: absolute;
-                top: 50%;
-                right: 20%;
+            &-image {
+                img {
+                    position: absolute;
+                    top: 50%;
+                }
             }
         }
     }
