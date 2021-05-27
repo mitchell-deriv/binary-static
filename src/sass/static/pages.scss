@@ -1414,7 +1414,11 @@ body #not_authenticated_financial ul.checked > li {
             font-weight: 500;
 
             @media only screen and (max-width: 576px) {
-                font-size: smaller;
+                font-size: 13px;
+                margin-top: 0.3rem;
+                width: 70%;
+                word-wrap: break-word;
+                margin-left: 8px;
             }
 
             p {
@@ -1429,10 +1433,16 @@ body #not_authenticated_financial ul.checked > li {
             width: 100%;
             font-size: 10px;
             color: $COLOR_GRAY_SUB;
+            @media only screen and (max-width: 576px) {
+                font-size: xx-small;
+            }
 
             span {
                 padding: 0 0.5rem;
                 border-left: 0.5px solid $COLOR_GRAY_SUB;
+                @media only screen and (max-width: 576px) {
+                    padding: 0 0.2rem;
+                }
             }
         }
         &-arrow {

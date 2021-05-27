@@ -19,7 +19,7 @@ const WelcomePageCr = () => {
             desc       : it.L('Earn [_1]fixed returns[_2] by [_3]risking only[_4] what you put in.', '<strong>', '</strong>', '<strong>', '</strong>'),
             url        : it.url_for('trading'),
             action_id  : 'd_ptions',
-            sub_options: ['Forex', 'Synthetics', 'Stocks and indices', 'Cryptocurrencies', 'Commodities'],
+            sub_options: ['Forex', 'Synthetics', 'Stocks and indices', 'Commodities'],
         },
         {
             icon     : 'images/pages/welcome/notsure.svg',
