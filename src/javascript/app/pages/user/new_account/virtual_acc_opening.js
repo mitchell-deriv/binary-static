@@ -181,7 +181,10 @@ const VirtualAccOpening = (() => {
 
         const { can_upgrade_to } = upgrade_info;
         if (is_unwelcome_uk) return urlFor('new_account/realws');
-        if (can_upgrade_to.includes('svg')) return urlFor('new_account/welcomecr');
+        if (can_upgrade_to.includes('svg') && residence !== 'au') {
+            return urlFor('new_account/welcomecr');
+        }
+        if (residence === 'au') return urlFor('user/metatrader');
         
         return urlFor('new_account/welcome');
     };
