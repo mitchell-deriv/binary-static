@@ -8,7 +8,7 @@ const urlFor           = require('../../../../_common/url').urlFor;
 
 const WelcomePageCr = (() => {
 
-    let el_welcome_container,
+    let welcome_container,
         is_virtual,
         upgrade_info,
         cfd,
@@ -18,7 +18,7 @@ const WelcomePageCr = (() => {
     const init = () => {
         upgrade_info          = ClientBase.getBasicUpgradeInfo();
         is_virtual            = Client.get('is_virtual');
-        el_welcome_container  = getElementById('welcome_container');
+        welcome_container     = getElementById('welcome_container');
         not_sure              = getElementById('default');
         cfd                   = getElementById('cfd');
         d_options             = getElementById('d_ptions');
@@ -32,24 +32,24 @@ const WelcomePageCr = (() => {
 
             if (Client.hasAccountType('real')) {
                 BinaryPjax.load(Client.defaultRedirectUrl());
-                showLoadingImage(el_welcome_container, 'dark');
+                showLoadingImage(welcome_container, 'dark');
             }
             if (!getCanUpgrade('svg')) {
                 BinaryPjax.load(Client.defaultRedirectUrl());
             }
-            not_sure.addEventListener('click', onNotSure);
+            not_sure.addEventListener('click', onClickNotSure);
 
-            cfd.addEventListener('click', onCFD);
+            cfd.addEventListener('click', onClickCFD);
 
-            d_options.addEventListener('click', onDOptions);
+            d_options.addEventListener('click', onClickDigitalOptions);
         });
     };
 
-    const onNotSure = () => {
+    const onClickNotSure = () => {
         BinaryPjax.load(Client.defaultRedirectUrl());
     };
 
-    const onCFD = () => {
+    const onClickCFD = () => {
         if (is_virtual && upgrade_info.can_upgrade_to.length) {
             if (getCanUpgrade('svg')) {
                 BinaryPjax.load(urlFor('/user/metatrader'));
@@ -59,7 +59,7 @@ const WelcomePageCr = (() => {
         }
     };
 
-    const onDOptions = () => {
+    const onClickDigitalOptions = () => {
         if (is_virtual && upgrade_info.can_upgrade_to.length){
             if (getCanUpgrade('svg')) {
                 BinaryPjax.load(`${urlFor('trading')}?market=forex&formname=risefall`);
@@ -70,9 +70,9 @@ const WelcomePageCr = (() => {
     };
     
     const onUnload = () => {
-        cfd.removeEventListener('click', onCFD);
-        d_options.removeEventListener('click', onDOptions);
-        not_sure.removeEventListener('click', onNotSure);
+        cfd.removeEventListener('click', onClickCFD);
+        d_options.removeEventListener('click', onClickDigitalOptions);
+        not_sure.removeEventListener('click', onClickNotSure);
     };
 
     return {
