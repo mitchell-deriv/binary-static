@@ -10161,7 +10161,7 @@ var FinancialAccOpening = __webpack_require__(/*! ../pages/user/new_account/fina
 var RealAccOpening = __webpack_require__(/*! ../pages/user/new_account/real_acc_opening */ "./src/javascript/app/pages/user/new_account/real_acc_opening.js");
 var VirtualAccOpening = __webpack_require__(/*! ../pages/user/new_account/virtual_acc_opening */ "./src/javascript/app/pages/user/new_account/virtual_acc_opening.js");
 var WelcomePage = __webpack_require__(/*! ../pages/user/new_account/welcome_page */ "./src/javascript/app/pages/user/new_account/welcome_page.js");
-var WelcomePageCr = __webpack_require__(/*! ../pages/user/new_account/welcome_page_cr */ "./src/javascript/app/pages/user/new_account/welcome_page_cr.js");
+var WelcomePageOnboarding = __webpack_require__(/*! ../pages/user/new_account/welcome_onboarding */ "./src/javascript/app/pages/user/new_account/welcome_onboarding.js");
 var ResetPassword = __webpack_require__(/*! ../pages/user/reset_password */ "./src/javascript/app/pages/user/reset_password.js");
 var TradingResetPassword = __webpack_require__(/*! ../pages/user/trading_reset_password */ "./src/javascript/app/pages/user/trading_reset_password.js");
 var SetCurrency = __webpack_require__(/*! ../pages/user/set_currency */ "./src/javascript/app/pages/user/set_currency.js");
@@ -10253,7 +10253,7 @@ var pages_config = {
     two_factor_authentication: { module: TwoFactorAuthentication, is_authenticated: true },
     virtualws: { module: VirtualAccOpening, not_authenticated: true },
     welcome: { module: WelcomePage, is_authenticated: true, only_virtual: true },
-    welcomecr: { module: WelcomePageCr, is_authenticated: true, only_virtual: true },
+    welcome_onboarding: { module: WelcomePageOnboarding, is_authenticated: true, only_virtual: true },
     withdrawws: { module: PaymentAgentWithdraw, is_authenticated: true, only_real: true },
 
     'affiliate-ib': { module: AffiliatesIBLanding },
@@ -36503,8 +36503,8 @@ var State = __webpack_require__(/*! ../../../../_common/storage */ "./src/javasc
 var urlFor = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js").urlFor;
 var Utility = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js");
 var isEuCountrySelected = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").isEuCountrySelected;
-var isBinaryApp = __webpack_require__(/*! ../../../../config */ "./src/javascript/config.js").isBinaryApp;
 var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
+var isBinaryApp = __webpack_require__(/*! ../../../../config */ "./src/javascript/config.js").isBinaryApp;
 
 var VirtualAccOpening = function () {
     var form = '#virtual-form';
@@ -36675,7 +36675,7 @@ var VirtualAccOpening = function () {
 
         if (is_unwelcome_uk) return urlFor('new_account/realws');
         if (can_upgrade_to.includes('svg') && residence !== 'au') {
-            return urlFor('new_account/welcomecr');
+            return urlFor('new_account/welcome_onboarding');
         }
         if (residence === 'au') return urlFor('user/metatrader');
 
@@ -36695,6 +36695,108 @@ var VirtualAccOpening = function () {
 }();
 
 module.exports = VirtualAccOpening;
+
+/***/ }),
+
+/***/ "./src/javascript/app/pages/user/new_account/welcome_onboarding.js":
+/*!*************************************************************************!*\
+  !*** ./src/javascript/app/pages/user/new_account/welcome_onboarding.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javascript/app/base/socket.js");
+var BinaryPjax = __webpack_require__(/*! ../../../base/binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
+var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
+var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
+var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").showLoadingImage;
+var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
+var urlFor = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js").urlFor;
+
+var WelcomePageOnboarding = function () {
+
+    var welcome_container = void 0,
+        is_virtual = void 0,
+        upgrade_info = void 0,
+        cfd = void 0,
+        d_options = void 0,
+        not_sure = void 0;
+
+    var init = function init() {
+        upgrade_info = ClientBase.getBasicUpgradeInfo();
+        is_virtual = Client.get('is_virtual');
+        welcome_container = getElementById('welcome_container');
+        not_sure = getElementById('default');
+        cfd = getElementById('cfd');
+        d_options = getElementById('d_ptions');
+    };
+
+    var getCanUpgrade = function getCanUpgrade(upgrade_type) {
+        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : upgrade_info,
+            can_upgrade_to = _ref.can_upgrade_to;
+
+        return can_upgrade_to.includes(upgrade_type);
+    };
+
+    var onLoad = function onLoad() {
+        BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(function () {
+            init();
+
+            if (Client.hasAccountType('real')) {
+                BinaryPjax.load(Client.defaultRedirectUrl());
+                showLoadingImage(welcome_container, 'dark');
+            }
+            if (!getCanUpgrade('svg')) {
+                BinaryPjax.load(Client.defaultRedirectUrl());
+            }
+            not_sure.addEventListener('click', onClickNotSure);
+
+            cfd.addEventListener('click', onClickCFD);
+
+            d_options.addEventListener('click', onClickDigitalOptions);
+        });
+    };
+
+    var onClickNotSure = function onClickNotSure() {
+        BinaryPjax.load(Client.defaultRedirectUrl());
+    };
+
+    var onClickCFD = function onClickCFD() {
+        if (is_virtual && upgrade_info.can_upgrade_to.length) {
+            if (getCanUpgrade('svg')) {
+                BinaryPjax.load(urlFor('/user/metatrader'));
+            }
+        } else {
+            BinaryPjax.load(Client.defaultRedirectUrl());
+        }
+    };
+
+    var onClickDigitalOptions = function onClickDigitalOptions() {
+        if (is_virtual && upgrade_info.can_upgrade_to.length) {
+            if (getCanUpgrade('svg')) {
+                BinaryPjax.load(urlFor('trading') + '?market=forex&formname=risefall');
+            }
+        } else {
+            BinaryPjax.load(Client.defaultRedirectUrl());
+        }
+    };
+
+    var onUnload = function onUnload() {
+        cfd.removeEventListener('click', onClickCFD);
+        d_options.removeEventListener('click', onClickDigitalOptions);
+        not_sure.removeEventListener('click', onClickNotSure);
+    };
+
+    return {
+        onLoad: onLoad,
+        onUnload: onUnload
+    };
+}();
+
+module.exports = WelcomePageOnboarding;
 
 /***/ }),
 
@@ -36755,108 +36857,6 @@ var WelcomePage = function () {
 }();
 
 module.exports = WelcomePage;
-
-/***/ }),
-
-/***/ "./src/javascript/app/pages/user/new_account/welcome_page_cr.js":
-/*!**********************************************************************!*\
-  !*** ./src/javascript/app/pages/user/new_account/welcome_page_cr.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var BinarySocket = __webpack_require__(/*! ../../../base/socket */ "./src/javascript/app/base/socket.js");
-var BinaryPjax = __webpack_require__(/*! ../../../base/binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
-var Client = __webpack_require__(/*! ../../../base/client */ "./src/javascript/app/base/client.js");
-var getElementById = __webpack_require__(/*! ../../../../_common/common_functions */ "./src/javascript/_common/common_functions.js").getElementById;
-var showLoadingImage = __webpack_require__(/*! ../../../../_common/utility */ "./src/javascript/_common/utility.js").showLoadingImage;
-var ClientBase = __webpack_require__(/*! ../../../../_common/base/client_base */ "./src/javascript/_common/base/client_base.js");
-var urlFor = __webpack_require__(/*! ../../../../_common/url */ "./src/javascript/_common/url.js").urlFor;
-
-var WelcomePageCr = function () {
-
-    var el_welcome_container = void 0,
-        is_virtual = void 0,
-        upgrade_info = void 0,
-        cfd = void 0,
-        d_options = void 0,
-        not_sure = void 0;
-
-    var init = function init() {
-        upgrade_info = ClientBase.getBasicUpgradeInfo();
-        is_virtual = Client.get('is_virtual');
-        el_welcome_container = getElementById('welcome_container');
-        not_sure = getElementById('default');
-        cfd = getElementById('cfd');
-        d_options = getElementById('d_ptions');
-    };
-
-    var getCanUpgrade = function getCanUpgrade(upgrade_type) {
-        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : upgrade_info,
-            can_upgrade_to = _ref.can_upgrade_to;
-
-        return can_upgrade_to.includes(upgrade_type);
-    };
-
-    var onLoad = function onLoad() {
-        BinarySocket.wait('authorize', 'landing_company', 'get_settings', 'get_account_status').then(function () {
-            init();
-
-            if (Client.hasAccountType('real')) {
-                BinaryPjax.load(Client.defaultRedirectUrl());
-                showLoadingImage(el_welcome_container, 'dark');
-            }
-            if (!getCanUpgrade('svg')) {
-                BinaryPjax.load(Client.defaultRedirectUrl());
-            }
-            not_sure.addEventListener('click', onNotSure);
-
-            cfd.addEventListener('click', onCFD);
-
-            d_options.addEventListener('click', onDOptions);
-        });
-    };
-
-    var onNotSure = function onNotSure() {
-        BinaryPjax.load(Client.defaultRedirectUrl());
-    };
-
-    var onCFD = function onCFD() {
-        if (is_virtual && upgrade_info.can_upgrade_to.length) {
-            if (getCanUpgrade('svg')) {
-                BinaryPjax.load(urlFor('/user/metatrader'));
-            }
-        } else {
-            BinaryPjax.load(Client.defaultRedirectUrl());
-        }
-    };
-
-    var onDOptions = function onDOptions() {
-        if (is_virtual && upgrade_info.can_upgrade_to.length) {
-            if (getCanUpgrade('svg')) {
-                BinaryPjax.load(urlFor('trading') + '?market=forex&formname=risefall');
-            }
-        } else {
-            BinaryPjax.load(Client.defaultRedirectUrl());
-        }
-    };
-
-    var onUnload = function onUnload() {
-        cfd.removeEventListener('click', onCFD);
-        d_options.removeEventListener('click', onDOptions);
-        not_sure.removeEventListener('click', onNotSure);
-    };
-
-    return {
-        onLoad: onLoad,
-        onUnload: onUnload
-    };
-}();
-
-module.exports = WelcomePageCr;
 
 /***/ }),
 
