@@ -14,8 +14,8 @@ const State                    = require('../../../../_common/storage').State;
 const urlFor                   = require('../../../../_common/url').urlFor;
 const Utility                  = require('../../../../_common/utility');
 const isEuCountrySelected      = require('../../../../_common/utility').isEuCountrySelected;
-const isBinaryApp              = require('../../../../config').isBinaryApp;
 const ClientBase               = require('../../../../_common/base/client_base');
+const isBinaryApp              = require('../../../../config').isBinaryApp;
 
 const VirtualAccOpening = (() => {
     const form = '#virtual-form';
@@ -182,7 +182,7 @@ const VirtualAccOpening = (() => {
         const { can_upgrade_to } = upgrade_info;
         if (is_unwelcome_uk) return urlFor('new_account/realws');
         if (can_upgrade_to.includes('svg') && residence !== 'au') {
-            return urlFor('new_account/welcomecr');
+            return urlFor('new_account/welcome_onboarding');
         }
         if (residence === 'au') return urlFor('user/metatrader');
         

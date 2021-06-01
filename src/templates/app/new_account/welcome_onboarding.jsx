@@ -1,7 +1,7 @@
 import React from 'react';
 import { SeparatorLine } from '../../_common/components/separator_line.jsx';
 
-const WelcomePageCr = () => {
+const WelcomePageOnboarding = () => {
 
     const dropdown = 'images/pages/welcome/ddown.svg';
     const options = [
@@ -75,4 +75,4 @@ const RenderOption = ({ option, dropdown }) => (
     </div>
 );
   
-export default WelcomePageCr;
+export default WelcomePageOnboarding;

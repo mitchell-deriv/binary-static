@@ -6,7 +6,7 @@ const showLoadingImage = require('../../../../_common/utility').showLoadingImage
 const ClientBase       = require('../../../../_common/base/client_base');
 const urlFor           = require('../../../../_common/url').urlFor;
 
-const WelcomePageCr = (() => {
+const WelcomePageOnboarding = (() => {
 
     let welcome_container,
         is_virtual,
@@ -81,4 +81,4 @@ const WelcomePageCr = (() => {
     };
 })();
 
-module.exports = WelcomePageCr;
+module.exports = WelcomePageOnboarding;
