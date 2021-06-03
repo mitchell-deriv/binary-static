@@ -28329,7 +28329,7 @@ var ChangePassword = function () {
             case 'trading_password':
                 return localize('Please click on the link in the email to reset your trading password.');
             default:
-                return localize('If you have an account with us, we\'ll send you a link to your email in a few minutes to reset your password.');
+                return localize('Please click on the link in the email to reset your binary password.');
         }
     };
 
