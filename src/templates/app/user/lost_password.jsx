@@ -15,7 +15,7 @@ const LostPassword = () => (
             </Fieldset>
         </form>
 
-        <p id='check_spam' className='invisible'>{it.L('If you have an account with us, we\'ll send you a link to your email in a few minutes to reset your password.')}</p>
+        <p id='check_spam' className='invisible'>{it.L('If you don\'t receive the email within the next few minutes, please check your junk/spam folder.')}</p>
     </div>
 );
 
