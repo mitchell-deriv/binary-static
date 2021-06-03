@@ -1531,6 +1531,7 @@ var getLanguage = __webpack_require__(/*! ../language */ "./src/javascript/_comm
 var isMobile = __webpack_require__(/*! ../os_detect */ "./src/javascript/_common/os_detect.js").isMobile;
 var isStorageSupported = __webpack_require__(/*! ../storage */ "./src/javascript/_common/storage.js").isStorageSupported;
 var LocalStore = __webpack_require__(/*! ../storage */ "./src/javascript/_common/storage.js").LocalStore;
+var removeCookies = __webpack_require__(/*! ../storage */ "./src/javascript/_common/storage.js").removeCookies;
 var urlForCurrentDomain = __webpack_require__(/*! ../url */ "./src/javascript/_common/url.js").urlForCurrentDomain;
 var isLoginPages = __webpack_require__(/*! ../utility */ "./src/javascript/_common/utility.js").isLoginPages;
 var TrafficSource = __webpack_require__(/*! ../../app/common/traffic_source */ "./src/javascript/app/common/traffic_source.js");
@@ -1538,6 +1539,7 @@ var getAppId = __webpack_require__(/*! ../../config */ "./src/javascript/config.
 
 var Login = function () {
     var redirectToLogin = function redirectToLogin(reset_password) {
+        removeCookies('hide_guide');
         if (!Client.isLoggedIn() && !isLoginPages() && isStorageSupported(sessionStorage) || reset_password) {
             sessionStorage.setItem('redirect_url', window.location.href);
             window.location.href = loginUrl();
@@ -9960,7 +9962,7 @@ var BinaryLoader = function () {
             return localize('Please [_1]log in[_2] or [_3]sign up[_4] to view this page.', ['<a href="' + 'javascript:;' + '">', '</a>', '<a href="' + urlFor('new-account') + '">', '</a>']);
         },
         only_virtual: function only_virtual() {
-            return localize('Sorry, this feature is available to virtual accounts only.');
+            return localize('This feature is available to virtual accounts only.');
         },
         only_real: function only_real() {
             return localize('This feature is not relevant to virtual-money accounts.');
@@ -9969,13 +9971,13 @@ var BinaryLoader = function () {
             return localize('This page is only available to logged out clients.');
         },
         no_mf: function no_mf() {
-            return localize('Sorry, but binary options trading is not available in your financial account.');
+            return localize('Binary options trading is not available in your financial account.');
         },
         options_blocked: function options_blocked() {
-            return localize('Sorry, but binary options trading is not available in your country.');
+            return localize('Binary options trading is not available in your country.');
         },
         residence_blocked: function residence_blocked() {
-            return localize('Sorry, this page is not available in your country of residence.');
+            return localize('This page is not available in your country of residence.');
         }
     };
 
@@ -10016,6 +10018,9 @@ var BinaryLoader = function () {
                 }
             });
         }
+        if (this_page === 'deactivated-account' && Client.isLoggedIn()) {
+            displayMessage(error_messages.not_deactivated());
+        }
 
         BinarySocket.wait('authorize').then(function () {
             if (config.no_blocked_country && Client.isLoggedIn() && Client.isOptionsBlocked()) {
@@ -10049,6 +10054,7 @@ var BinaryLoader = function () {
         if (!content) {
             return;
         }
+        content.classList.add('container');
 
         var div_container = createElement('div', { class: 'logged_out_title_container', html: Client.isAccountOfType('financial') || Client.isOptionsBlocked() ? '' : content.getElementsByTagName('h1')[0] || '' });
         var div_notice = createElement('p', { class: 'center-text notice-msg', html: localized_message });
@@ -10173,6 +10179,7 @@ var VideoFacility = __webpack_require__(/*! ../pages/user/video_facility */ "./s
 // const Charity            = require('../../static/pages/charity');
 var Contact = __webpack_require__(/*! ../../static/pages/contact */ "./src/javascript/static/pages/contact.js");
 // const Contact2            = require('../../static/pages/contact_2');
+var DeactivatedAccount = __webpack_require__(/*! ../../static/pages/deactivated_account */ "./src/javascript/static/pages/deactivated_account.js");
 var GetStarted = __webpack_require__(/*! ../../static/pages/get_started */ "./src/javascript/static/pages/get_started.js");
 var Home = __webpack_require__(/*! ../../static/pages/home */ "./src/javascript/static/pages/home.js");
 var KeepSafe = __webpack_require__(/*! ../../static/pages/keep_safe */ "./src/javascript/static/pages/keep_safe.js");
@@ -10261,6 +10268,7 @@ var pages_config = {
     'binary-options': { module: GetStarted.BinaryOptions },
     // 'contact-2'              : { module: Contact2 },
     'contract-specifications': { module: TabSelector },
+    'deactivated-account': { module: DeactivatedAccount },
     'get-started': { module: TabSelector },
     'how-to-trade-mt5': { module: TabSelector },
     'ib-faq': { module: StaticPages.IBProgrammeFAQ },
@@ -10685,7 +10693,7 @@ var Client = function () {
 
         if (response.logout !== 1) return;
         removeCookies('login', 'loginid', 'loginid_list', 'email', 'residence', 'settings'); // backward compatibility
-        removeCookies('reality_check', 'affiliate_token', 'affiliate_tracking', 'onfido_token');
+        removeCookies('reality_check', 'affiliate_token', 'affiliate_tracking', 'onfido_token', 'hide_guide');
         // clear elev.io session storage
         sessionStorage.removeItem('_elevaddon-6app');
         sessionStorage.removeItem('_elevaddon-6create');
@@ -14856,7 +14864,6 @@ var Guide = function () {
 
         makeButton();
     };
-
     /*
      *  do not show the guide button if its close (X) has been clicked before
      */
@@ -27672,7 +27679,8 @@ var Authenticate = function () {
     };
 
     var showSuccess = function showSuccess() {
-        BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function () {
+        BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function (response) {
+            authentication_object = response.get_account_status.authentication;
             Header.displayAccountStatus();
             removeButtonLoading();
             $button.setVisibility(0);
@@ -27684,7 +27692,8 @@ var Authenticate = function () {
     };
 
     var showSuccessUns = function showSuccessUns() {
-        BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function () {
+        BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function (response) {
+            authentication_object = response.get_account_status.authentication;
             Header.displayAccountStatus();
             removeButtonLoadingUns();
             $button_uns.setVisibility(0);
@@ -27827,6 +27836,9 @@ var Authenticate = function () {
         var type_pending = type === 'identity' ? 'poa' : 'poi';
         var description_status = status !== 'verified';
 
+        $('#text_verified_' + type_pending + '_required, #text_pending_' + type_pending + '_required').setVisibility(0);
+        $('#button_verified_' + type_pending + '_required, #button_pending_' + type_pending + '_required').setVisibility(0);
+
         if (needs_verification.includes(type)) {
             $('#text_' + status + '_' + type_required + '_required').setVisibility(1);
             $('#button_' + status + '_' + type_required + '_required').setVisibility(1);
@@ -27844,7 +27856,8 @@ var Authenticate = function () {
             onfido.tearDown();
             $('#authentication_loading').setVisibility(1);
             setTimeout(function () {
-                BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function () {
+                BinarySocket.send({ get_account_status: 1 }, { forced: true }).then(function (response) {
+                    authentication_object = response.get_account_status.authentication;
                     $('#msg_personal_details').setVisibility(0);
                     $('#upload_complete').setVisibility(1);
                     Header.displayAccountStatus();
@@ -29165,7 +29178,7 @@ var PortfolioInit = function () {
     var createPortfolioRow = function createPortfolioRow(data, is_first) {
         var new_class = is_first ? '' : 'new';
         var $div = $('<div/>');
-        $div.append($('<tr/>', { class: 'tr-first ' + new_class + ' ' + data.contract_id, id: data.contract_id }).append($('<td/>', { class: 'ref' }).append($('<span ' + GetAppDetails.showTooltip(data.app_id, oauth_apps[data.app_id]) + ' data-balloon-position="right">' + data.transaction_id + '</span>'))).append($('<td/>', { class: 'payout' }).append($('<strong/>', { html: +data.payout ? formatMoney(data.currency, data.payout) : '-' }))).append($('<td/>', { class: 'details', text: data.longcode })).append($('<td/>', { class: 'purchase' }).append($('<strong/>', { html: formatMoney(data.currency, data.buy_price) }))).append($('<td/>', { class: 'indicative' }).append($('<strong/>', { class: 'indicative_price', text: '--.--' }))).append($('<td/>', { class: 'button' }).append($('<button/>', { class: 'button open_contract_details nowrap', contract_id: data.contract_id, text: localize('View') })))).append($('<tr/>', { class: 'tr-desc ' + new_class + ' ' + data.contract_id }).append($('<td/>', { colspan: '6', text: data.longcode })));
+        $div.append($('<tr/>', { class: 'tr-first ' + new_class + ' ' + data.contract_id, id: data.contract_id }).append($('<td/>', { class: 'ref' }).append($('<span ' + GetAppDetails.showTooltip(data.app_id, oauth_apps[data.app_id]) + ' data-balloon-position="right">' + data.transaction_id + '</span>'))).append($('<td/>', { class: 'payout ' + (!data.payout ? 'is_empty' : '') }).append($('<strong/>', { html: +data.payout ? formatMoney(data.currency, data.payout) : '-' }))).append($('<td/>', { class: 'details', text: data.longcode })).append($('<td/>', { class: 'purchase' }).append($('<strong/>', { html: formatMoney(data.currency, data.buy_price) }))).append($('<td/>', { class: 'indicative' }).append($('<strong/>', { class: 'indicative_price', text: '--.--' }))).append($('<td/>', { class: 'button' }).append($('<button/>', { class: 'button open_contract_details nowrap', contract_id: data.contract_id, text: localize('View') })))).append($('<tr/>', { class: 'tr-desc ' + new_class + ' ' + data.contract_id }).append($('<td/>', { colspan: '6', text: data.longcode })));
 
         $('#portfolio-body').prepend($div.html());
     };
@@ -30066,22 +30079,13 @@ var AccountClosure = function () {
 
                                                 case 9:
                                                     el_step_2_submit.setAttribute('disabled', false);
-                                                    _context2.next = 17;
+                                                    _context2.next = 13;
                                                     break;
 
                                                 case 12:
-                                                    el_submit_loading.setVisibility(0);
-                                                    showStep(3);
-                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                    Client.sendLogoutRequest(false, Url.urlFor('deactivated-account'));
 
-                                                    sessionStorage.setItem('closingAccount', 1);
-                                                    setTimeout(function () {
-                                                        // we need to clear all stored client data by performing a logout action and then redirect to home
-                                                        // otherwise it will think that client is still logged in and redirect to trading page
-                                                        Client.sendLogoutRequest(false, Url.urlFor('home'));
-                                                    }, 10000);
-
-                                                case 17:
+                                                case 13:
                                                 case 'end':
                                                     return _context2.stop();
                                             }
@@ -39420,6 +39424,42 @@ var Contact = function () {
 }();
 
 module.exports = Contact;
+
+/***/ }),
+
+/***/ "./src/javascript/static/pages/deactivated_account.js":
+/*!************************************************************!*\
+  !*** ./src/javascript/static/pages/deactivated_account.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Url = __webpack_require__(/*! ../../../javascript/_common/url.js */ "./src/javascript/_common/url.js");
+var Client = __webpack_require__(/*! ../../app/base/client */ "./src/javascript/app/base/client.js");
+var BinaryPjax = __webpack_require__(/*! ../../app/base/binary_pjax */ "./src/javascript/app/base/binary_pjax.js");
+
+var DeactivatedAccount = function () {
+    var onLoad = function onLoad() {
+        var redirect_home = Url.urlFor('home');
+        var redirect_trading = Url.urlFor('trading');
+        setTimeout(function () {
+            if (Client.isLoggedIn()) {
+                BinaryPjax.load(redirect_trading);
+            } else {
+                BinaryPjax.load(redirect_home);
+            }
+        }, 5000);
+    };
+
+    return {
+        onLoad: onLoad
+    };
+}();
+
+module.exports = DeactivatedAccount;
 
 /***/ }),
 
