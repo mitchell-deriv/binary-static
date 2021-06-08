@@ -598,6 +598,10 @@ ul.bullet.gr-row > li {
     display: list-item;
 }
 
+#tax_information_note_toggle {
+    font-weight: bold;
+}
+
 .toggle-arrow {
     &:after {
         content: '';
