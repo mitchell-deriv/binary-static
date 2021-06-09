@@ -9895,6 +9895,8 @@ var BinaryLoader = function () {
 
         localizeForLang(urlLang());
 
+        checkAppidAndQAserver();
+
         Page.showNotificationOutdatedBrowser();
 
         Client.init();
@@ -9905,6 +9907,16 @@ var BinaryLoader = function () {
         container.addEventListener('binarypjax:after', afterContentChange);
         BinaryPjax.init(container, '#content');
         ThirdPartyLinks.init();
+    };
+
+    var checkAppidAndQAserver = function checkAppidAndQAserver() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var qa_server = urlParams.get('qa_server');
+        var app_id = urlParams.get('app_id');
+        if (qa_server && app_id) {
+            localStorage.setItem('config.server_url', qa_server);
+            localStorage.setItem('config.app_id', app_id);
+        }
     };
 
     var beforeContentChange = function beforeContentChange() {
@@ -9978,6 +9990,9 @@ var BinaryLoader = function () {
         },
         residence_blocked: function residence_blocked() {
             return localize('This page is not available in your country of residence.');
+        },
+        not_deactivated: function not_deactivated() {
+            return localize('Page not available, you did not deactivate your account.');
         }
     };
 
@@ -11625,7 +11640,7 @@ var LoggedInHandler = function () {
             // redirect back
             var set_default = true;
             if (redirect_url) {
-                var do_not_redirect = ['trading_reset_passwordws', 'reset_passwordws', 'lost_passwordws', 'change_passwordws', 'home', '404'];
+                var do_not_redirect = ['trading_reset_passwordws', 'reset_passwordws', 'lost_passwordws', 'change_passwordws', 'deactivated-account', 'home', '404'];
                 var reg = new RegExp(do_not_redirect.join('|'), 'i');
                 if (!reg.test(redirect_url) && urlFor('') !== redirect_url) {
                     set_default = false;
