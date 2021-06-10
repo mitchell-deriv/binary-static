@@ -186,8 +186,6 @@
             border-bottom: 1px solid $COLOR_DARK_GRAY;
         }
         tr {
-            position: relative;
-
             .data-anchor-link {
                 display: none;
             }
@@ -972,6 +970,22 @@ body #not_authenticated_financial ul.checked > li {
             color: $COLOR_BLACK;
             border-radius: 0;
         }
+        /** TODO: To re-implement style overrides when upgrading Onfido version
+        .onfido-sdk-ui-Theme-textButton:hover {
+            color: $COLOR_BLACK;
+        }
+        .onfido-sdk-ui-CustomFileInput-container {
+            .onfido-sdk-ui-Theme-button-lg {
+                background: rgb(54, 64, 245);
+            }
+            button {
+                background: transparent;
+
+                &:hover {
+                    background: rgb(92, 108, 255);
+                }
+            }
+        } **/
         input, textarea {
             &:hover, &:focus {
                 outline: 0;
@@ -1037,6 +1051,11 @@ body #not_authenticated_financial ul.checked > li {
         margin: 0 auto;
     }
     .submit-status table {
+
+        @media screen and (max-width: 500px) {
+            font-size: 0.7rem;
+        }
+
         th:not(:last-child) {
             width: 25%;
         }
@@ -1621,13 +1640,71 @@ body #not_authenticated_financial ul.checked > li {
     }
 }
 
+.deactivated-account-content {
+    text-align: center;
+
+    .close-user-account {
+        height: 25vh;
+
+        .msg_main_modal {
+            .notice-msg {
+                background-color: transparent;
+                height: auto;
+                margin: auto;
+
+                img {
+                    width: 4rem;
+                    margin-bottom: 1rem;
+                }
+                p {
+                    font-weight: 500;
+                }
+                h1 {
+                    @media (max-width: 500px) {
+                        font-size: 30px;
+                    }
+                }
+                @media (max-width: 500px) {
+                    width: 90%;
+                }
+            }
+        }
+        @media (max-width: 500px) {
+            margin-bottom: 5rem;
+        }
+    }
+}
+
 .account-closure {
+    .notice-msg-wrapper {
+        background-color: $COLOR_YELLOW;
+        margin-top: 65px;
+    }
+    .notice-msg-text {
+        color: $COLOR_BLACK;
+        overflow: hidden;
+        margin: 0;
+        text-align: center;
+    }
     &-form {
         text-align: left;
         line-height: 40px;
 
-        span {
-            padding-left: 15px;
+        .margin-top-20 {
+            margin-top: 20px;
+        }
+        .textarea-container {
+            display: grid;
+        }
+        p {
+            font-size: 1rem;
+        }
+        textarea {
+            width: 90%;
+            max-width: 350px;
+            height: 80px;
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
     }
     &-subtitle {

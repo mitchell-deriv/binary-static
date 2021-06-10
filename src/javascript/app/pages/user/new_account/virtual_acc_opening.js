@@ -13,6 +13,7 @@ const LocalStore               = require('../../../../_common/storage').LocalSto
 const State                    = require('../../../../_common/storage').State;
 const urlFor                   = require('../../../../_common/url').urlFor;
 const Utility                  = require('../../../../_common/utility');
+const isEuCountrySelected      = require('../../../../_common/utility').isEuCountrySelected;
 const isBinaryApp              = require('../../../../config').isBinaryApp;
 
 const VirtualAccOpening = (() => {
@@ -30,7 +31,6 @@ const VirtualAccOpening = (() => {
     const init = () => {
         $(form).setVisibility(1);
         BinarySocket.send({ residence_list: 1 }).then(response => handleResidenceList(response.residence_list));
-
         bindValidation();
         FormManager.handleSubmit({
             form_selector       : form,
@@ -50,7 +50,6 @@ const VirtualAccOpening = (() => {
                 }));
             });
             $residence.html($options_with_disabled.html());
-
             BinarySocket.wait('website_status').then(response => handleWebsiteStatus(response.website_status, $residence));
         } else {
             $residence.setVisibility(1);
@@ -58,6 +57,8 @@ const VirtualAccOpening = (() => {
     };
 
     const handleWebsiteStatus = (website_status = {}, $residence) => {
+        const email_consent_container = $('#consent_checkbox');
+        const consent_checkbox = $('#email_consent');
         if (!website_status || Utility.isEmptyObject(website_status)) return;
         const clients_country = website_status.clients_country;
 
@@ -73,6 +74,25 @@ const VirtualAccOpening = (() => {
                 },
             })
             .setVisibility(1);
+            
+        const residence_dropdown = $('#residence');
+        if (isEuCountrySelected(residence_dropdown.val())) {
+            consent_checkbox.removeClass('hidden-consent-checkbox');
+            email_consent_container.removeClass('email-consent-container');
+        } else {
+            consent_checkbox.addClass('hidden-consent-checkbox');
+        }
+        residence_dropdown.on('change', () => {
+            const updated_selected_value = $('#residence').val();
+            const eu_country = isEuCountrySelected(updated_selected_value);
+            if (eu_country) {
+                consent_checkbox.removeClass('hidden-consent-checkbox');
+                email_consent_container.removeClass('email-consent-container');
+            } else {
+                consent_checkbox.addClass('hidden-consent-checkbox');
+                email_consent_container.addClass('email-consent-container');
+            }
+        });
     };
 
     const bindValidation = () => {

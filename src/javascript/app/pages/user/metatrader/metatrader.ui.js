@@ -24,15 +24,17 @@ const MetaTraderUI = (() => {
         $templates,
         $form,
         $main_msg,
+        mt5_login_list,
         validations,
         submit,
         topup_demo,
         token,
         current_action_ui;
 
-    const accounts_info = MetaTraderConfig.accounts_info;
-    const actions_info  = MetaTraderConfig.actions_info;
-    const mt5_url       = 'https://trade.mql5.com/trade';
+    const accounts_info   = MetaTraderConfig.accounts_info;
+    const actions_info    = MetaTraderConfig.actions_info;
+    const mt5_url         = 'https://trade.mql5.com/trade';
+    const getAccountsInfo = MetaTraderConfig.getAccountsInfo;
 
     let disabled_signup_types = {
         'real': false,
@@ -57,6 +59,10 @@ const MetaTraderUI = (() => {
         $main_msg    = $container.find('#main_msg');
         $container.find('[class*="act_"]').on('click', populateForm);
 
+        BinarySocket.wait('mt5_login_list').then(() => {
+            mt5_login_list = State.getResponse('mt5_login_list');
+        });
+
         MetaTraderConfig.setMessages($templates.find('#messages'));
 
         validations = MetaTraderConfig.validations();
@@ -72,11 +78,11 @@ const MetaTraderUI = (() => {
         $mt5_web_link.attr('href', `${mt5_url}${query_params}`);
     };
 
-    const populateTradingServers = () => {
+    const populateTradingServers = (acc_type) => {
         const $ddl_trade_server = $form.find('#ddl_trade_server');
 
         $ddl_trade_server.empty();
-        let account_type = newAccountGetType();
+        let account_type = acc_type || newAccountGetType();
         const num_servers = {
             disabled : 0,
             supported: 0,
@@ -85,10 +91,10 @@ const MetaTraderUI = (() => {
 
         State.getResponse('trading_servers').forEach(trading_server => {
             // if server is not added to account type, and in accounts_info we are not storing it with server
-            if (!/\d$/.test(account_type) && !accounts_info[account_type]) {
+            if (!/\d$/.test(account_type) && !getAccountsInfo(account_type)) {
                 account_type += `_${trading_server.id}`;
             }
-            const new_account_info = accounts_info[account_type];
+            const new_account_info = getAccountsInfo(account_type);
             const { market_type, sub_account_type } = new_account_info;
             const { supported_accounts = [] } = trading_server;
             const is_server_supported = isSupportedServer(market_type, sub_account_type, supported_accounts);
@@ -145,7 +151,7 @@ const MetaTraderUI = (() => {
             .sort(sortMt5Accounts)
             .forEach((acc_type) => {
                 if ($list.find(`[value="${acc_type}"]`).length === 0) {
-                    if (accounts_info[acc_type].is_demo) {
+                    if (getAccountsInfo(acc_type).is_demo) {
                         if (!acc_group_demo_set) {
                             $list.append($('<div/>', { class: 'acc-group invisible', id: 'acc_group_demo', text: localize('Demo Accounts') }));
                             acc_group_demo_set = true;
@@ -227,15 +233,15 @@ const MetaTraderUI = (() => {
 
     const updateListItem = (acc_type) => {
         const $acc_item = $list.find(`[value="${acc_type}"]`);
-        $acc_item.find('.mt-type').text(accounts_info[acc_type].short_title);
-        if (accounts_info[acc_type].info) {
-            const server_info = accounts_info[acc_type].info.server_info;
+        $acc_item.find('.mt-type').text(getAccountsInfo(acc_type).short_title);
+        if (getAccountsInfo(acc_type).info) {
+            const server_info = getAccountsInfo(acc_type).info.server_info;
             const region = server_info && server_info.geolocation.region;
             const sequence = server_info && server_info.geolocation.sequence;
-            const is_synthetic = accounts_info[acc_type].market_type === 'gaming';
-            const label_text = server_info ? sequence > 1 ? `${region} ${sequence}` : region : accounts_info[acc_type].info.display_server;
+            const is_synthetic = getAccountsInfo(acc_type).market_type === 'gaming' || getAccountsInfo(acc_type).market_type === 'synthetic';
+            const label_text = server_info ? sequence > 1 ? `${region} ${sequence}` : region : getAccountsInfo(acc_type).info.display_server;
             setMTAccountText();
-            $acc_item.find('.mt-login').text(`(${accounts_info[acc_type].info.display_login})`);
+            $acc_item.find('.mt-login').text(`(${getAccountsInfo(acc_type).info.display_login})`);
             if (
                 server_info &&
                 is_synthetic &&
@@ -255,19 +261,19 @@ const MetaTraderUI = (() => {
                 $acc_item.find('.mt-server').remove();
             }
             $acc_item.setVisibility(1);
-            if (accounts_info[acc_type].is_demo) {
+            if (getAccountsInfo(acc_type).is_demo) {
                 $list.find('#acc_group_demo').setVisibility(1);
             } else {
                 $list.find('#acc_group_real').setVisibility(1);
             }
             if (acc_type === Client.get('mt5_account')) {
                 const mt_balance = Currency.formatMoney(MetaTraderConfig.getCurrency(acc_type),
-                    +accounts_info[acc_type].info.balance);
+                    +getAccountsInfo(acc_type).info.balance);
                 $acc_item.find('.mt-balance').html(mt_balance);
                 $action.find('.mt5-balance').html(mt_balance);
                 const $add_region_btn = $container.find('#btn_add_region');
                 $add_region_btn.setVisibility(
-                    getAvailableServers(false, acc_type).length > 0 && !accounts_info[acc_type].is_demo,
+                    getAvailableServers(false, acc_type).length > 0 && !getAccountsInfo(acc_type).is_demo,
                 );
                 if (disabled_signup_types.real) {
                     $add_region_btn.addClass('button-disabled');
@@ -275,7 +281,7 @@ const MetaTraderUI = (() => {
             }
             // disable MT5 account opening if created all available accounts
             if (Object.keys(accounts_info).every(type =>
-                accounts_info[type].info || !MetaTraderConfig.hasTradeServers(type))) {
+                getAccountsInfo(type).info || !MetaTraderConfig.hasTradeServers(type))) {
                 $container.find('.act_new_account').remove();
             }
 
@@ -339,18 +345,18 @@ const MetaTraderUI = (() => {
             displayAccountDescription(acc_type);
         }
 
-        if (accounts_info[acc_type].info) {
-            const is_demo      = accounts_info[acc_type].is_demo;
-            const is_synthetic = accounts_info[acc_type].market_type === 'gaming';
-            const server_info  = accounts_info[acc_type].info.server_info;
+        if (getAccountsInfo(acc_type).info) {
+            const is_demo      = getAccountsInfo(acc_type).is_demo;
+            const is_synthetic = getAccountsInfo(acc_type).market_type === 'gaming' || getAccountsInfo(acc_type).market_type === 'synthetic';
+            const server_info  = getAccountsInfo(acc_type).info.server_info;
             const region = server_info && server_info.geolocation.region;
             const sequence = server_info && server_info.geolocation.sequence;
-            const label_text = server_info ? sequence > 1 ? `${region} ${sequence}` : region : accounts_info[acc_type].info.display_server;
+            const label_text = server_info ? sequence > 1 ? `${region} ${sequence}` : region : getAccountsInfo(acc_type).info.display_server;
             $detail.find('.real-only').setVisibility(!is_demo);
             // Update account info
             $detail.find('.acc-info div[data]').map(function () {
                 const key     = $(this).attr('data');
-                const info    = accounts_info[acc_type].info[key];
+                const info    = getAccountsInfo(acc_type).info[key];
                 const mapping = {
                     balance      : () => (isNaN(info) ? '' : Currency.formatMoney(MetaTraderConfig.getCurrency(acc_type), +info)),
                     broker       : () => 'Deriv Limited',
@@ -395,8 +401,8 @@ const MetaTraderUI = (() => {
 
     const defaultAction = acc_type => {
         let type = 'new_account';
-        if (accounts_info[acc_type] && accounts_info[acc_type].info) {
-            type = (accounts_info[acc_type].is_demo || Client.get('is_virtual') || getHashValue('token')) ? 'manage_password' : 'cashier';
+        if (getAccountsInfo(acc_type) && getAccountsInfo(acc_type).info) {
+            type = (getAccountsInfo(acc_type).is_demo || Client.get('is_virtual') || getHashValue('token')) ? 'manage_password' : 'cashier';
             removeUrlHash(); // only load manage_password section on first page load if token in url, after that remove it from url
         }
         return type;
@@ -440,12 +446,18 @@ const MetaTraderUI = (() => {
                 .setVisibility(1);
 
             if (action === 'manage_password') {
-                $form.find('button[type="submit"]').append(accounts_info[acc_type].info.display_login ? ` ${localize('for account [_1]', accounts_info[acc_type].info.display_login)}` : '');
+                if (shouldSetTradingPassword()) {
+                    $form.find('#new_client_message').setVisibility(1);
+                } else {
+                    $form.find('#existing_client_message').setVisibility(1);
+                }
+                $form.find('button#btn_submit_password_change[type="submit"]').append(accounts_info[acc_type].info.display_login ? ` ${localize('for account [_1]', accounts_info[acc_type].info.display_login)}` : '');
                 if (!token) {
                     $form.find('#frm_verify_password_reset').setVisibility(1);
                 } else if (!Validation.validEmailToken(token)) {
                     $form.find('#frm_verify_password_reset').find('#token_error').setVisibility(1).end().setVisibility(1);
                 } else {
+                    $form.find('#frm_password_change').setVisibility(0);
                     $form.find('#frm_password_reset').setVisibility(1);
                 }
             }
@@ -476,8 +488,8 @@ const MetaTraderUI = (() => {
             setDemoTopupStatus();
             $form.find('.binary-account').text(`${localize('[_1] Account [_2]', ['Binary', Client.get('loginid')])}`);
             $form.find('.binary-balance').html(`${Currency.formatMoney(client_currency, Client.get('balance'))}`);
-            $form.find('.mt5-account').text(`${localize('[_1] Account [_2]', [accounts_info[acc_type].title, accounts_info[acc_type].info.display_login])}`);
-            $form.find('.mt5-balance').html(`${Currency.formatMoney(mt_currency, accounts_info[acc_type].info.balance)}`);
+            $form.find('.mt5-account').text(`${localize('[_1] Account [_2]', [getAccountsInfo(acc_type).title, getAccountsInfo(acc_type).info.display_login])}`);
+            $form.find('.mt5-balance').html(`${Currency.formatMoney(mt_currency, getAccountsInfo(acc_type).info.balance)}`);
             $form.find('label[for="txt_amount_deposit"]').append(` ${Currency.getCurrencyDisplayCode(client_currency)}`);
             $form.find('label[for="txt_amount_withdrawal"]').append(` ${mt_currency}`);
 
@@ -499,7 +511,7 @@ const MetaTraderUI = (() => {
                 });
             });
 
-            if (!accounts_info[acc_type].is_demo) {
+            if (!getAccountsInfo(acc_type).is_demo) {
                 let msg = '';
                 if (Client.get('is_virtual')) {
                     msg = MetaTraderConfig.needsRealMessage();
@@ -551,10 +563,10 @@ const MetaTraderUI = (() => {
             if (/unknown+$/.test(acc_type)) return false;
             let account_type = acc_type || newAccountGetType();
             // if server is not added to account type, and in accounts_info we are storing it without server
-            if (!/\d$/.test(account_type) && !accounts_info[account_type]) {
+            if (!/\d$/.test(account_type) && !getAccountsInfo(account_type)) {
                 account_type += `_${trading_server.id}`;
             }
-            const new_account_info = accounts_info[account_type];
+            const new_account_info = getAccountsInfo(account_type);
             const { supported_accounts } = trading_server;
 
             if (!new_account_info || !supported_accounts) {
@@ -576,7 +588,7 @@ const MetaTraderUI = (() => {
         });
 
     const isSupportedServer = (market_type, sub_account_type, supported_accounts) => {
-        const is_synthetic     = market_type === 'gaming'    && sub_account_type === 'financial';
+        const is_synthetic     = (market_type === 'gaming' || market_type === 'synthetic') && sub_account_type === 'financial';
         const is_financial     = market_type === 'financial' && sub_account_type === 'financial';
         const is_financial_stp = market_type === 'financial' && sub_account_type === 'financial_stp';
 
@@ -589,24 +601,49 @@ const MetaTraderUI = (() => {
 
     const isUsedServer = (is_server_supported, trading_server) =>
         is_server_supported && Object.keys(accounts_info).find(account =>
-            accounts_info[account].info &&
+            getAccountsInfo(account).info &&
             isSupportedServer(
-                accounts_info[account].info.market_type,
-                accounts_info[account].info.sub_account_type,
+                getAccountsInfo(account).info.market_type,
+                getAccountsInfo(account).info.sub_account_type,
                 trading_server.supported_accounts
             ) &&
-            trading_server.id === accounts_info[account].info.server
+            trading_server.id === getAccountsInfo(account).info.server
         );
+
+    const shouldSetTradingPassword = () => {
+        const { status } = State.getResponse('get_account_status');
+
+        return Array.isArray(status) && status.includes('trading_password_required');
+    };
 
     const displayStep = (step) => {
         const new_account_type = newAccountGetType();
         const is_demo = /demo/.test(new_account_type);
+        const should_set_trading_password = shouldSetTradingPassword();
         const is_synthetic = /gaming/.test(new_account_type);
+        const has_mt5_account = mt5_login_list.length > 0;
 
         $form.find('#msg_form').remove();
         $form.find('#mv_new_account div[id^="view_"]').setVisibility(0);
         $form.find(`#view_${step}`).setVisibility(1);
         $form.find('#view_3').find('.error-msg, .days-to-crack').setVisibility(0);
+
+        // Show proper notice msg based on api flag
+        if (should_set_trading_password) {
+            $form.find('#view_3').find('#trading_password_new_user').setVisibility(1);
+            if (has_mt5_account) {
+                $form.find('#trading_password_input').setVisibility(0);
+                $form.find('#new_user_cancel_button').on('click', () => {
+                    location.reload();
+                });
+                $form.find('#has_mt5_new_user_btn_submit_new_account').setVisibility(1);
+            } else {
+                $form.find('#new_user_btn_submit_new_account').setVisibility(1);
+            }
+        } else {
+            $form.find('#view_3').find('#trading_password_existing_user').setVisibility(1);
+        }
+
         $form.find(`.${is_demo ? 'real' : 'demo'}-only`).setVisibility(0);
 
         // we do not show step 2 (servers selection) to demo and non synthetic accouns
@@ -619,11 +656,6 @@ const MetaTraderUI = (() => {
                 displayStep(1);
             }
 
-            // disable next button in case if all servers are used or unavailable
-            if (num_servers.supported === num_servers.used + num_servers.disabled) {
-                disableButtonLink('.btn-next');
-            }
-
             const sample_account = MetaTraderConfig.getSampleAccount(new_account_type);
             $form.find('#view_2 #mt5_account_type').text(sample_account.title);
             $form.find('button[type="submit"]').attr('acc_type', MetaTraderConfig.getCleanAccType(newAccountGetType(), 2));
@@ -632,11 +664,22 @@ const MetaTraderUI = (() => {
             $view_2_button_container.setVisibility(1);
         } else if (step === 3) {
             $form.find('input').not(':input[type=radio]').val('');
+            $form.find('#trading_password_reset_required').setVisibility(0);
 
-            const $view_3_button_container = $form.find('#view_3-buttons');
-
+            let $view_3_button_container;
+            if (should_set_trading_password) {
+                $view_3_button_container = $form.find('#view_3-buttons_new_user');
+            } else {
+                $view_3_button_container = $form.find('#view_3-buttons_existing_user');
+            }
             $('<p />', { id: 'msg_form', class: 'center-text gr-padding-10 error-msg no-margin invisible' }).prependTo($view_3_button_container);
             $view_3_button_container.setVisibility(1);
+            $view_3_button_container.find('#btn_forgot_trading_password').on('click', () => displayStep(4));
+        } else if (step === 4) {
+            BinarySocket.send({
+                verify_email: Client.get('email'),
+                type        : 'trading_platform_password_reset',
+            });
         } else if (step !== 1) {
             displayStep(1);
         }
@@ -667,14 +710,14 @@ const MetaTraderUI = (() => {
         // is_new_account
         displayAccountDescription();
         $form = actions_info[action].$form;
-        if (Object.keys(accounts_info).every(a_type => !accounts_info[a_type].info)) {
+        if (Object.keys(accounts_info).every(a_type => !getAccountsInfo(a_type).info)) {
             $form.find('#view_1 .btn-cancel').addClass('invisible');
         }
 
         // Navigation buttons: cancel, next, back
         $form.find('.btn-cancel').click(() => {
             loadAction(null, acc_type);
-            displayAccountDescription(accounts_info[acc_type] ? acc_type : undefined);
+            displayAccountDescription(getAccountsInfo(acc_type) ? acc_type : undefined);
             $.scrollTo($('h1'), 300, { offset: -10 });
             showFinancialAuthentication(true);
         });
@@ -723,11 +766,16 @@ const MetaTraderUI = (() => {
                 $(e.target).not(':input[disabled]').attr('checked', 'checked');
             }
 
+            const new_user_submit_button = $form.find(mt5_login_list.length > 0 ? '#has_mt5_new_user_btn_submit_new_account' : '#new_user_btn_submit_new_account');
+            const existing_user_submit_button = $form.find('#existing_user_btn_submit_new_account');
+
             // Disable/enable submit button based on whether any of the checkboxes is checked.
             if ($form.find('#ddl_trade_server input[checked]').length > 0) {
-                $form.find('#btn_submit_new_account').removeAttr('disabled');
+                new_user_submit_button.removeAttr('disabled');
+                existing_user_submit_button.removeAttr('disabled');
             } else {
-                $form.find('#btn_submit_new_account').attr('disabled', true);
+                new_user_submit_button.attr('disabled', true);
+                existing_user_submit_button.attr('disabled', true);
             }
         });
 
@@ -788,6 +836,13 @@ const MetaTraderUI = (() => {
                 $form.find('#view_1 .btn-cancel').removeClass('invisible');
             });
         }
+
+        // disable next button and Synthetic option if all servers are used or unavailable
+        const num_servers = populateTradingServers('real_gaming_financial');
+        if (/real/.test(selected_acc_type) && num_servers.supported === num_servers.used + num_servers.disabled) {
+            disableButtonLink('.btn-next');
+            $form.find('.step-2 #rbtn_gaming_financial').addClass('existed');
+        }
     };
 
     const switchAccountTypesUI = (type, form) => {
@@ -824,7 +879,7 @@ const MetaTraderUI = (() => {
             .filter(acc_type => acc_type.indexOf(type) === 0)
             .forEach((acc_type) => {
                 let class_name = (type === 'real' && Client.get('is_virtual')) ? 'disabled' : '';
-                if (accounts_info[acc_type].info && (getAvailableServers(false, acc_type).length === 0 || type === 'demo')) {
+                if (getAccountsInfo(acc_type).info && (getAvailableServers(false, acc_type).length === 0 || type === 'demo')) {
                     class_name = 'existed';
                 }
                 const clean_acc_type = MetaTraderConfig.getCleanAccType(acc_type, 2);
@@ -847,19 +902,20 @@ const MetaTraderUI = (() => {
         Object.keys(accounts_info).sort(sortMt5Accounts).forEach(acc_type => {
             // remove server from name
             const clean_acc_type = MetaTraderConfig.getCleanAccType(acc_type, 2);
-            filtered_accounts[clean_acc_type] = accounts_info[acc_type];
+            filtered_accounts[clean_acc_type] = getAccountsInfo(acc_type);
         });
 
         Object.keys(filtered_accounts).forEach((acc_type) => {
             // TODO: remove once we have market type and sub type data from error response details
             if (/unknown+$/.test(acc_type)) return;
-            const $acc  = filtered_accounts[acc_type].is_demo ? $acc_template_demo.clone() : $acc_template_real.clone();
+            const $acc  = getAccountsInfo(acc_type, filtered_accounts).is_demo
+                ? $acc_template_demo.clone() : $acc_template_real.clone();
             const type  = acc_type.split('_').slice(1).join('_');
-            const image = filtered_accounts[acc_type].market_type === 'gaming' ? 'synthetic' : filtered_accounts[acc_type].sub_account_type; // image name can be (financial_stp|financial|synthetic)
+            const image =  getAccountsInfo(acc_type, filtered_accounts).market_type === 'gaming' || getAccountsInfo(acc_type, filtered_accounts).market_type === 'synthetic'  ? 'synthetic' : getAccountsInfo(acc_type, filtered_accounts).sub_account_type; // image name can be (financial_stp|financial|synthetic)
             $acc.attr({ id: `template_${type}` });
             $acc.find('.mt5_type_box').attr({ id: `rbtn_${type}`, 'data-acc-type': type })
                 .find('img').attr('src', urlForStatic(`/images/pages/metatrader/icons/acc_${image}.svg`));
-            $acc.find('p').text(filtered_accounts[acc_type].short_title);
+            $acc.find('p').text(getAccountsInfo(acc_type, filtered_accounts).short_title);
             $acc_template_mt.append($acc);
 
             count++;
@@ -905,8 +961,29 @@ const MetaTraderUI = (() => {
         $('#mt_loading').remove();
     };
 
+    /**
+     * @param {string} action
+     * @returns {jQuery}
+     */
+    const  getActionButton = (action) => {
+        let button_selector = 'button';
+        if (action === 'new_account') {
+            if (shouldSetTradingPassword()) {
+                if (mt5_login_list.length > 0) {
+                    button_selector = '#has_mt5_new_user_btn_submit_new_account';
+                } else {
+                    button_selector = '#new_user_btn_submit_new_account';
+                }
+            } else {
+                button_selector = '#existing_user_btn_submit_new_account';
+            }
+        }
+        return actions_info[action].$form.find(button_selector);
+    };
+
     const disableButton = (action) => {
-        const $btn = actions_info[action].$form.find('button');
+        const $btn = getActionButton(action);
+
         if ($btn.length && !$btn.find('.barspinner').length) {
             $btn.attr('disabled', 'disabled');
             const $btn_text = $('<span/>', { text: $btn.text(), class: 'invisible' });
@@ -915,14 +992,41 @@ const MetaTraderUI = (() => {
         }
     };
 
-    const enableButton = (action, response = {}) => {
-        const $btn = actions_info[action].$form.find('button');
+    const enableButton = (action, response) => {
+        const $btn = getActionButton(action);
         if ($btn.length && $btn.find('.barspinner').length) {
             $btn.removeAttr('disabled').html($btn.find('span').text());
         }
         if (/password_reset/.test(action)) {
             // after submit is done, reset token value
             resetManagePasswordTab(action, response);
+        }
+        if (/new_account/.test(action)) {
+            resetNewAccountForm(response);
+        }
+    };
+
+    const resetNewAccountForm = (response) => {
+        const should_reset_view = ['#view_3-buttons_reset_password', '#trading_password_reset_required'];
+        const normal_view = ['#trading_password_existing_user', '#view_3-buttons_existing_user', '#trading_password_input'];
+        const $hint = $('#trading_password_existing_user_validation_error');
+        $('#trading_password').val('').focus();
+        $hint.setVisibility(0); // Make sure hint is hidden unless told otherwise
+        // We need to render a different form on this error.
+        if (response.error && response.error.code === 'PasswordReset') {
+            normal_view.forEach(selector => $(selector).setVisibility(0));
+            should_reset_view.forEach(selector => $(selector).setVisibility(1));
+            $('#btn_reset_trading_password').on('click.reset_password', () => displayStep(4));
+            $('#try_again').on('click', () => {
+                // Reset previous form
+                normal_view.forEach(selector => $(selector).setVisibility(1));
+                should_reset_view.forEach(selector => $(selector).setVisibility(0));
+                $('#btn_reset_trading_password').off('click.reset_password');
+                displayStep(3);
+            });
+        }
+        if (response.error && response.error.code === 'PasswordError') {
+            $hint.setVisibility(1);
         }
     };
 
@@ -933,7 +1037,7 @@ const MetaTraderUI = (() => {
             if (action === 'password_reset') { // go back to verify reset password form
                 loadAction('manage_password');
                 if (!response.error) {
-                    displayMainMessage(localize('The [_1] password of account number [_2] has been changed.', [response.echo_req.password_type, MetaTraderConfig.getDisplayLogin(response.echo_req.login)]));
+                    displayMainMessage(localize('The investor password of account number [_1] has been changed.', MetaTraderConfig.getDisplayLogin(response.echo_req.account_id)));
                 } else if (has_invalid_token) {
                     $form.find('#frm_verify_password_reset #token_error').setVisibility(1);
                 }
@@ -968,16 +1072,17 @@ const MetaTraderUI = (() => {
             The code below is to stop the tooltip from showing wrong
             information.
         */
-        if ((accounts_info[acc_type].landing_company_short === 'vanuatu' &&
-            accounts_info[acc_type].market_type === 'financial' &&
-            accounts_info[acc_type].sub_account_type === 'financial') ||
+        if ((getAccountsInfo(acc_type).landing_company_short === 'vanuatu' &&
+            getAccountsInfo(acc_type).market_type === 'financial' &&
+            getAccountsInfo(acc_type).sub_account_type === 'financial') ||
             is_mobile) {
             $icon.remove();
             return;
         }
 
         BinarySocket.wait('landing_company').then((response) => {
-            const company = response.landing_company[`mt_${accounts_info[acc_type].market_type}_company`][accounts_info[acc_type].sub_account_type];
+            const landing_company_name = getAccountsInfo(acc_type).market_type === 'synthetic' ? 'mt_gaming_company' : `mt_${getAccountsInfo(acc_type).market_type}_company`;
+            const company = response.landing_company[landing_company_name][getAccountsInfo(acc_type).sub_account_type];
 
             $icon.attr({
                 'data-balloon'       : `${localize('Counterparty')}: ${company.name}, ${localize('Jurisdiction')}: ${company.country}`,
@@ -990,14 +1095,14 @@ const MetaTraderUI = (() => {
         const el_demo_topup_btn  = getElementById('demo_topup_btn');
         const el_loading         = getElementById('demo_topup_loading');
         const acc_type           = Client.get('mt5_account');
-        const is_demo            = accounts_info[acc_type].is_demo;
+        const is_demo            = getAccountsInfo(acc_type).is_demo;
         const topup_btn_text     = localize('Get [_1]', `10,000.00 ${MetaTraderConfig.getCurrency(acc_type)}`);
 
         el_loading.setVisibility(0);
         el_demo_topup_btn.firstChild.innerText = topup_btn_text;
 
         if (is_demo) {
-            const balance     = +accounts_info[acc_type].info.balance;
+            const balance     = +getAccountsInfo(acc_type).info.balance;
             const min_balance = 1000;
 
             if (balance <= min_balance) {

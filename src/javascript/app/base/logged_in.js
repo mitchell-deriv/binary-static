@@ -34,7 +34,7 @@ const LoggedInHandler = (() => {
             // redirect back
             let set_default = true;
             if (redirect_url) {
-                const do_not_redirect = ['reset_passwordws', 'lost_passwordws', 'change_passwordws', 'home', '404'];
+                const do_not_redirect = ['trading_reset_passwordws', 'reset_passwordws', 'lost_passwordws', 'change_passwordws', 'deactivated-account', 'home', '404'];
                 const reg             = new RegExp(do_not_redirect.join('|'), 'i');
                 if (!reg.test(redirect_url) && urlFor('') !== redirect_url) {
                     set_default = false;
@@ -43,7 +43,7 @@ const LoggedInHandler = (() => {
             if (set_default) {
                 const lang_cookie = urlLang(redirect_url) || Cookies.get('language');
                 const language    = getLanguage();
-                redirect_url      = Client.isAccountOfType('financial')
+                redirect_url      = (Client.isAccountOfType('financial') || Client.isOptionsBlocked())
                     ? urlFor('user/metatrader')
                     : Client.defaultRedirectUrl();
                 if (lang_cookie && lang_cookie !== language) {

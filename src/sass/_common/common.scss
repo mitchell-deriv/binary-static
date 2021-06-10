@@ -252,8 +252,9 @@ label {
 
 /* global styles */
 .required_field_asterisk {
-    position: absolute;
-    margin: -3px 3px;
+    position: relative;
+    left: 3px;
+    top: -3px;
     font-size: $FONT_SIZE_S;
     color: $COLOR_RED;
 
@@ -351,6 +352,15 @@ _:-ms-fullscreen, :root #content-holder {
     vertical-align: middle;
 }
 
+#email_consent + label {
+    display: flex;
+    justify-content: center;
+
+    &:before {
+        margin-top: 4px;
+    }
+}
+
 input[type=checkbox] {
     margin: 5px 5px 5px 0;
     padding: 7px;
@@ -370,7 +380,7 @@ input[type=checkbox] {
 
 .logged_out_title_container {
     margin-top: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 button .barspinner.white {
@@ -409,6 +419,10 @@ button .barspinner.white {
     display: none;
     background: url('../images/common/scrollup_icon.svg') no-repeat;
     z-index: 999;
+}
+
+.flex {
+    display: flex;
 }
 
 .inline-flex {
@@ -486,6 +500,9 @@ button .barspinner.white {
 #virtual-form {
     .select2-container {
         max-width: 220px;
+    }
+    .email-consent-container {
+        visibility: hidden !important;
     }
 }
 
@@ -570,6 +587,11 @@ button .barspinner.white {
     input[style*='background'] ~ &--toggle {
         right: 32px;
     }
+}
+
+.required_asterisk:after {
+    content: '*';
+    color: $COLOR_RED;
 }
 
 ul.bullet.gr-row > li {
