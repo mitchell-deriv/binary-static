@@ -49,7 +49,7 @@ const KeepSafe = () => (
                             <p>{it.L('[_1] provides demo facilities to practise your trading strategy with virtual funds. Switch to your demo account using the drop-down box in the top-right corner of the screen.', it.website_name)}</p>
                         </div>
                         <div className='gr-4 gr-push-1 gr-8-m gr-push-0-m gr-centered-m gr-no-gutter gr-padding-10 gr-parent'>
-                            <img className='responsive' src={it.url_for('images/pages/keep_safe/virtual_funds.png')} />
+                            <img className='responsive' src={it.url_for('images/pages/keep_safe/demo_funds.png')} />
                         </div>
                     </div>
                 </div>
