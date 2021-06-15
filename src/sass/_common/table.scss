@@ -104,12 +104,22 @@ table {
         }
     }
     #statement-table, #profit-table {
+        th {
+            text-align: center;
+            @media (max-width: 480px) {
+                text-align: left;
+            }
+        }
         tr {
             & > th.details, & > td.details {
                 display: none !important;
             }
             td {
                 overflow: initial;
+                text-align: center;
+                @media (max-width: 480px) {
+                    text-align: left;
+                }
             }
             td.desc {
                 max-width: 30em;
