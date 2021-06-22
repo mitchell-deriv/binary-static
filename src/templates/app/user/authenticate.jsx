@@ -9,9 +9,6 @@ import {
     TabContent,
     TabContentContainer,
     TabsSubtabs }        from '../../_common/components/tabs.jsx';
-import { Residence } from '../../_common/components/forms_common_rows.jsx';
-import { FormRow, Fieldset } from '../../_common/components/forms.jsx';
-import FormVerificationCode from '../_includes/form_verification_code.jsx';
 
 const ArrowsMobile = ({ direction, parent }) => (
     <div className='align-self-center gr-2 gr-hide gr-show-m gr-no-gutter'>
@@ -75,7 +72,7 @@ const Authenticate = () => (
                 />
             </TabContainer>
             
-            <div className='tab-content invisible'>
+            <div className='tab-content'>
                 <TabContentContainer>
                     <TabContent id='poi' className='selectedTab'>
                         <p id='msg_personal_details' className='gr-padding-10 center-text notice-msg invisible'>
