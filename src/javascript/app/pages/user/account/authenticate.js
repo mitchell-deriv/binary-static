@@ -16,6 +16,7 @@ const toTitleCase             = require('../../../../_common/string_util').toTit
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
 const showLoadingImage        = require('../../../../_common/utility').showLoadingImage;
+const makeOption               = require('../../../../_common/common_functions').makeOption;
 
 /*
     To handle onfido unsupported country, we handle the functions separately,
@@ -40,7 +41,7 @@ const Authenticate = (() => {
         file_checks    = {};
         $submit_status = $('.submit-status');
         $submit_table  = $submit_status.find('table tbody');
-
+        BinarySocket.send({ residence_list: 1 }).then(response =>  handleDocumentList(response.residence_list));
         // Setup accordion
         $('#not_authenticated .files').accordion({
             heightStyle: 'content',
@@ -908,6 +909,25 @@ const Authenticate = (() => {
             $(`#button_${status}_${type_required}_required`).setVisibility(1);
         } else if (description_status) {
             $(`#text_${status}_${type_pending}_pending`).setVisibility(1);
+        }
+    };
+
+    const handleDocumentList = (residence_list) => {
+        const $documents = $('#documents');
+        // to be changed with real selected item from country selection page
+        const selected_item_index = 159;
+        if (residence_list.length > 0) {
+            const $options_with_disabled = $('<select/>');
+            const document_list = residence_list[selected_item_index].identity.services.idv.documents_supported;
+            Object.values(document_list).forEach((res) => {
+                const { display_name , format } = res;
+                $options_with_disabled.append(makeOption({
+                    text       : display_name,
+                    value      : format,
+                    is_disabled: false,
+                }));
+            });
+            $documents.html($options_with_disabled.html());
         }
     };
 
