@@ -12,6 +12,7 @@ const isImageType             = require('../../../../_common/image_utility').isI
 const getLanguage             = require('../../../../_common/language').get;
 const localize                = require('../../../../_common/localize').localize;
 const State                   = require('../../../../_common/storage').State;
+const makeOption               = require('../../../../_common/common_functions').makeOption;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
@@ -40,6 +41,7 @@ const Authenticate = (() => {
         file_checks    = {};
         $submit_status = $('.submit-status');
         $submit_table  = $submit_status.find('table tbody');
+        BinarySocket.send({ residence_list: 1 }).then(response => handleResidenceList(response.residence_list));
 
         // Setup accordion
         $('#not_authenticated .files').accordion({
@@ -71,7 +73,23 @@ const Authenticate = (() => {
             $('#exp_date_2').datepicker('setDate', '2099-12-31');
         }
     };
-
+    const handleResidenceList = (residence_list) => {
+        const $residence = $('#residence');
+        if (residence_list.length > 0) {
+            const $options_with_disabled = $('<select/>');
+            residence_list.forEach((res) => {
+                $options_with_disabled.append(makeOption({
+                    text       : res.text,
+                    value      : res.value,
+                    is_disabled: res.disabled,
+                }));
+            });
+            $residence.html($options_with_disabled.html());
+            // BinarySocket.wait('website_status').then(response => handleWebsiteStatus(response.website_status, $residence));
+        } else {
+            $residence.setVisibility(1);
+        }
+    };
     const initUnsupported = () => {
         file_checks_uns    = {};
         $submit_status_uns = $('.submit-status-uns');

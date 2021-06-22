@@ -9,6 +9,9 @@ import {
     TabContent,
     TabContentContainer,
     TabsSubtabs }        from '../../_common/components/tabs.jsx';
+import { Residence } from '../../_common/components/forms_common_rows.jsx';
+import { FormRow, Fieldset } from '../../_common/components/forms.jsx';
+import FormVerificationCode from '../_includes/form_verification_code.jsx';
 
 const ArrowsMobile = ({ direction, parent }) => (
     <div className='align-self-center gr-2 gr-hide gr-show-m gr-no-gutter'>
@@ -41,7 +44,20 @@ const Authenticate = () => (
             <p>{it.L('We will inform you when your account needs to be authenticated.')}</p>
         </div>
 
-        <div id='authentication_tab' className='gr-padding-20'>
+        <div id='residence_selection' className='center-text gr-padding-20'>
+            <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
+            <p>{it.L('In which country was your document issued')}</p>
+            <select className='center-text' type='select' id='residence' style={{ margin: '0 auto' , display: 'block' }} />
+            <Button
+                id='button_next_country_selected'
+                className='button gr-padding-20'
+                text_className='margin-top-20'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poa`}
+                text={it.L('Next')}
+            />
+        </div>
+
+        <div id='authentication_tab' className='gr-padding-20 invisible'>
             <TabContainer className='gr-parent full-width gr-11 gr-12-m gr-centered' theme='light'>
                 <div className='gr-row gr-hide gr-show-m mobile-menu'>
                     <ArrowsMobile parent='authentication_tab' direction='left' />
@@ -58,7 +74,8 @@ const Authenticate = () => (
                     ]}
                 />
             </TabContainer>
-            <div className='tab-content'>
+            
+            <div className='tab-content invisible'>
                 <TabContentContainer>
                     <TabContent id='poi' className='selectedTab'>
                         <p id='msg_personal_details' className='gr-padding-10 center-text notice-msg invisible'>
