@@ -60,6 +60,9 @@ table {
         &[data-balloon] {
             border-bottom: 3px solid $COLOR_LIGHT_GRAY;
         }
+        &.is_empty {
+            text-align: center;
+        }
     }
     .w-80 {
         width: 80px;
@@ -125,6 +128,13 @@ table {
                 }
                 th, td {
                     font-size: $FONT_SIZE_XS;
+                }
+            }
+            @media (max-width: 480px) {
+                & > th.details, & > td.details {
+                    .button {
+                        padding: 8px;
+                    }
                 }
             }
         }

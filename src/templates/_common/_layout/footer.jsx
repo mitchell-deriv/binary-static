@@ -50,7 +50,7 @@ const Footer = () => (
                                     { text: it.L('About Us'),               href: it.url_for('about-us') },
                                     { text: it.L('Group History'),          href: it.url_for('group-history') },
                                     { text: it.L('Binary.com in Numbers'),  href: it.url_for('binary-in-numbers') },
-                                    { text: it.L('Careers'),                href: it.deriv_career_url },
+                                    { text: it.L('Careers'),                href: it.deriv_career_url ,                   target: '_blank' },
                                     { text: it.L('Patents'),                href: it.url_for('legal/us_patents') },
                                     { text: it.L('Contact Us'),             href: it.url_for('contact') },
                                 ]}
@@ -93,9 +93,9 @@ const Footer = () => (
                             <FooterColumn
                                 header={it.L('Trading')}
                                 items={[
-                                    { text: it.L('Platforms'),      href: it.url_for('platforms'),                dataShow: '-maltainvest' },
-                                    { text: it.L('Asset Index'),    href: it.url_for('resources/asset_indexws'),  dataShow: '-maltainvest' },
-                                    { text: it.L('Trading Times'),  href: it.url_for('resources/market_timesws'), dataShow: '-maltainvest' },
+                                    { text: it.L('Platforms'),      href: it.url_for('platforms'),                dataShow: '-maltainvest, -optionsblocked' },
+                                    { text: it.L('Asset Index'),    href: it.url_for('resources/asset_indexws'),  dataShow: '-maltainvest, -optionsblocked' },
+                                    { text: it.L('Trading Times'),  href: it.url_for('resources/market_timesws'), dataShow: '-maltainvest, -optionsblocked' },
                                     { text: it.L('Network Status'), href: 'https://binarycom.statuspage.io', target: '_blank' },
                                 ]}
                             />
