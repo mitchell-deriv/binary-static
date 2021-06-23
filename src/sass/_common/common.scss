@@ -442,6 +442,14 @@ button .barspinner.white {
     align-self: center;
 }
 
+.child-span {
+    padding: 10px 15px !important;
+
+    img {
+        height: 20px;
+    }
+}
+
 .align-start {
     @include BIDIR_VALUE (text-align, left, right);
 }

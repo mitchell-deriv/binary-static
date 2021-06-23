@@ -41,6 +41,7 @@ const Authenticate = () => (
             <p>{it.L('We will inform you when your account needs to be authenticated.')}</p>
         </div>
         <div id='identity_verification' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
             <p>{it.L('Please select the document type and enter the document number.')}</p>
             <select className='center-text' type='select' id='documents' style={{ margin: '0 auto' , display: 'block' }} />
@@ -56,11 +57,17 @@ const Authenticate = () => (
                 <span className='icon' />
             </div>
             <Button
+         
                 id='button_verified_poi_required'
-                className='button'
+                className='button button-secondary'
                 href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                 text={it.L('Go Back')}
-            />
+            >
+                <span className='child-span'>
+                    <img src={it.url_for('images/pages/authenticate/arrow_left.svg')} />
+                    {it.L('Go Back')}
+                </span>
+            </Button>
             <Button
                 id='button_verified_poi_required'
                 className='button'
