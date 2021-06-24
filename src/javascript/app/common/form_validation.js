@@ -101,8 +101,10 @@ const Validation = (() => {
                     const event = events_map[field.type];
 
                     if (event) {
-                        field.$.unbind(event).on(event, () => {
-                            checkField(field);
+                        field.$.unbind(event).on(event, (e) => {
+                            if (e.type === 'input'){
+                                checkField(field);
+                            }
                             if (field.re_check_field) {
                                 checkField(forms[form_selector].fields.find(fld => (
                                     fld.selector === field.re_check_field
@@ -165,7 +167,7 @@ const Validation = (() => {
         ValidatorsMap.get().req.message = field.type === 'checkbox' ? localize('Please select the checkbox.') : localize('This field is required.');
         return false;
     };
-    const validEmail        = value => /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/.test(value);
+    const validEmail        = value => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
     const validPassword     = (value, options, field) => {
         if (/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])[ -~]*$/.test(value)) {
             Password.checkPassword(field.selector, true);
