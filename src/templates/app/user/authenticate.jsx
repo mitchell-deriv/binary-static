@@ -44,7 +44,7 @@ const Authenticate = () => (
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
             <p>{it.L('Please select the document type and enter the document number.')}</p>
-            <select className='center-text' type='select' id='documents' style={{ margin: '0 auto' , display: 'block' }} />
+            <select className='center-text width-50' type='select' id='documents' />
             <div className='input'>
                 <input
                     type='text'

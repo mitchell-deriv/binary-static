@@ -240,6 +240,10 @@ label {
     width: 100%;
 }
 
+.width-50 {
+    width: 50%;
+}
+
 .errorfield {
     margin-top: 8px;
     color: $COLOR_RED;
@@ -352,12 +356,26 @@ _:-ms-fullscreen, :root #content-holder {
     vertical-align: middle;
 }
 
-#email_consent + label {
+#mail_consent + label {
     display: flex;
     justify-content: center;
 
     &:before {
         margin-top: 4px;
+    }
+}
+
+#identity_verification {
+    select, .input {
+        width: 50%;
+        margin: 0 auto;
+    }
+    .input {
+        input {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
     }
 }
 
@@ -446,7 +464,8 @@ button .barspinner.white {
     padding: 10px 15px !important;
 
     img {
-        height: 20px;
+        height: 18px;
+        padding-right: 8px;
     }
 }
 
