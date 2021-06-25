@@ -54,10 +54,9 @@ const Authenticate = () => (
                     placeholder={it.L(('Enter Your Document Number'))}
                     // value={query}
                 />
-                <span className='icon' />
+                <span id='example' />
             </div>
             <Button
-         
                 id='button_verified_poi_required'
                 className='button button-secondary'
                 href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}

@@ -15,6 +15,7 @@ const State                   = require('../../../../_common/storage').State;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
+const getElementById = require('../../../../_common/common_functions').getElementById;
 const showLoadingImage        = require('../../../../_common/utility').showLoadingImage;
 const makeOption               = require('../../../../_common/common_functions').makeOption;
 
@@ -916,10 +917,12 @@ const Authenticate = (() => {
 
     const handleDocumentList = (residence_list) => {
         const $documents = $('#documents');
+        const $example = $('#example');
         // to be changed with real selected item from country selection page
         const selected_item_index = 159;
         if (residence_list.length > 0) {
             const $options_with_disabled = $('<select/>');
+            // to be changed with residence selected
             const document_list = residence_list[selected_item_index].identity.services.idv.documents_supported;
             Object.values(document_list).forEach((res) => {
                 const { display_name , format } = res;
@@ -929,7 +932,17 @@ const Authenticate = (() => {
                     is_disabled: false,
                 }));
             });
+
             $documents.html($options_with_disabled.html());
+
+            // This format maybe take from somewere else but logix ready
+            $documents.on('change', (e) => {
+                e.preventDefault();
+                if ($documents[0].selectedOptions){
+                    const format = $documents[0].selectedOptions[0].getAttribute('value');
+                    $example.html(`Example: ${format}`);
+                }
+            });
         }
     };
 
