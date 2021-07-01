@@ -44,7 +44,10 @@ const Authenticate = (() => {
         $submit_status = $('.submit-status');
         $submit_table  = $submit_status.find('table tbody');
 
-        BinarySocket.send({ residence_list: 1 }).then(response => handleResidenceList(response.residence_list));
+        BinarySocket.send({ residence_list: 1 }).then((response) => {
+            handleResidenceList(response.residence_list);
+            handleDocumentList(response.residence_list);
+        });
         // Setup accordion
         $('#not_authenticated .files').accordion({
             heightStyle: 'content',
