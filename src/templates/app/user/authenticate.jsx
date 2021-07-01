@@ -36,11 +36,45 @@ const Authenticate = () => (
         </div>
 
         <div id='authentication_unneeded' className='center-text gr-padding-20 invisible'>
-            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/invalid.svg')} />
+            <img className='gr-padding-20' src={it.url_for('images/xpages/authenticate/invalid.svg')} />
             <h1 className='gr-padding-10'>{it.L('You do not need to authenticate your account at this time')}</h1>
             <p>{it.L('We will inform you when your account needs to be authenticated.')}</p>
         </div>
-
+        <div id='identity_verification' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
+            <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
+            <p>{it.L('Please select the document type and enter the document number.')}</p>
+            <select className='center-text width-50' type='select' id='documents' />
+            <div className='input'>
+                <input
+                    type='text'
+                    maxLength={20}
+                    // onInput={searchSymbols}
+                    // onChange={searchSymbols}
+                    placeholder={it.L(('Enter Your Document Number'))}
+                    // value={query}
+                />
+                <span id='example' />
+            </div>
+            <Button
+                id='button_verified_poi_required'
+                className='button button-secondary'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Go Back')}
+            >
+                <span className='child-span'>
+                    <img src={it.url_for('images/pages/authenticate/arrow_left.svg')} />
+                    {it.L('Go Back')}
+                </span>
+            </Button>
+            <Button
+                id='button_verified_poi_required'
+                className='button'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Verify')}
+            />
+        </div>
+        
         <div id='residence_selection' className='center-text gr-padding-20'>
             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
             <p>{it.L('In which country was your document issued')}</p>
@@ -71,8 +105,8 @@ const Authenticate = () => (
                     ]}
                 />
             </TabContainer>
-            
-            <div className='tab-content'>
+
+            <div className='tab-content invisible'>
                 <TabContentContainer>
                     <TabContent id='poi' className='selectedTab'>
                         <p id='msg_personal_details' className='gr-padding-10 center-text notice-msg invisible'>
