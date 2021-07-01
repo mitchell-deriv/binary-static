@@ -16,9 +16,7 @@ const makeOption               = require('../../../../_common/common_functions')
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
-const getElementById = require('../../../../_common/common_functions').getElementById;
 const showLoadingImage        = require('../../../../_common/utility').showLoadingImage;
-const makeOption               = require('../../../../_common/common_functions').makeOption;
 
 /*
     To handle onfido unsupported country, we handle the functions separately,
