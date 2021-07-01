@@ -74,6 +74,19 @@ const Authenticate = () => (
                 text={it.L('Verify')}
             />
         </div>
+        
+        <div id='residence_selection' className='center-text gr-padding-20'>
+            <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
+            <p>{it.L('In which country was your document issued')}</p>
+            <select className='center-text' type='select' id='residence' style={{ margin: '0 auto' , display: 'block' }} />
+            <Button
+                id='button_next_country_selected'
+                className='button gr-padding-20'
+                text_className='margin-top-20'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poa`}
+                text={it.L('Next')}
+            />
+        </div>
 
         <div id='authentication_tab' className='gr-padding-20 invisible'>
             <TabContainer className='gr-parent full-width gr-11 gr-12-m gr-centered' theme='light'>
@@ -92,6 +105,7 @@ const Authenticate = () => (
                     ]}
                 />
             </TabContainer>
+
             <div className='tab-content invisible'>
                 <TabContentContainer>
                     <TabContent id='poi' className='selectedTab'>
