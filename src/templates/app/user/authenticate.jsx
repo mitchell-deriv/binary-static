@@ -35,9 +35,20 @@ const Authenticate = () => (
             <h1 className='gr-padding-10'>{it.L('Your account has been verified successfully')}</h1>
         </div>
 
-        <div id='authentication_verified' className='center-text gr-padding-20'>
+        <div id='document_number_verified' className='center-text gr-padding-20'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
             <h1 className='gr-padding-10'>{it.L('We\'ve successfully verified your document number')}</h1>
+        </div>
+        <div id='proof_of_address_needed' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
+            <h1 className='gr-padding-10'>{it.L('Your document number has been verified')}</h1>
+            <p>{it.L('Next, we\'ll need your proof of address')}</p>
+            <Button
+                id='proof_of_address_needed'
+                className='button'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Submit proof of address')}
+            />
         </div>
 
         <div id='authentication_unneeded' className='center-text gr-padding-20 invisible'>
