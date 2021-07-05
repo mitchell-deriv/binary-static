@@ -39,12 +39,49 @@ const Authenticate = () => (
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
             <h1 className='gr-padding-10'>{it.L('We\'ve successfully verified your document number')}</h1>
         </div>
+
+        <div id='verification_failed_document_expired' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
+            <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
+            <p>{it.L('It looks like your identity document has expired. Please try again with a valid document.')}</p>
+            <Button
+                id='try_again'
+                className='button'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Try again')}
+            />
+        </div>
+
+        <div id='document_verification_failed' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
+            <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
+            <p>{it.L('We were unable to verify you identity based on the details you entered.')}</p>
+            <Button
+                id='try_again'
+                className='button'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Try again')}
+            />
+        </div>
+        
+        <div id='doc_ver_failed_upload_identity' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
+            <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
+            <p>{it.L('We were unable to verify you identity based on the details you entered.[_1]Please upload your identitiy document', '<br />')}</p>
+            <Button
+                id='try_again'
+                className='button'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Upload identity document')}
+            />
+        </div>
+
         <div id='proof_of_address_needed' className='center-text gr-padding-20'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
             <h1 className='gr-padding-10'>{it.L('Your document number has been verified')}</h1>
             <p>{it.L('Next, we\'ll need your proof of address')}</p>
             <Button
-                id='proof_of_address_needed'
+                id='proof_of_address'
                 className='button'
                 href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                 text={it.L('Submit proof of address')}
