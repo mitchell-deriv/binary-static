@@ -16,7 +16,7 @@ const makeOption              = require('../../../../_common/common_functions').
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
-const showLoadingImage        = require('../../../../_common/utility').showLoadingImage;
+const { showLoadingImage , getDocumentData }        = require('../../../../_common/utility').showLoadingImage;
 
 /*
     To handle onfido unsupported country, we handle the functions separately,
@@ -980,9 +980,15 @@ const Authenticate = (() => {
         $('#limited_poi').setVisibility(0);
     };
 
-    const handleResidenceList = () => {
+    const getSampleImage = (document_name , country_code) => {
+        const selected_document = document_list.find(d => d.text === document_name);
+        const { sample_image } = getDocumentData(country_code, selected_document.id);
+        return sample_image;
+    };
+
+    const handleResidenceList = async () => {
         let residence_list;
-        BinarySocket.send({ residence_list: 1 }).then(response => residence_list = response.residence_list);
+        await BinarySocket.send({ residence_list: 1 }).then(response => residence_list = response.residence_list);
         const $residence = $('#residence');
         if (residence_list.length > 0) {
             const $options_with_disabled = $('<select/>');
@@ -999,7 +1005,7 @@ const Authenticate = (() => {
                 residence_dropdown.addEventListener('change', (e) => {
                     const dropdown_country = residence_list.filter(r => r.value === e.target.value);
                     if (dropdown_country) {
-                        selected_country = dropdown_country;
+                        selected_country = dropdown_country[0];
                     }
                 });
             }
@@ -1016,16 +1022,29 @@ const Authenticate = (() => {
             $residence.setVisibility(1);
         }
     };
+ 
+    const handleDocumentList = async (residence_list) => {
 
-    const handleDocumentList = (residence_list) => {
         const $documents = $('#documents');
         const $example = $('#example');
         // to be changed with real selected item from country selection page
         const selected_item_index = 159;
+
+        // need to implement deconstruciton of is selected country has_visual_sample
+        const {
+            value: country_code,
+            identity: {
+                services: {
+                    idv: { has_visual_sample },
+                },
+            },
+        } = selected_country;
+
         if (residence_list.length > 0) {
             const $options_with_disabled = $('<select/>');
             // to be changed with residence selected
             const document_list = residence_list[selected_item_index].identity.services.idv.documents_supported;
+
             Object.values(document_list).forEach((res) => {
                 const { display_name , format } = res;
                 $options_with_disabled.append(makeOption({
@@ -1040,7 +1059,13 @@ const Authenticate = (() => {
             // This format maybe take from somewere else but logix ready
             $documents.on('change', (e) => {
                 e.preventDefault();
+                // to continue ater user chooses doc type
+                if (has_visual_sample){
+                    // insert logic for populating the sample if available
+                    getSampleImage();
+                }
                 if ($documents[0].selectedOptions){
+                    //
                     const format = $documents[0].selectedOptions[0].getAttribute('value');
                     $example.html(`Example: ${format}`);
                 }
@@ -1287,6 +1312,7 @@ const Authenticate = (() => {
     };
 
     const onLoad = async () => {
+        handleResidenceList();
         cleanElementVisibility();
         const authentication_status = await getAccountStatus();
         const is_required = checkIsRequired(authentication_status);
