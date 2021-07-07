@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-06-27 05:33\n"
+"PO-Revision-Date: 2021-07-06 13:43\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -2084,7 +2084,7 @@ msgid "Before using the trading robots or Expert Advisors and forward trade, the
 msgstr "Sebelum menggunakan trading robot atau Expert Advisor dan melanjutkan trading, klien harus mengujinya pada akun demo terlebih dahulu."
 
 msgid "Before you deactivate your account, you need to do the following:"
-msgstr ""
+msgstr "Sebelum menonaktifkan akun, Anda harus melakukan hal berikut:"
 
 msgid "Beginner"
 msgstr "Pemula"
@@ -2852,7 +2852,7 @@ msgid "Close identity verification screen"
 msgstr "Menutup layar verifikasi identitas"
 
 msgid "Close open positions"
-msgstr ""
+msgstr "Tutup kontrak yang masih berjalan"
 
 msgid "Close your %1 account."
 msgstr "Tutup akun %1 Anda."
@@ -6045,16 +6045,16 @@ msgid "If you find any vulnerabilities in our %1open-source code%2, feel free to
 msgstr "Jika Anda menemukan kerentanan pada %1kode open-source%2 kami, silahkan ajukan permohonan pada GitHub."
 
 msgid "If you have a Binary real account, go to %1Cashier%2 to withdraw your funds"
-msgstr ""
+msgstr "Jika Anda memiliki akun riil Binary, kunjungi %1Kasir%2 untuk menarik saldo Anda"
 
 msgid "If you have a Binary real account, go to %1Portfolio%2 to close any open positions."
-msgstr ""
+msgstr "Jika Anda memiliki akun riil Binary, kunjungi %1Portfolio%2 untuk menutup posisi berjalan."
 
 msgid "If you have a MT5 real account, go to %1MT5 dashboard%2 to withdraw your funds."
-msgstr ""
+msgstr "Jika Anda memiliki akun riil DMT5, kunjungi %1Dashboard MT5%2 untuk menarik dana Anda."
 
 msgid "If you have a MT5 real account, log into it to close any open positions."
-msgstr ""
+msgstr "Jika Anda memiliki akun riil MT5, akses akun tersebut untuk menutup posisi berjalan."
 
 msgid "If you have a payment reference (for example 122), you can enter it here."
 msgstr "Jika Anda memiliki referensi pembayaran (misalnya 122), Anda dapat memasukkannya di sini."
@@ -8030,8 +8030,8 @@ msgstr "Catatan: %1 tidak membebankan biaya transfer."
 msgid "Note: For any enquiries regarding disabled or excluded accounts, please contact %1Customer Support%2."
 msgstr "Nota: Untuk pertanyaan mengenai akun non aktif atau pembatalan akun, silahkan hubungi %1Customer Support%2."
 
-msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC. Transactions are accepted only in US dollars."
-msgstr "Catatan: transfer agen pembayaran hanya tersedia untuk akun yang terdaftar pada Deriv (SVG) LLC. Transaksi diterima hanya dalam mata uang dolar AS."
+msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC."
+msgstr ""
 
 msgid "Note: You are limited to one fiat currency account. The currency of your fiat account can be changed before you deposit into your fiat account for the first time or create an MT5 account. You may also open one account for each supported cryptocurrency."
 msgstr "Catatan: Anda hanya dapat memiliki satu akun dalam mata uang fiat. Mata uang akun fiat Anda dapat dirubah jika Anda belum melakukan deposit perdana atau mendaftar akun MT5. Anda juga dapat mendaftar pada setiap akun mata uang kripto yang tersedia."
@@ -10355,6 +10355,9 @@ msgstr "Maaf, fitur ini tidak tersedia di yurisdiksi Anda."
 msgid "Sorry, withdrawals for this currency are currently disabled."
 msgstr "Maaf, penarikan untuk mata uang ini sedang dinonaktifkan."
 
+msgid "Sorry, your account is not authorised for any further contract purchases."
+msgstr ""
+
 msgid "Source of income"
 msgstr "Sumber penghasilan"
 
@@ -12604,7 +12607,7 @@ msgid "This feature is available to demo accounts only."
 msgstr "Fasilitas ini hanya tersedia untuk akun demo saja."
 
 msgid "This feature is not relevant to demo accounts."
-msgstr ""
+msgstr "Fasilitas ini tidak tersedia untuk akun demo."
 
 msgid "This feature is only relevant to payment agent accounts."
 msgstr "Fitur ini hanya relevan untuk akun agen pembayaran."
@@ -14338,7 +14341,7 @@ msgid "Withdraw funds from your MT5 account"
 msgstr "Menarik dana dari akun MT5 Anda"
 
 msgid "Withdraw your funds"
-msgstr ""
+msgstr "Tarik dana Anda"
 
 msgid "Withdrawal"
 msgstr "Penarikan"
