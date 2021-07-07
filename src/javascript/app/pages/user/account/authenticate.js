@@ -16,7 +16,7 @@ const localize                = require('../../../../_common/localize').localize
 const makeOption              = require('../../../../_common/common_functions').makeOption;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
-const Url                     = require('../../../../_common/url');
+const Url                  = require('../../../../_common/url');
 const { showLoadingImage , getDocumentData }        = require('../../../../_common/utility').showLoadingImage;
 
 /*
@@ -982,16 +982,16 @@ const Authenticate = (() => {
         $('#limited_poi').setVisibility(0);
     };
 
-    const getSampleImage = (document_name , country_code) => {
-        const selected_document = document_list.find(d => d.text === document_name);
-        const { sample_image } = getDocumentData(country_code, selected_document.id);
-        return sample_image;
-    };
+    // const getSampleImage = (document_name , country_code) => {
+    //     const selected_document = document_list.find(d => d.text === document_name);
+    //     const { sample_image } = getDocumentData(country_code, selected_document.id);
+    //     return sample_image;
+    // };
 
     const handleResidenceList = async () => {
         let residence_list;
-        await BinarySocket.send({ residence_list: 1 }).then(response => residence_list = response.residence_list);
-        const { residence_list } = response;
+        await BinarySocket.send({ residence_list: 1 })
+            .then(response => residence_list = response.residence_list);
         const $residence = $('#residence_selection');
         if (residence_list.length > 0) {
             const $options_with_disabled = $('<select/>');
@@ -1011,29 +1011,19 @@ const Authenticate = (() => {
                         selected_country = dropdown_country[0];
                     }
                 });
-                $residence.html($options_with_disabled.html());
-                const residence_dropdown = document.getElementById('residence');
-                if (residence_dropdown) {
-                    residence_dropdown.addEventListener('change', (e) => {
-                        const dropdown_country = residence_list.filter(r => r.value === e.target.value);
-                        if (dropdown_country) {
-                            selected_country = dropdown_country;
-                        }
-                    });
-                }
-    
-                const next_button = document.getElementById('button_next_country_selected');
-                if (next_button) {
-                    next_button.addEventListener('click', () => {
-                        if (selected_country) {
-                            handleDocumentList(selected_country);
-                        }
-                    });
-                }
-
-                $residence.setVisibility(1);
             }
-        });
+
+            const next_button = document.getElementById('button_next_country_selected');
+            if (next_button) {
+                next_button.addEventListener('click', () => {
+                    if (selected_country) {
+                        handleDocumentList(selected_country);
+                    }
+                });
+            }
+        } else {
+            $residence.setVisibility(1);
+        }
     };
  
     const handleDocumentList = async (residence_list) => {
@@ -1057,7 +1047,7 @@ const Authenticate = (() => {
             const $options_with_disabled = $('<select/>');
             // to be changed with residence selected
             const document_list = residence_list[selected_item_index].identity.services.idv.documents_supported;
-
+            
             Object.values(document_list).forEach((res) => {
                 const { display_name , format } = res;
                 $options_with_disabled.append(makeOption({
@@ -1075,7 +1065,7 @@ const Authenticate = (() => {
                 // to continue ater user chooses doc type
                 if (has_visual_sample){
                     // insert logic for populating the sample if available
-                    getSampleImage();
+                    // getSampleImage();
                 }
                 if ($documents[0].selectedOptions){
                     //
@@ -1264,7 +1254,6 @@ const Authenticate = (() => {
         // Usage Guide:
         // const account_status = figmaAccountStatus('idv_result_rejected_limited');
         const account_status = figmaAccountStatus('idv_none').authentication;
-
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
@@ -1335,20 +1324,17 @@ const Authenticate = (() => {
     };
 
     const onLoad = async () => {
-        handleResidenceList();
         cleanElementVisibility();
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
         const account_status = figmaAccountStatus('idv_none').authentication;
-
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);
         //     $('#authentication_loading').setVisibility(0);
         //     $('#authentication_unneeded').setVisibility(1);
         // }
-
         const has_svg_account = Client.hasSvgAccount();
         if (is_required || has_svg_account){
             initTab();
