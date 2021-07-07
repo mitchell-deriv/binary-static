@@ -992,18 +992,18 @@ const Authenticate = (() => {
         let residence_list;
         await BinarySocket.send({ residence_list: 1 })
             .then(response => residence_list = response.residence_list);
-        const $residence = $('#residence_selection');
+        const $residence_dropdown = $('#residence_dropdown');
+        
         if (residence_list.length > 0) {
-            const $options_with_disabled = $('<select/>');
             residence_list.forEach((res) => {
-                $options_with_disabled.append(makeOption({
+                $residence_dropdown.append(makeOption({
                     text       : res.text,
                     value      : res.value,
                     is_disabled: res.disabled,
                 }));
             });
-            $residence.html($options_with_disabled.html());
-            const residence_dropdown = document.getElementById('residence');
+            $residence_dropdown.html($residence_dropdown.html());
+            const residence_dropdown = document.getElementById('residence_dropdown');
             if (residence_dropdown) {
                 residence_dropdown.addEventListener('change', (e) => {
                     const dropdown_country = residence_list.filter(r => r.value === e.target.value);
@@ -1021,8 +1021,7 @@ const Authenticate = (() => {
                     }
                 });
             }
-        } else {
-            $residence.setVisibility(1);
+            $('#residence_div').setVisibility(1);
         }
     };
  

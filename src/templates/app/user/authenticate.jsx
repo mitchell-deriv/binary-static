@@ -40,7 +40,7 @@ const Authenticate = () => (
             <h1 className='gr-padding-10'>{it.L('We\'ve successfully verified your document number')}</h1>
         </div>
 
-        <div id='verification_failed_document_expired' className='center-text gr-padding-20'>
+        <div id='verification_failed_document_expired' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
             <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
             <p>{it.L('It looks like your identity document has expired. Please try again with a valid document.')}</p>
@@ -93,7 +93,7 @@ const Authenticate = () => (
             <h1 className='gr-padding-10'>{it.L('You do not need to authenticate your account at this time')}</h1>
             <p>{it.L('We will inform you when your account needs to be authenticated.')}</p>
         </div>
-        <div id='identity_verification' className='center-text gr-padding-20'>
+        <div id='identity_verification' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
             <p>{it.L('Please select the document type and enter the document number.')}</p>
@@ -242,10 +242,10 @@ const Authenticate = () => (
                             />
                             <p>{it.L('Need help? [_1]Contact us[_2].', `<a href="${it.url_for('contact')}">`, '</a>')}</p>
                         </div>
-                        <div id='residence_selection' className='center-text gr-padding-20 invisible'>
+                        <div id='residence_div' className='center-text gr-padding-20 invisible'>
                             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
                             <p>{it.L('In which country was your document issued')}</p>
-                            <select className='center-text' type='select' id='residence' style={{ margin: '0 auto' , display: 'block' }} />
+                            <select className='center-text' type='select' id='residence_dropdown' style={{ margin: '0 auto' , display: 'block' }} />
                             <Button
                                 id='button_next_country_selected'
                                 className='button gr-padding-20'
