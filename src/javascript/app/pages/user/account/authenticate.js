@@ -1,17 +1,18 @@
 const DocumentUploader        = require('@binary-com/binary-document-uploader');
 const Cookies                 = require('js-cookie');
 const Onfido                  = require('onfido-sdk-ui');
+const figmaAccountStatus      = require('./mock/account.status.mock').figmaAccountStatus;
 const onfido_phrases          = require('./onfido_phrases');
 const Client                  = require('../../../base/client');
 const Header                  = require('../../../base/header');
 const BinarySocket            = require('../../../base/socket');
-const isAuthenticationAllowed = require('../../../../_common/base/client_base').isAuthenticationAllowed;
+// const isAuthenticationAllowed = require('../../../../_common/base/client_base').isAuthenticationAllowed;
 const CompressImage           = require('../../../../_common/image_utility').compressImg;
 const ConvertToBase64         = require('../../../../_common/image_utility').convertToBase64;
 const isImageType             = require('../../../../_common/image_utility').isImageType;
 const getLanguage             = require('../../../../_common/language').get;
 const localize                = require('../../../../_common/localize').localize;
-const State                   = require('../../../../_common/storage').State;
+// const State                   = require('../../../../_common/storage').State;
 const makeOption              = require('../../../../_common/common_functions').makeOption;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
@@ -847,13 +848,14 @@ const Authenticate = (() => {
         TabSelector.onLoad();
     };
 
-    const getAccountStatus = () => new Promise((resolve) => {
-        // check update account status
-        BinarySocket.wait('get_account_status').then(() => {
-            const authentication_response = State.getResponse('get_account_status.authentication');
-            resolve(authentication_response);
-        });
-    });
+    // Enable when BE API is ready (latest_attempt)
+    // const getAccountStatus = () => new Promise((resolve) => {
+    //     check update account status
+    //     BinarySocket.wait('get_account_status').then(() => {
+    //         const authentication_response = State.getResponse('get_account_status.authentication');
+    //         resolve(authentication_response);
+    //     });
+    // });
 
     const initOnfido = async (sdk_token, documents_supported, country_code) => {
         if (!$('#onfido').is(':parent')) {
@@ -989,7 +991,8 @@ const Authenticate = (() => {
     const handleResidenceList = async () => {
         let residence_list;
         await BinarySocket.send({ residence_list: 1 }).then(response => residence_list = response.residence_list);
-        const $residence = $('#residence');
+        const { residence_list } = response;
+        const $residence = $('#residence_selection');
         if (residence_list.length > 0) {
             const $options_with_disabled = $('<select/>');
             residence_list.forEach((res) => {
@@ -1008,19 +1011,29 @@ const Authenticate = (() => {
                         selected_country = dropdown_country[0];
                     }
                 });
-            }
+                $residence.html($options_with_disabled.html());
+                const residence_dropdown = document.getElementById('residence');
+                if (residence_dropdown) {
+                    residence_dropdown.addEventListener('change', (e) => {
+                        const dropdown_country = residence_list.filter(r => r.value === e.target.value);
+                        if (dropdown_country) {
+                            selected_country = dropdown_country;
+                        }
+                    });
+                }
+    
+                const next_button = document.getElementById('button_next_country_selected');
+                if (next_button) {
+                    next_button.addEventListener('click', () => {
+                        if (selected_country) {
+                            handleDocumentList(selected_country);
+                        }
+                    });
+                }
 
-            const next_button = document.getElementById('button_next_country_selected');
-            if (next_button) {
-                next_button.addEventListener('click', () => {
-                    if (selected_country) {
-                        handleDocumentList(selected_country);
-                    }
-                });
+                $residence.setVisibility(1);
             }
-        } else {
-            $residence.setVisibility(1);
-        }
+        });
     };
  
     const handleDocumentList = async (residence_list) => {
@@ -1240,7 +1253,17 @@ const Authenticate = (() => {
     };
 
     const initAuthentication = async () => {
-        const account_status = await getAccountStatus();
+        // const account_status = await getAccountStatus();
+        // idv_none - Initial document verification for idv supported country
+        // idv_none_poa - Initial document verification for idv supported country that needs POA
+        // idv_result_pass - Idv verification pass
+        // idv_result_pass_poa - Idv verification pass and needs POA
+        // idv_result_expired - Idv verification expired
+        // idv_result_rejected - Idv verification rejected have submissions left
+        // idv_result_rejected_limited - Idv verification rejected but no submissions left
+        // Usage Guide:
+        // const account_status = figmaAccountStatus('idv_result_rejected_limited');
+        const account_status = figmaAccountStatus('idv_none').authentication;
 
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
@@ -1314,13 +1337,17 @@ const Authenticate = (() => {
     const onLoad = async () => {
         handleResidenceList();
         cleanElementVisibility();
-        const authentication_status = await getAccountStatus();
-        const is_required = checkIsRequired(authentication_status);
-        if (!isAuthenticationAllowed()) {
-            $('#authentication_tab').setVisibility(0);
-            $('#authentication_loading').setVisibility(0);
-            $('#authentication_unneeded').setVisibility(1);
-        }
+        // const authentication_status = await getAccountStatus();
+        // TODO: Remove when API is ready
+        // Mock Data for now
+        const account_status = figmaAccountStatus('idv_none').authentication;
+
+        const is_required = checkIsRequired(account_status);
+        // if (!isAuthenticationAllowed()) {
+        //     $('#authentication_tab').setVisibility(0);
+        //     $('#authentication_loading').setVisibility(0);
+        //     $('#authentication_unneeded').setVisibility(1);
+        // }
 
         const has_svg_account = Client.hasSvgAccount();
         if (is_required || has_svg_account){
