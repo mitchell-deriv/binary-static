@@ -31,6 +31,7 @@ const Authenticate = (() => {
     let file_checks          = {};
     let file_checks_uns      = {};
     let onfido,
+        account_status,
         selected_country,
         $button,
         $submit_status,
@@ -988,14 +989,16 @@ const Authenticate = (() => {
     //     return sample_image;
     // };
 
-    const handleResidenceList = async () => {
+    const handleIdvCountrySelector = async () => {
         let residence_list;
         await BinarySocket.send({ residence_list: 1 })
             .then(response => residence_list = response.residence_list);
-        const $residence_dropdown = $('#residence_dropdown');
+        const $residence_dropdown = $('#country_dropdown');
+        const next_button = document.getElementById('button_next_country_selected');
+        next_button.classList.add('button-disabled');
  
         if (residence_list.length > 0) {
-            $('#residence_div').setVisibility(1);
+            $('#idv_country_selector').setVisibility(1);
             residence_list.forEach((res) => {
                 $residence_dropdown.append(makeOption({
                     text       : res.text,
@@ -1006,33 +1009,38 @@ const Authenticate = (() => {
 
             $residence_dropdown.html($residence_dropdown.html());
 
-            const residence_dropdown = document.getElementById('residence_dropdown');
-            if (residence_dropdown) {
-                residence_dropdown.addEventListener('change', (e) => {
-                    const dropdown_country = residence_list.find(r => r.value === e.target.value);
-                    if (dropdown_country) {
-                        selected_country = dropdown_country;
-                    }
-                });
+            if (selected_country) {
+                $residence_dropdown.val(selected_country.value);
             }
 
-            const next_button = document.getElementById('button_next_country_selected');
-            if (next_button) {
-                next_button.addEventListener('click', () => {
-                    if (selected_country) {
-                        $('#residence_div').setVisibility(0);
-                        handleDocumentList();
-                    }
-                });
-            }
+            $residence_dropdown.on('change', (e) => {
+                const dropdown_country = residence_list.find(r => r.value === e.target.value);
+                if (dropdown_country) {
+                    selected_country = dropdown_country;
+                }
+                if (selected_country) {
+                    next_button.classList.remove('button-disabled');
+                }
+            });
+
+            next_button.addEventListener('click', () => {
+                if (selected_country) {
+                    $('#idv_country_selector').setVisibility(0);
+                    handleIdvDocumentSubmit();
+                }
+            });
         }
     };
  
-    const handleDocumentList = async () => {
-        $('#identity_verification').setVisibility(1);
-
-        const $documents = $('#documents');
-        const $example = $('#example');
+    const handleIdvDocumentSubmit = async () => {
+        $('#idv_document_submit').setVisibility(1);
+        const $documents = $('#document_type');
+        const $example = $('#document_example_format');
+        const document_input = document.getElementById('document_number');
+        const back_button = document.getElementById('idv_document_submit_back_btn');
+        const verify_button = document.getElementById('idv_document_submit_verify_btn');
+        verify_button.classList.add('button-disabled');
+        document_input.disabled = true;
 
         // Deconstruct required data from selected_country
         const {
@@ -1046,40 +1054,78 @@ const Authenticate = (() => {
             },
         } = selected_country;
 
+        // Contains data from dropdown selection
+        let selected_option;
+
         if (selected_country) {
             const $options_with_disabled = $('<select/>');
             
             Object.keys(documents_supported).forEach((item) => {
-                const { display_name , format } = documents_supported[item];
+                const { display_name } = documents_supported[item];
                 $options_with_disabled.append(makeOption({
                     text       : display_name,
-                    value      : format,
+                    value      : item,
                     is_disabled: false,
                 }));
             });
 
             $documents.html($options_with_disabled.html());
 
-            // This format maybe take from somewere else but logix ready
+            // Update Sample Image and Example Format on Dropdown Change (If Available)
             $documents.on('change', (e) => {
                 e.preventDefault();
-                // to continue ater user chooses doc type
                 if (has_visual_sample){
                     // insert logic for populating the sample if available
                     // getSampleImage();
                 }
                 if ($documents[0].selectedOptions){
-                    //
-                    const format = $documents[0].selectedOptions[0].getAttribute('value');
-                    $example.html(`Example: ${format}`);
+                    selected_option = documents_supported[e.target.value];
+                    // Replace with example format. Now is just taking the format regex from BE.
+                    $example.html(`Example: ${selected_option.format}`);
                 }
+
+                if (selected_option) {
+                    document_input.disabled = false;
+                }
+            });
+
+            document_input.addEventListener('keyup', (e) => {
+                const format_regex = new RegExp(selected_option.format);
+                if (format_regex.test(e.target.value)) {
+                    verify_button.classList.remove('button-disabled');
+                } else {
+                    // Display format errors (To be changed)
+                    $example.html(`Invalid format. Example: ${selected_option.format}`);
+                }
+            });
+
+            back_button.addEventListener('click', () => {
+                $('#idv_document_submit').setVisibility(0);
+                handleIdvCountrySelector();
+            });
+
+            verify_button.addEventListener('click', () => {
+                const submit_data = {
+                    identity_verification_document_add: 1,
+                    document_number                   : 'test',
+                    document_type                     : 'tesstt',
+                    issuing_country                   : selected_country.value,
+                };
+                BinarySocket.send(submit_data).then(response => {
+                    if (response.error) {
+                        // Show API document sending error message
+                    } else {
+                        $('#idv_document_submit').setVisibility(0);
+                    }
+                });
             });
         }
     };
 
-    const handleIdv = (identity, needs_poa) => {
-        const { idv } = identity.services;
+    const handleIdv = () => {
+        const { idv } = account_status.identity.services;
         const { status, submissions_left } = idv;
+        const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
 
         switch (status) {
             case 'pending':
@@ -1112,7 +1158,7 @@ const Authenticate = (() => {
         }
     };
 
-    const handleOnfido = async (identity, needs_poa) => {
+    const handleOnfido = async () => {
         const service_token_response = await getOnfidoServiceToken();
         let has_personal_details_error = false;
 
@@ -1143,12 +1189,13 @@ const Authenticate = (() => {
         if (has_personal_details_error) {
             $('#personal_details_error').setVisibility(1);
         } else {
-            const { onfido_service } = identity.services;
+            onfido = account_status.identity.services;
+            const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
             const {
                 status,
                 submissions_left,
                 last_rejected: rejected_reasons,
-            } = onfido_service;
+            } = onfido;
 
             const {
                 identity: {
@@ -1254,7 +1301,7 @@ const Authenticate = (() => {
         // idv_result_rejected_limited - Idv verification rejected but no submissions left
         // Usage Guide:
         // const account_status = figmaAccountStatus('idv_result_rejected_limited');
-        const account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = figmaAccountStatus('idv_none').authentication;
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
@@ -1265,7 +1312,7 @@ const Authenticate = (() => {
         const identity_status = identity.status;
         const identity_last_attempt = identity.attempts.latest;
         
-        const needs_poa = needs_verification.length && needs_verification.includes('document');
+        // const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
         // const needs_poi = needs_verification.length && needs_verification.includes('identity');
 
         const is_fully_authenticated = identity.status === 'verified' && document.status === 'verified';
@@ -1273,7 +1320,7 @@ const Authenticate = (() => {
 
         // Country Selector
         if (identity_status === 'none') {
-            handleResidenceList(identity, needs_poa);
+            handleIdvCountrySelector();
         } else if (is_fully_authenticated && !should_allow_resubmission) {
             $('#authentication_tab').setVisibility(0);
             $('#authentication_verified').setVisibility(1);
@@ -1307,13 +1354,13 @@ const Authenticate = (() => {
         } else {
             switch (identity_last_attempt.service) {
                 case 'idv':
-                    handleIdv(identity, needs_poa);
+                    handleIdv();
                     break;
                 case 'onfido':
-                    handleOnfido(identity, needs_poa);
+                    handleOnfido();
                     break;
                 case 'manual':
-                    handleManual(identity);
+                    handleManual();
                     break;
                 default:
                     break;
@@ -1329,7 +1376,7 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        const account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = figmaAccountStatus('idv_none').authentication;
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);
