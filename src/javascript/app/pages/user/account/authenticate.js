@@ -986,7 +986,7 @@ const Authenticate = (() => {
 
     const getSampleImage = (selected_document , country_code) => {
         // const selected_document = document_list.find(d => d.text === document_name);
-        const { sample_image } = getDocumentData(country_code, selected_document.display_name.toLowerCase());
+        const { sample_image } = getDocumentData(country_code, selected_document.id.toLowerCase());
         return sample_image;
     };
 
