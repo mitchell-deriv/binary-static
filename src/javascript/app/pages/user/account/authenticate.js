@@ -16,8 +16,8 @@ const localize                = require('../../../../_common/localize').localize
 const makeOption              = require('../../../../_common/common_functions').makeOption;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
-const Url                  = require('../../../../_common/url');
-const { showLoadingImage , getDocumentData }        = require('../../../../_common/utility').showLoadingImage;
+const Url                     = require('../../../../_common/url');
+const { showLoadingImage }    = require('../../../../_common/utility').showLoadingImage;
 
 /*
     To handle onfido unsupported country, we handle the functions separately,
@@ -993,8 +993,9 @@ const Authenticate = (() => {
         await BinarySocket.send({ residence_list: 1 })
             .then(response => residence_list = response.residence_list);
         const $residence_dropdown = $('#residence_dropdown');
-        
+ 
         if (residence_list.length > 0) {
+            $('#residence_div').setVisibility(1);
             residence_list.forEach((res) => {
                 $residence_dropdown.append(makeOption({
                     text       : res.text,
@@ -1002,13 +1003,15 @@ const Authenticate = (() => {
                     is_disabled: res.disabled,
                 }));
             });
+
             $residence_dropdown.html($residence_dropdown.html());
+
             const residence_dropdown = document.getElementById('residence_dropdown');
             if (residence_dropdown) {
                 residence_dropdown.addEventListener('change', (e) => {
-                    const dropdown_country = residence_list.filter(r => r.value === e.target.value);
+                    const dropdown_country = residence_list.find(r => r.value === e.target.value);
                     if (dropdown_country) {
-                        selected_country = dropdown_country[0];
+                        selected_country = dropdown_country;
                     }
                 });
             }
@@ -1017,38 +1020,39 @@ const Authenticate = (() => {
             if (next_button) {
                 next_button.addEventListener('click', () => {
                     if (selected_country) {
-                        handleDocumentList(selected_country);
+                        $('#residence_div').setVisibility(0);
+                        handleDocumentList();
                     }
                 });
             }
-            $('#residence_div').setVisibility(1);
         }
     };
  
-    const handleDocumentList = async (residence_list) => {
+    const handleDocumentList = async () => {
+        $('#identity_verification').setVisibility(1);
 
         const $documents = $('#documents');
         const $example = $('#example');
-        // to be changed with real selected item from country selection page
-        const selected_item_index = 159;
 
-        // need to implement deconstruciton of is selected country has_visual_sample
+        // Deconstruct required data from selected_country
         const {
-            value: country_code,
             identity: {
                 services: {
-                    idv: { has_visual_sample },
+                    idv: { 
+                        has_visual_sample,
+                        documents_supported: document_list,
+                    },
                 },
             },
         } = selected_country;
 
-        if (residence_list.length > 0) {
+        console.log(document_list)
+
+        if (selected_country) {
             const $options_with_disabled = $('<select/>');
-            // to be changed with residence selected
-            const document_list = residence_list[selected_item_index].identity.services.idv.documents_supported;
             
-            Object.values(document_list).forEach((res) => {
-                const { display_name , format } = res;
+            Object.keys(document_list).forEach((item) => {
+                const { display_name , format } = document_list[item];
                 $options_with_disabled.append(makeOption({
                     text       : display_name,
                     value      : format,

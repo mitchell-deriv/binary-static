@@ -93,40 +93,6 @@ const Authenticate = () => (
             <h1 className='gr-padding-10'>{it.L('You do not need to authenticate your account at this time')}</h1>
             <p>{it.L('We will inform you when your account needs to be authenticated.')}</p>
         </div>
-        <div id='identity_verification' className='center-text gr-padding-20 invisible'>
-            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
-            <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
-            <p>{it.L('Please select the document type and enter the document number.')}</p>
-            <select className='center-text width-50' type='select' id='documents' />
-            <div className='input'>
-                <input
-                    type='text'
-                    maxLength={20}
-                    // onInput={searchSymbols}
-                    // onChange={searchSymbols}
-                    placeholder={it.L(('Enter Your Document Number'))}
-                    // value={query}
-                />
-                <span id='example' />
-            </div>
-            <Button
-                id='button_verified_poi_required'
-                className='button button-secondary'
-                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
-                text={it.L('Go Back')}
-            >
-                <span className='child-span'>
-                    <img src={it.url_for('images/pages/authenticate/arrow_left.svg')} />
-                    {it.L('Go Back')}
-                </span>
-            </Button>
-            <Button
-                id='button_verified_poi_required'
-                className='button'
-                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
-                text={it.L('Verify')}
-            />
-        </div>
 
         <div id='authentication_tab' className='gr-padding-20'>
             <TabContainer className='gr-parent full-width gr-11 gr-12-m gr-centered' theme='light'>
@@ -146,7 +112,7 @@ const Authenticate = () => (
                 />
             </TabContainer>
 
-            <div className='tab-content invisible'>
+            <div className='tab-content'>
                 <TabContentContainer>
                     <TabContent id='poi' className='selectedTab'>
                         <p id='msg_personal_details' className='gr-padding-10 center-text notice-msg invisible'>
@@ -156,7 +122,7 @@ const Authenticate = () => (
                         <div id='not_authenticated_uns' className='invisible'>
                             <UnsupportedMessage />
                         </div>
-                        <div id='upload_complete' className='center-text gr-padding-20'>
+                        <div id='upload_complete' className='center-text gr-padding-20 invisible'>
                             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/valid.svg')} />
                             <h1 className='gr-padding-10'>{it.L('Your proof of identity was submitted successfully')}</h1>
                             <p id='text_pending_poi_pending' className='invisible'>{it.L('Your document is being reviewed, please check back in 1-3 days.')}</p>
@@ -181,7 +147,7 @@ const Authenticate = () => (
                             <p>{it.L('Kindly send a scan of a valid proof of identity to [_1]support@binary.com[_2]', '<a href="mailto:support@binary.com" target="_blank">', '</a>')}</p>
                         </div>
 
-                        <div id='last_rejection_poi' className='center-text gr-padding-20'>
+                        <div id='last_rejection_poi' className='center-text gr-padding-20 invisible'>
                             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/invalid.svg')} />
                             <h1 className='gr-padding-10'>{it.L('Your proof of identity submission failed because:')}</h1>
                             <div className='gr-8 gr-12-m gr-centered gr-no-gutter gr-gutter-m'>
@@ -207,19 +173,19 @@ const Authenticate = () => (
                             </button>
                         </div>
 
-                        <div id='limited_poi' className='center-text gr-padding-20 '>
+                        <div id='limited_poi' className='center-text gr-padding-20 invisible'>
                             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/invalid.svg')} />
                             <h1 className='gr-padding-10'>{it.L('You\'ve reached the limit for uploading your documents.')}</h1>
                             <p>{it.L('Please contact us via [_1]live chat[_2].', `<a href=${it.url_for('contact')} target="_blank">`, '</a>')}</p>
                         </div>
 
-                        <div id='unverified' className='center-text gr-padding-20 '>
+                        <div id='unverified' className='center-text gr-padding-20 invisible'>
                             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/invalid.svg')} />
                             <h1 className='gr-padding-10'>{it.L('Proof of identity verification failed')}</h1>
                             <p>{it.L('We were unable to verify your document automatically. We will try to verify your document manually. Please check back in 1-3 days.')}</p>
                         </div>
 
-                        <div id='verified' className='center-text gr-padding-20 '>
+                        <div id='verified' className='center-text gr-padding-20 invisible'>
                             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/valid.svg')} />
                             <h1 className='gr-padding-10'>{it.L('Your proof of identity has been verified successfully')}</h1>
                             <p id='text_verified_poa_required' className='invisible'>{it.L('You must also submit a proof of address.')}</p>
@@ -242,6 +208,7 @@ const Authenticate = () => (
                             />
                             <p>{it.L('Need help? [_1]Contact us[_2].', `<a href="${it.url_for('contact')}">`, '</a>')}</p>
                         </div>
+
                         <div id='residence_div' className='center-text gr-padding-20 invisible'>
                             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
                             <p>{it.L('In which country was your document issued')}</p>
@@ -250,8 +217,42 @@ const Authenticate = () => (
                                 id='button_next_country_selected'
                                 className='button gr-padding-20'
                                 text_className='margin-top-20'
-                                href={`${it.url_for('user/authenticate')}?authentication_tab=poa`}
                                 text={it.L('Next')}
+                            />
+                        </div>
+
+                        <div id='identity_verification' className='center-text gr-padding-20 invisible'>
+                            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
+                            <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
+                            <p>{it.L('Please select the document type and enter the document number.')}</p>
+                            <select className='center-text width-50' type='select' id='documents' />
+                            <div className='input'>
+                                <input
+                                    type='text'
+                                    maxLength={20}
+                                    // onInput={searchSymbols}
+                                    // onChange={searchSymbols}
+                                    placeholder={it.L(('Enter Your Document Number'))}
+                                    // value={query}
+                                />
+                                <span id='example' />
+                            </div>
+                            <Button
+                                id='button_verified_poi_required'
+                                className='button button-secondary'
+                                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                                text={it.L('Go Back')}
+                            >
+                                <span className='child-span'>
+                                    <img src={it.url_for('images/pages/authenticate/arrow_left.svg')} />
+                                    {it.L('Go Back')}
+                                </span>
+                            </Button>
+                            <Button
+                                id='button_verified_poi_required'
+                                className='button'
+                                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                                text={it.L('Verify')}
                             />
                         </div>
                     </TabContent>
