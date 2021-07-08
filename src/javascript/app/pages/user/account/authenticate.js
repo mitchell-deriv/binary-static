@@ -17,7 +17,8 @@ const makeOption              = require('../../../../_common/common_functions').
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
-const { showLoadingImage }    = require('../../../../_common/utility').showLoadingImage;
+const showLoadingImage        = require('../../../../_common/utility').showLoadingImage;
+const getDocumentData        = require('../../../../_common/utility').getDocumentData;
 
 /*
     To handle onfido unsupported country, we handle the functions separately,
@@ -983,11 +984,11 @@ const Authenticate = (() => {
         $('#limited_poi').setVisibility(0);
     };
 
-    // const getSampleImage = (document_name , country_code) => {
-    //     const selected_document = document_list.find(d => d.text === document_name);
-    //     const { sample_image } = getDocumentData(country_code, selected_document.id);
-    //     return sample_image;
-    // };
+    const getSampleImage = (selected_document , country_code) => {
+        // const selected_document = document_list.find(d => d.text === document_name);
+        const { sample_image } = getDocumentData(country_code, selected_document.display_name.toLowerCase());
+        return sample_image;
+    };
 
     const handleIdvCountrySelector = async () => {
         let residence_list;
@@ -1044,6 +1045,7 @@ const Authenticate = (() => {
 
         // Deconstruct required data from selected_country
         const {
+            value: country_code,
             identity: {
                 services: {
                     idv: {
@@ -1074,12 +1076,16 @@ const Authenticate = (() => {
             // Update Sample Image and Example Format on Dropdown Change (If Available)
             $documents.on('change', (e) => {
                 e.preventDefault();
+                selected_option = documents_supported[e.target.value];
+                
                 if (has_visual_sample){
-                    // insert logic for populating the sample if available
-                    // getSampleImage();
+                    Object.keys(documents_supported).forEach((key) =>  {
+                        const doc_sele = documents_supported[key];
+                        if (key.toLocaleLowerCase() === e.target.value.toLowerCase()) {selected_option = { ...doc_sele , 'id': key };}
+                    });
+                    getSampleImage(selected_option , country_code);
                 }
                 if ($documents[0].selectedOptions){
-                    selected_option = documents_supported[e.target.value];
                     // Replace with example format. Now is just taking the format regex from BE.
                     $example.html(`Example: ${selected_option.format}`);
                 }
@@ -1090,6 +1096,7 @@ const Authenticate = (() => {
             });
 
             document_input.addEventListener('keyup', (e) => {
+                e.preventDefault();
                 const format_regex = new RegExp(selected_option.format);
                 if (format_regex.test(e.target.value)) {
                     verify_button.classList.remove('button-disabled');
@@ -1099,19 +1106,21 @@ const Authenticate = (() => {
                 }
             });
 
-            back_button.addEventListener('click', () => {
+            back_button.addEventListener('click', (e) => {
+                e.preventDefault();
                 $('#idv_document_submit').setVisibility(0);
                 handleIdvCountrySelector();
             });
 
-            verify_button.addEventListener('click', () => {
+            verify_button.addEventListener('click', async (e) => {
+                e.preventDefault();
                 const submit_data = {
                     identity_verification_document_add: 1,
                     document_number                   : 'test',
                     document_type                     : 'tesstt',
                     issuing_country                   : selected_country.value,
                 };
-                BinarySocket.send(submit_data).then(response => {
+                await BinarySocket.send(submit_data).then(response => {
                     if (response.error) {
                         // Show API document sending error message
                     } else {

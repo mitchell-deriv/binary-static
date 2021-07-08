@@ -278,64 +278,107 @@ class PromiseClass {
 const lc_licenseID = 12049137;
 const lc_clientID = '66aa088aad5a414484c1fd1fa8a5ace7';
 
-const getDocumentData = (country_code, document_type) => idv_document_data[country_code][document_type];
-
+export const getDocumentData = (country_code, document_type) => {
+    if (Object.keys(idv_document_data).includes(country_code)) {
+        return idv_document_data[country_code][document_type];
+    }
+    return null;
+};
 const getImageLocation = image_name => `/images/common/visual_samples/${image_name}`;
 
-// Note: Ensure that the object keys matches BE API's key. This is simply a mapping for FE templates
+// Note: Ensure that the object keys matches BE API's keys. This is simply a mapping for FE templates
 const idv_document_data = {
     ke: {
         alien_card: {
-            example_format: '123456',
-            sample_image  : getImageLocation('ke_alien_card.png'),
+            new_display_name: '',
+            example_format  : '123456',
+            sample_image    : getImageLocation('ke_alien_card.png'),
         },
         national_id: {
-            example_format: '123456789',
-            sample_image  : getImageLocation('ke_national_identity_card.png'),
+            new_display_name: '',
+            example_format  : '123456789',
+            sample_image    : getImageLocation('ke_national_identity_card.png'),
         },
         passport: {
-            example_format: 'A123456789',
-            sample_image  : getImageLocation('ke_passport.png'),
+            new_display_name: '',
+            example_format  : 'A123456789',
+            sample_image    : getImageLocation('ke_passport.png'),
         },
     },
     za: {
         national_id: {
-            example_format: '1234567890123',
-            sample_image  : getImageLocation('za_national_identity_card.png'),
+            new_display_name: '',
+            example_format  : '1234567890123',
+            sample_image    : getImageLocation('za_national_identity_card.png'),
         },
         national_id_no_photo: {
-            example_format: '1234567890123',
-            sample_image  : '',
+            new_display_name: '',
+            example_format  : '1234567890123',
+            sample_image    : '',
         },
     },
     ng: {
         bvn: {
-            example_format: '12345678901',
-            sample_image  : '',
+            new_display_name: 'Bank verification number',
+            example_format  : '12345678901',
+            sample_image    : '',
         },
         cac: {
-            example_format: '12345678',
-            sample_image  : '',
+            new_display_name: 'Corporate affairs commission',
+            example_format  : '12345678',
+            sample_image    : '',
         },
         drivers_license: {
-            example_format: 'ABC123456789012',
-            sample_image  : getImageLocation('ng_drivers_license.png'),
+            new_display_name: '',
+            example_format  : 'ABC123456789012',
+            sample_image    : getImageLocation('ng_drivers_license.png'),
         },
         nin: {
-            example_format: '12345678901',
-            sample_image  : '',
+            new_display_name: 'National identity number',
+            example_format  : '12345678901',
+            sample_image    : '',
         },
         nin_slip: {
-            example_format: '12345678901',
-            sample_image  : getImageLocation('ng_nin_slip.png'),
+            new_display_name: 'National identity number slip',
+            example_format  : '12345678901',
+            sample_image    : getImageLocation('ng_nin_slip.png'),
         },
         tin: {
-            example_format: '12345678-1234',
-            sample_image  : '',
+            new_display_name: 'Taxpayer identification number',
+            example_format  : '12345678-1234',
+            sample_image    : '',
         },
         voter_id: {
-            example_format: '1234567890123456789',
-            sample_image  : getImageLocation('ng_voter_id.png'),
+            new_display_name: 'Voter ID',
+            example_format  : '1234567890123456789',
+            sample_image    : getImageLocation('ng_voter_id.png'),
+        },
+    },
+    gh: {
+        drivers_license: {
+            new_display_name: '',
+            example_format  : 'B1234567',
+            sample_image    : '',
+        },
+        national_id: {
+            new_display_name: 'National ID',
+            example_format  : 'GHA-123456789-1',
+            sample_image    : '',
+        },
+        passport: {
+            new_display_name: 'Passport',
+            example_format  : 'G1234567',
+            sample_image    : '',
+        },
+        ssnit: {
+            new_display_name: 'Social Security and National Insurance Trust',
+            example_format  : 'C123456789012',
+            sample_image    : '',
+        },
+        voter_id: {
+            new_display_name: 'Voter ID',
+            example_format  : '01234567890',
+            sample_image    : '',
         },
     },
 };
