@@ -209,10 +209,10 @@ const Authenticate = () => (
                             <p>{it.L('Need help? [_1]Contact us[_2].', `<a href="${it.url_for('contact')}">`, '</a>')}</p>
                         </div>
 
-                        <div id='residence_div' className='center-text gr-padding-20 invisible'>
+                        <div id='idv_country_selector' className='center-text gr-padding-20 invisible'>
                             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
                             <p>{it.L('In which country was your document issued')}</p>
-                            <select className='center-text' type='select' id='residence_dropdown' style={{ margin: '0 auto' , display: 'block' }} />
+                            <select className='center-text' type='select' id='country_dropdown' style={{ margin: '0 auto' , display: 'block' }} />
                             <Button
                                 id='button_next_country_selected'
                                 className='button gr-padding-20'
@@ -221,13 +221,14 @@ const Authenticate = () => (
                             />
                         </div>
 
-                        <div id='identity_verification' className='center-text gr-padding-20 invisible'>
+                        <div id='idv_document_submit' className='center-text gr-padding-20 invisible'>
                             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
                             <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
                             <p>{it.L('Please select the document type and enter the document number.')}</p>
-                            <select className='center-text width-50' type='select' id='documents' />
+                            <select className='center-text width-50' type='select' id='document_type' />
                             <div className='input'>
                                 <input
+                                    id='document_number'
                                     type='text'
                                     maxLength={20}
                                     // onInput={searchSymbols}
@@ -235,12 +236,11 @@ const Authenticate = () => (
                                     placeholder={it.L(('Enter Your Document Number'))}
                                     // value={query}
                                 />
-                                <span id='example' />
+                                <span id='document_example_format' />
                             </div>
                             <Button
-                                id='button_verified_poi_required'
+                                id='idv_document_submit_back_btn'
                                 className='button button-secondary'
-                                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                                 text={it.L('Go Back')}
                             >
                                 <span className='child-span'>
@@ -249,9 +249,8 @@ const Authenticate = () => (
                                 </span>
                             </Button>
                             <Button
-                                id='button_verified_poi_required'
+                                id='idv_document_submit_verify_btn'
                                 className='button'
-                                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                                 text={it.L('Verify')}
                             />
                         </div>
