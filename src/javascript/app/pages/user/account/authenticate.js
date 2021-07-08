@@ -1083,7 +1083,23 @@ const Authenticate = (() => {
                         const doc_sele = documents_supported[key];
                         if (key.toLocaleLowerCase() === e.target.value.toLowerCase()) {selected_option = { ...doc_sele , 'id': key };}
                     });
-                    getSampleImage(selected_option , country_code);
+                    
+                    const $image_div = document.getElementById('idv_document_submit__right');
+                    const $image_url = getSampleImage(selected_option , country_code);
+                    
+                    if ($image_url) {
+                        if (!document.getElementById('programmatically_image')) {
+                            const img = document.createElement('img');
+                            img.src = $image_url;
+                            img.id = 'programmatically_image';
+                            img.style.cssText = 'width:400px';
+                            $image_div.appendChild(img);
+                        } else {
+                            const $prog_image = document.getElementById('programmatically_image');
+                            $prog_image.src = $image_url;
+                        }
+                        $($image_div).setVisibility(1);
+                    }
                 }
                 if ($documents[0].selectedOptions){
                     // Replace with example format. Now is just taking the format regex from BE.

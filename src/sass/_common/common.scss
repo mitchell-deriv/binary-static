@@ -365,7 +365,19 @@ _:-ms-fullscreen, :root #content-holder {
     }
 }
 
+.idv_document_submit {
+    &__right {
+        width: 50%;
+    }
+    .idv_document_submit__right__img {
+        width: 50%;
+    }
+}
+
 #idv_document_submit {
+    display: flex;
+    justify-content: center;
+
     select, .input {
         width: 50%;
         margin: 0 auto;

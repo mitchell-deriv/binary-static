@@ -221,38 +221,41 @@ const Authenticate = () => (
                             />
                         </div>
 
-                        <div id='idv_document_submit' className='center-text gr-padding-20 invisible'>
-                            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
-                            <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
-                            <p>{it.L('Please select the document type and enter the document number.')}</p>
-                            <select className='center-text width-50' type='select' id='document_type' />
-                            <div className='input'>
-                                <input
-                                    id='document_number'
-                                    type='text'
-                                    maxLength={20}
-                                    // onInput={searchSymbols}
-                                    // onChange={searchSymbols}
-                                    placeholder={it.L(('Enter Your Document Number'))}
+                        <div id='idv_document_submit' className='idv_document_submit center-text gr-padding-20 invisible'>
+                            <div className='idv_document_submit__left'>
+                                <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verify_identity.svg')} />
+                                <h1 className='gr-padding-10'>{it.L('Verify Your Identity')}</h1>
+                                <p>{it.L('Please select the document type and enter the document number.')}</p>
+                                <select className='center-text width-50' type='select' id='document_type' />
+                                <div className='input'>
+                                    <input
+                                        id='document_number'
+                                        type='text'
+                                        maxLength={20}
+                                        // onInput={searchSymbols}
+                                        // onChange={searchSymbols}
+                                        placeholder={it.L(('Enter Your Document Number'))}
                                     // value={query}
+                                    />
+                                    <span id='document_example_format' />
+                                </div>
+                                <Button
+                                    id='idv_document_submit_back_btn'
+                                    className='button button-secondary'
+                                    text={it.L('Go Back')}
+                                >
+                                    <span className='child-span'>
+                                        <img src={it.url_for('images/pages/authenticate/arrow_left.svg')} />
+                                        {it.L('Go Back')}
+                                    </span>
+                                </Button>
+                                <Button
+                                    id='idv_document_submit_verify_btn'
+                                    className='button'
+                                    text={it.L('Verify')}
                                 />
-                                <span id='document_example_format' />
                             </div>
-                            <Button
-                                id='idv_document_submit_back_btn'
-                                className='button button-secondary'
-                                text={it.L('Go Back')}
-                            >
-                                <span className='child-span'>
-                                    <img src={it.url_for('images/pages/authenticate/arrow_left.svg')} />
-                                    {it.L('Go Back')}
-                                </span>
-                            </Button>
-                            <Button
-                                id='idv_document_submit_verify_btn'
-                                className='button'
-                                text={it.L('Verify')}
-                            />
+                            <div id='idv_document_submit__right' className='invisible' />
                         </div>
                     </TabContent>
                     <TabContent id='poa'>
