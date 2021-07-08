@@ -1038,21 +1038,19 @@ const Authenticate = (() => {
         const {
             identity: {
                 services: {
-                    idv: { 
+                    idv: {
                         has_visual_sample,
-                        documents_supported: document_list,
+                        documents_supported,
                     },
                 },
             },
         } = selected_country;
 
-        console.log(document_list)
-
         if (selected_country) {
             const $options_with_disabled = $('<select/>');
             
-            Object.keys(document_list).forEach((item) => {
-                const { display_name , format } = document_list[item];
+            Object.keys(documents_supported).forEach((item) => {
+                const { display_name , format } = documents_supported[item];
                 $options_with_disabled.append(makeOption({
                     text       : display_name,
                     value      : format,
@@ -1275,7 +1273,7 @@ const Authenticate = (() => {
 
         // Country Selector
         if (identity_status === 'none') {
-            handleResidenceList();
+            handleResidenceList(identity, needs_poa);
         } else if (is_fully_authenticated && !should_allow_resubmission) {
             $('#authentication_tab').setVisibility(0);
             $('#authentication_verified').setVisibility(1);
