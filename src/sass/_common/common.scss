@@ -366,10 +366,15 @@ _:-ms-fullscreen, :root #content-holder {
 }
 
 .idv_document_submit {
+    &__left {
+        @media (max-width: 768px) {
+            margin-bottom: 20px;
+        }
+    }
     &__right {
         width: 50%;
     }
-    .idv_document_submit__right__img {
+    .idv_document_submit__right {
         width: 50%;
     }
 }
@@ -377,6 +382,10 @@ _:-ms-fullscreen, :root #content-holder {
 #idv_document_submit {
     display: flex;
     justify-content: center;
+
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+    }
 
     select, .input {
         width: 50%;

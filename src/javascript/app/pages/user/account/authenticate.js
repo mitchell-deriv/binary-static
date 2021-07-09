@@ -985,9 +985,13 @@ const Authenticate = (() => {
     };
 
     const getSampleImage = (selected_document , country_code) => {
-        // const selected_document = document_list.find(d => d.text === document_name);
         const { sample_image } = getDocumentData(country_code, selected_document.id.toLowerCase());
         return sample_image;
+    };
+
+    const getExampleFormat = (selected_document , country_code) => {
+        const { example_format } = getDocumentData(country_code, selected_document.id.toLowerCase());
+        return example_format;
     };
 
     const handleIdvCountrySelector = async () => {
@@ -1099,11 +1103,12 @@ const Authenticate = (() => {
                             $prog_image.src = $image_url;
                         }
                         $($image_div).setVisibility(1);
+                    } else {
+                        $($image_div).setVisibility(0);
                     }
                 }
                 if ($documents[0].selectedOptions){
-                    // Replace with example format. Now is just taking the format regex from BE.
-                    $example.html(`Example: ${selected_option.format}`);
+                    $example.html(`Example: ${getExampleFormat(selected_option , country_code)}`);
                 }
 
                 if (selected_option) {
@@ -1117,8 +1122,7 @@ const Authenticate = (() => {
                 if (format_regex.test(e.target.value)) {
                     verify_button.classList.remove('button-disabled');
                 } else {
-                    // Display format errors (To be changed)
-                    $example.html(`Invalid format. Example: ${selected_option.format}`);
+                    $example.html(`Invalid format. Example: ${getExampleFormat(selected_option , country_code)}`);
                 }
             });
 
