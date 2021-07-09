@@ -1051,6 +1051,7 @@ const Authenticate = (() => {
         $('#idv_document_submit').setVisibility(1);
         const $documents = $('#document_type');
         const $example = $('#document_example_format');
+        const $example_format = document.getElementById('document_example_format');
         const document_input = document.getElementById('document_number');
         const back_button = document.getElementById('idv_document_submit_back_btn');
         const verify_button = document.getElementById('idv_document_submit_verify_btn');
@@ -1138,11 +1139,17 @@ const Authenticate = (() => {
                 if (format_regex.test(e.target.value)) {
                     document_number = e.target.value;
                     verify_button.classList.remove('button-disabled');
+                    $example_format.classList.remove('red');
                 } else {
                     $example.html(`Invalid format. Example: ${getExampleFormat(document_type , country_code)}`);
+                    $example_format.classList.add('red');
+
                     if (!verify_button.classList.contains('button-disabled')) {
                         verify_button.classList.add('button-disabled');
                     }
+                }
+                if (e.target.value === '') {
+                    $example_format.classList.remove('red');
                 }
             });
 

@@ -65,10 +65,7 @@ const Authenticate = () => (
                                 type='text'
                                 maxLength={20}
                                 className='idv-container__input'
-                                // onInput={searchSymbols}
-                                // onChange={searchSymbols}
                                 placeholder={it.L(('Enter Your Document Number'))}
-                            // value={query}
                             />
                             <span id='document_example_format' />
                         </fieldset>
