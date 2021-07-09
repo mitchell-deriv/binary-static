@@ -1168,12 +1168,12 @@ const Authenticate = (() => {
             case 'rejected':
                 $('#idv_document_failed').setVisibility(1);
                 if (Number(submissions_left < 1)) {
-                    $('#idv_document_failed_try_again').setVisibility(0);
+                    $('#idv_document_failed_try_again_btn').setVisibility(0);
                 }
                 break;
             case 'verified':
                 if (needs_poa) {
-                    $('idv_document_verified_need_poa').setVisibility(1);
+                    $('#idv_document_verified_need_poa').setVisibility(1);
                 } else {
                     $('#idv_document_verified').setVisibility(1);
                 }
@@ -1330,7 +1330,7 @@ const Authenticate = (() => {
         // idv_result_rejected_limited - Idv verification rejected but no submissions left
         // Usage Guide:
         // const account_status = figmaAccountStatus('idv_result_rejected_limited');
-        account_status = figmaAccountStatus('idv_result_pass').authentication;
+        account_status = figmaAccountStatus('idv_result_rejected_limited').authentication;
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
@@ -1380,7 +1380,7 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        account_status = figmaAccountStatus('idv_result_pass').authentication;
+        account_status = figmaAccountStatus('idv_result_rejected_limited').authentication;
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);
