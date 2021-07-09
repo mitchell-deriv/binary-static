@@ -1367,7 +1367,7 @@ const Authenticate = (() => {
         // idv_result_rejected_limited - Idv verification rejected but no submissions left
         // Usage Guide:
         // const account_status = figmaAccountStatus('idv_result_rejected_limited');
-        account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = figmaAccountStatus('idv_result_rejected_limited').authentication;
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
