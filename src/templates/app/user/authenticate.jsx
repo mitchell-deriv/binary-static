@@ -76,6 +76,24 @@ const Authenticate = () => (
             />
         </div>
 
+        <div id='idv_submit_successfully_need_poa' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/submit_successfully.svg')} />
+            <h1 className='gr-padding-10'>{it.L('We\'ve received your document number')}</h1>
+            <p>{it.L('We\'ll process your details within a few minutes and notify its status via email. Next, we\'ll need your proof of address')}</p>
+            <Button
+                id='proof_of_address'
+                className='button'
+                href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                text={it.L('Submit proof of address')}
+            />
+        </div>
+
+        <div id='idv_submit_successfully' className='center-text gr-padding-20'>
+            <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/submit_successfully.svg')} />
+            <h1 className='gr-padding-10'>{it.L('We\'ve received your document number')}</h1>
+            <p>{it.L('We\'ll process your details within a few minutes and notify its status via email.')}</p>
+        </div>
+
         <div id='idv_document_verified_need_poa' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
             <h1 className='gr-padding-10'>{it.L('Your document number has been verified')}</h1>
