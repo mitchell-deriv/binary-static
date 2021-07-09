@@ -142,7 +142,7 @@ const Authenticate = () => (
                 <Button
                     id='proof_of_address'
                     className='button'
-                    href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                    href={`${it.url_for('user/authenticate')}?authentication_tab=poa`}
                     text={it.L('Submit proof of address')}
                 />
             </div>

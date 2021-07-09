@@ -1149,7 +1149,8 @@ body #not_authenticated_financial ul.checked > li {
         }
         &__dropdown {
             width: 100%;
-            padding: 0px 0 0px 16px;
+            padding: 5px 16px;
+            height: fit-content;
             margin-top: 25px;
 
             @media (max-width: 768px) {
@@ -1203,7 +1204,7 @@ body #not_authenticated_financial ul.checked > li {
         }
     }
     .country-selector {
-        max-width: 380px;
+        max-width: unset;
     }
     .document-submit {
         max-width: 540px;

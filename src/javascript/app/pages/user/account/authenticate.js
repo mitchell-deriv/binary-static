@@ -1000,10 +1000,18 @@ const Authenticate = (() => {
             .then(response => residence_list = response.residence_list);
         const $residence_dropdown = $('#country_dropdown');
         const next_button = document.getElementById('button_next_country_selected');
-        next_button.classList.add('button-disabled');
+        if (!selected_country) {
+            next_button.classList.add('button-disabled');
+        }
+        $('#authentication_loading').setVisibility(0);
  
         if (residence_list.length > 0) {
             $('#idv_country_selector').setVisibility(1);
+            $residence_dropdown.append(makeOption({
+                text       : localize('Please select the country of document issuance.'),
+                value      : 'initial',
+                is_disabled: 'disabled',
+            }));
             residence_list.forEach((res) => {
                 $residence_dropdown.append(makeOption({
                     text       : res.text,
@@ -1016,6 +1024,8 @@ const Authenticate = (() => {
 
             if (selected_country) {
                 $residence_dropdown.val(selected_country.value);
+            } else {
+                $residence_dropdown.val('initial');
             }
 
             $residence_dropdown.on('change', (e) => {
@@ -1065,6 +1075,11 @@ const Authenticate = (() => {
 
         if (selected_country) {
             const $options_with_disabled = $('<select/>');
+            $options_with_disabled.append(makeOption({
+                text       : localize('Please select a document type.'),
+                value      : 'initial',
+                is_disabled: 'disabled',
+            }));
             
             Object.keys(documents_supported).forEach((item) => {
                 const { display_name } = documents_supported[item];
@@ -1076,6 +1091,7 @@ const Authenticate = (() => {
             });
 
             $documents.html($options_with_disabled.html());
+            $documents.val('initial');
 
             // Update Sample Image and Example Format on Dropdown Change (If Available)
             $documents.on('change', (e) => {
@@ -1167,7 +1183,12 @@ const Authenticate = (() => {
                 break;
             case 'rejected':
                 $('#idv_document_failed').setVisibility(1);
-                if (Number(submissions_left < 1)) {
+                if (Number(submissions_left > 1)) {
+                    $('#idv_document_failed_try_again_btn').on('click', () => {
+                        $('#idv_document_failed').setVisibility(0);
+                        handleIdvCountrySelector();
+                    });
+                } else {
                     $('#idv_document_failed_try_again_btn').setVisibility(0);
                 }
                 break;
@@ -1380,7 +1401,7 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        account_status = figmaAccountStatus('idv_result_rejected_limited').authentication;
+        account_status = figmaAccountStatus('idv_result_rejected').authentication;
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);
