@@ -1168,12 +1168,12 @@ const Authenticate = (() => {
             case 'rejected':
                 $('#idv_document_failed').setVisibility(1);
                 if (Number(submissions_left < 1)) {
-                    $('#idv_document_failed_try_again').setVisibility(0);
+                    $('#idv_document_failed_try_again_btn').setVisibility(0);
                 }
                 break;
             case 'verified':
                 if (needs_poa) {
-                    $('idv_document_verified_need_poa').setVisibility(1);
+                    $('#idv_document_verified_need_poa').setVisibility(1);
                 } else {
                     $('#idv_document_verified').setVisibility(1);
                 }
@@ -1236,6 +1236,7 @@ const Authenticate = (() => {
     
             switch (status) {
                 case 'none':
+                    init();
                     $('#msg_personal_details').setVisibility(1);
                     if (onfido_unsupported) {
                         $('#not_authenticated_uns').setVisibility(1);
@@ -1353,48 +1354,21 @@ const Authenticate = (() => {
         } else if (is_fully_authenticated && !should_allow_resubmission) {
             $('#authentication_tab').setVisibility(0);
             $('#authentication_verified').setVisibility(1);
-        } else if (!needs_verification.includes('document')) {
-            switch (document.status) {
-                case 'none': {
-                    init();
-                    $('#not_authenticated').setVisibility(1);
-                    break;
-                }
-                case 'pending':
-                    showCTAButton('identity', 'pending');
-                    $('#pending_poa').setVisibility(1);
-                    break;
-                case 'rejected':
-                    $('#unverified_poa').setVisibility(1);
-                    break;
-                case 'suspected':
-                    $('#unverified_poa').setVisibility(1);
-                    break;
-                case 'verified':
-                    showCTAButton('document', 'verified');
-                    $('#verified_poa').setVisibility(1);
-                    break;
-                case 'expired':
-                    $('#expired_poa').setVisibility(1);
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch (identity_last_attempt.service) {
-                case 'idv':
-                    $('#authentication_tab').setVisibility(0);
-                    handleIdv();
-                    break;
-                case 'onfido':
-                    handleOnfido();
-                    break;
-                case 'manual':
-                    handleManual();
-                    break;
-                default:
-                    break;
-            }
+        }
+
+        switch (identity_last_attempt.service) {
+            case 'idv':
+                $('#authentication_tab').setVisibility(0);
+                handleIdv();
+                break;
+            case 'onfido':
+                handleOnfido();
+                break;
+            case 'manual':
+                handleManual();
+                break;
+            default:
+                break;
         }
 
         $('#authentication_loading').setVisibility(0);
@@ -1406,7 +1380,7 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = figmaAccountStatus('idv_result_rejected_limited').authentication;
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);

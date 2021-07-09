@@ -94,14 +94,14 @@ const Authenticate = () => (
                 </div>
             </div>
 
-            <div id='idv_document_verified' className='center-text gr-padding-20 invisible'>
-                <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
-                <h1 className='gr-padding-10'>{it.L('We\'ve successfully verified your document number')}</h1>
+            <div id='idv_document_verified' className='idv-container invisible'>
+                <img className='idv-container__main-icon' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
+                <h1 className='idv-container__header'>{it.L('We\'ve successfully verified your document number')}</h1>
             </div>
 
-            <div id='idv_document_expired' className='center-text gr-padding-20 invisible'>
-                <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
-                <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
+            <div id='idv_document_expired' className='idv-container invisible'>
+                <img className='idv-container__main-icon' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
+                <h1 className='idv-container__header'>{it.L('Verification of document number failed')}</h1>
                 <p>{it.L('It looks like your identity document has expired. Please try again with a valid document.')}</p>
                 <Button
                     id='try_again'
@@ -111,12 +111,12 @@ const Authenticate = () => (
                 />
             </div>
 
-            <div id='idv_document_failed' className='center-text gr-padding-20 invisible'>
-                <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
-                <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
+            <div id='idv_document_failed' className='idv-container invisible'>
+                <img className='idv-container__main-icon' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
+                <h1 className='idv-container__header'>{it.L('Verification of document number failed')}</h1>
                 <p>{it.L('We were unable to verify you identity based on the details you entered.')}</p>
                 <Button
-                    id='idv_document_failed_try_again'
+                    id='idv_document_failed_try_again_btn'
                     className='button'
                     href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                     text={it.L('Try again')}
@@ -132,18 +132,6 @@ const Authenticate = () => (
                     className='button'
                     href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                     text={it.L('Upload identity document')}
-                />
-            </div>
-
-            <div id='idv_document_verified_need_poa' className='center-text gr-padding-20 invisible'>
-                <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
-                <h1 className='gr-padding-10'>{it.L('Your document number has been verified')}</h1>
-                <p>{it.L('Next, we\'ll need your proof of address')}</p>
-                <Button
-                    id='proof_of_address'
-                    className='button'
-                    href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
-                    text={it.L('Submit proof of address')}
                 />
             </div>
 
@@ -165,14 +153,14 @@ const Authenticate = () => (
                 <p>{it.L('We\'ll process your details within a few minutes and notify its status via email.')}</p>
             </div>
 
-            <div id='idv_document_verified_need_poa' className='center-text gr-padding-20 invisible'>
-                <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
-                <h1 className='gr-padding-10'>{it.L('Your document number has been verified')}</h1>
+            <div id='idv_document_verified_need_poa' className='idv-container invisible'>
+                <img className='idv-container__main-icon' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
+                <h1 className='idv-container__header'>{it.L('Your document number has been verified')}</h1>
                 <p>{it.L('Next, we\'ll need your proof of address')}</p>
                 <Button
                     id='proof_of_address'
                     className='button'
-                    href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
+                    href={`${it.url_for('user/authenticate')}?authentication_tab=poa`}
                     text={it.L('Submit proof of address')}
                 />
             </div>
