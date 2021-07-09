@@ -1145,11 +1145,16 @@ body #not_authenticated_financial ul.checked > li {
         }
         &__input {
             width: 100%;
-            padding: 8px 3px;
+            padding: 2px 3px;
         }
         &__dropdown {
             width: 100%;
-            padding: 5px 0 5px 16px;
+            padding: 0px 0 0px 16px;
+            margin-top: 25px;
+
+            @media (max-width: 768px) {
+                margin-top: 5px;
+            }
         }
         p {
             margin: unset;
@@ -1157,26 +1162,40 @@ body #not_authenticated_financial ul.checked > li {
         }
         &__document-container {
             width: 100%;
-            display: inline-flex;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             margin-bottom: 24px;
         }
         &__left {
-            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-width: 350px;
+
             fieldset {
                 width: 100%;
                 border: none;
-                margin-bottom: 38px;
+                margin-bottom: 23px;
             }
         }
         &__right {
-            background-color: #f2f3f4;
+            background-color: $COLOR_SHADY_WHITE;
             padding: 14px 18px;
             margin-left: 30px;
+
+            @media (max-width: 768px) {
+                width: 90%;
+                padding: 0;
+                margin-left: 0;
+            }
+
             img {
                 width: 245px;
+                @media (max-width: 768px) {
+                    width: 90%;
+                    padding: 5%;
+                }
             }
         }
         &__button-wrapper {
