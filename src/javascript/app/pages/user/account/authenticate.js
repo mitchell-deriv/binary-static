@@ -1079,7 +1079,6 @@ const Authenticate = (() => {
 
             // Update Sample Image and Example Format on Dropdown Change (If Available)
             $documents.on('change', (e) => {
-                e.preventDefault();
                 selected_option = documents_supported[e.target.value];
                 
                 if (has_visual_sample){
@@ -1088,7 +1087,7 @@ const Authenticate = (() => {
                         if (key.toLocaleLowerCase() === e.target.value.toLowerCase()) {selected_option = { ...doc_sele , 'id': key };}
                     });
                     
-                    const $image_div = document.getElementById('idv_document_submit__right');
+                    const $image_div = document.getElementById('idv_document_sample_image');
                     const $image_url = getSampleImage(selected_option , country_code);
                     
                     if ($image_url) {
@@ -1096,7 +1095,6 @@ const Authenticate = (() => {
                             const img = document.createElement('img');
                             img.src = $image_url;
                             img.id = 'programmatically_image';
-                            img.style.cssText = 'width:400px';
                             $image_div.appendChild(img);
                         } else {
                             const $prog_image = document.getElementById('programmatically_image');
@@ -1123,6 +1121,9 @@ const Authenticate = (() => {
                     verify_button.classList.remove('button-disabled');
                 } else {
                     $example.html(`Invalid format. Example: ${getExampleFormat(selected_option , country_code)}`);
+                    if (!verify_button.classList.contains('button-disabled')) {
+                        verify_button.classList.add('button-disabled');
+                    }
                 }
             });
 
@@ -1158,11 +1159,10 @@ const Authenticate = (() => {
 
         switch (status) {
             case 'pending':
-                // TODO: IDV Document Pending Page
                 if (needs_poa) {
-                    $('#idv_document_pending').setVisibility(1);
+                    $('#idv_submit_pending_need_poa').setVisibility(1);
                 } else {
-                    $('#idv_document_pending_need_poa').setVisibility(1);
+                    $('#idv_submit_pending').setVisibility(1);
                 }
                 break;
             case 'rejected':
@@ -1348,6 +1348,7 @@ const Authenticate = (() => {
 
         // Country Selector
         if (identity_status === 'none') {
+            $('#authentication_tab').setVisibility(0);
             handleIdvCountrySelector();
         } else if (is_fully_authenticated && !should_allow_resubmission) {
             $('#authentication_tab').setVisibility(0);
@@ -1382,6 +1383,7 @@ const Authenticate = (() => {
         } else {
             switch (identity_last_attempt.service) {
                 case 'idv':
+                    $('#authentication_tab').setVisibility(0);
                     handleIdv();
                     break;
                 case 'onfido':

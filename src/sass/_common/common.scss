@@ -365,41 +365,6 @@ _:-ms-fullscreen, :root #content-holder {
     }
 }
 
-.idv_document_submit {
-    &__left {
-        @media (max-width: 768px) {
-            margin-bottom: 20px;
-        }
-    }
-    &__right {
-        width: 50%;
-    }
-    .idv_document_submit__right {
-        width: 50%;
-    }
-}
-
-#idv_document_submit {
-    display: flex;
-    justify-content: center;
-
-    @media (max-width: 768px) {
-        flex-wrap: wrap;
-    }
-
-    select, .input {
-        width: 50%;
-        margin: 0 auto;
-    }
-    .input {
-        input {
-            margin-top: 20px;
-            width: 100%;
-        }
-        margin-bottom: 40px;
-    }
-}
-
 input[type=checkbox] {
     margin: 5px 5px 5px 0;
     padding: 7px;
@@ -504,6 +469,10 @@ button .barspinner.white {
 
 .margin-top-20 {
     margin-top: 20px;
+}
+
+.margin-top-40 {
+    margin-top: 40px;
 }
 
 .sidebar-container {

@@ -1121,6 +1121,76 @@ body #not_authenticated_financial ul.checked > li {
     }
 }
 
+.idv-main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .idv-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &__main-icon {
+            width: 130px;
+            height: 100px;
+            margin-bottom: 32px;
+        }
+        &__header {
+            font-size: 28px;
+            font-weight: 300;
+            line-height: 32px;
+            color: $COLOR_ORANGE;
+            margin-bottom: 16px;
+        }
+        &__input {
+            width: 100%;
+            padding: 8px 3px;
+        }
+        &__dropdown {
+            width: 100%;
+            padding: 5px 0 5px 16px;
+        }
+        p {
+            margin: unset;
+            margin-bottom: 24px;
+        }
+        &__document-container {
+            width: 100%;
+            display: inline-flex;
+            margin-bottom: 24px;
+        }
+        &__left {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            fieldset {
+                width: 100%;
+                border: none;
+                margin-bottom: 38px;
+            }
+        }
+        &__right {
+            background-color: #f2f3f4;
+            padding: 14px 18px;
+            margin-left: 30px;
+            img {
+                width: 245px;
+            }
+        }
+        &__button-wrapper {
+            display: inline-flex;
+        }
+    }
+    .country-selector {
+        max-width: 380px;
+    }
+    .document-submit {
+        max-width: 540px;
+    }
+}
+
 #content.careers-content {
     margin-top: 0;
 
