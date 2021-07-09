@@ -1069,9 +1069,11 @@ const Authenticate = (() => {
                 },
             },
         } = selected_country;
+        const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
 
         // Contains data from dropdown selection
-        let selected_option;
+        let document_type,
+            document_number;
 
         if (selected_country) {
             const $options_with_disabled = $('<select/>');
@@ -1095,16 +1097,16 @@ const Authenticate = (() => {
 
             // Update Sample Image and Example Format on Dropdown Change (If Available)
             $documents.on('change', (e) => {
-                selected_option = documents_supported[e.target.value];
+                document_type = documents_supported[e.target.value];
                 
                 if (has_visual_sample){
                     Object.keys(documents_supported).forEach((key) =>  {
                         const doc_sele = documents_supported[key];
-                        if (key.toLocaleLowerCase() === e.target.value.toLowerCase()) {selected_option = { ...doc_sele , 'id': key };}
+                        if (key.toLocaleLowerCase() === e.target.value.toLowerCase()) {document_type = { ...doc_sele , 'id': key };}
                     });
                     
                     const $image_div = document.getElementById('idv_document_sample_image');
-                    const $image_url = getSampleImage(selected_option , country_code);
+                    const $image_url = getSampleImage(document_type , country_code);
                     
                     if ($image_url) {
                         if (!document.getElementById('programmatically_image')) {
@@ -1122,21 +1124,22 @@ const Authenticate = (() => {
                     }
                 }
                 if ($documents[0].selectedOptions){
-                    $example.html(`Example: ${getExampleFormat(selected_option , country_code)}`);
+                    $example.html(`Example: ${getExampleFormat(document_type , country_code)}`);
                 }
 
-                if (selected_option) {
+                if (document_type) {
                     document_input.disabled = false;
                 }
             });
 
             document_input.addEventListener('keyup', (e) => {
                 e.preventDefault();
-                const format_regex = new RegExp(selected_option.format);
+                const format_regex = new RegExp(document_type.format);
                 if (format_regex.test(e.target.value)) {
+                    document_number = e.target.value;
                     verify_button.classList.remove('button-disabled');
                 } else {
-                    $example.html(`Invalid format. Example: ${getExampleFormat(selected_option , country_code)}`);
+                    $example.html(`Invalid format. Example: ${getExampleFormat(document_type , country_code)}`);
                     if (!verify_button.classList.contains('button-disabled')) {
                         verify_button.classList.add('button-disabled');
                     }
@@ -1153,15 +1156,21 @@ const Authenticate = (() => {
                 e.preventDefault();
                 const submit_data = {
                     identity_verification_document_add: 1,
-                    document_number                   : 'test',
-                    document_type                     : 'tesstt',
+                    document_number,
+                    document_type                     : document_type.id,
                     issuing_country                   : selected_country.value,
                 };
                 await BinarySocket.send(submit_data).then(response => {
                     if (response.error) {
-                        // Show API document sending error message
+                        // Show some error message to user
                     } else {
+                        // Success
                         $('#idv_document_submit').setVisibility(0);
+                        if (needs_poa) {
+                            $('#idv_submit_pending_need_poa').setVisibility(1);
+                        } else {
+                            $('#idv_submit_pending').setVisibility(1);
+                        }
                     }
                 });
             });
@@ -1401,7 +1410,7 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        account_status = figmaAccountStatus('idv_result_rejected').authentication;
+        account_status = figmaAccountStatus('idv_none').authentication;
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);
