@@ -76,7 +76,7 @@ const Authenticate = () => (
             />
         </div>
 
-        <div id='idv_submit_successfully_need_poa' className='center-text gr-padding-20'>
+        <div id='idv_submit_successfully_need_poa' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/submit_successfully.svg')} />
             <h1 className='gr-padding-10'>{it.L('We\'ve received your document number')}</h1>
             <p>{it.L('We\'ll process your details within a few minutes and notify its status via email. Next, we\'ll need your proof of address')}</p>
@@ -88,7 +88,7 @@ const Authenticate = () => (
             />
         </div>
 
-        <div id='idv_submit_successfully' className='center-text gr-padding-20'>
+        <div id='idv_submit_successfully_poa_uneeded' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/submit_successfully.svg')} />
             <h1 className='gr-padding-10'>{it.L('We\'ve received your document number')}</h1>
             <p>{it.L('We\'ll process your details within a few minutes and notify its status via email.')}</p>
