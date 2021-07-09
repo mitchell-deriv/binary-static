@@ -278,12 +278,13 @@ class PromiseClass {
 const lc_licenseID = 12049137;
 const lc_clientID = '66aa088aad5a414484c1fd1fa8a5ace7';
 
-export const getDocumentData = (country_code, document_type) => {
+const getDocumentData = (country_code, document_type) => {
     if (Object.keys(idv_document_data).includes(country_code)) {
         return idv_document_data[country_code][document_type];
     }
     return null;
 };
+
 const getImageLocation = image_name => `/images/common/visual_samples/${image_name}`;
 
 // Note: Ensure that the object keys matches BE API's keys. This is simply a mapping for FE templates

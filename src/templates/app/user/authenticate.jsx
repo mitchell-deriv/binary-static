@@ -35,12 +35,12 @@ const Authenticate = () => (
             <h1 className='gr-padding-10'>{it.L('Your account has been verified successfully')}</h1>
         </div>
 
-        <div id='document_number_verified' className='center-text gr-padding-20 invisible'>
+        <div id='idv_document_verified' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
             <h1 className='gr-padding-10'>{it.L('We\'ve successfully verified your document number')}</h1>
         </div>
 
-        <div id='verification_failed_document_expired' className='center-text gr-padding-20 invisible'>
+        <div id='idv_document_expired' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
             <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
             <p>{it.L('It looks like your identity document has expired. Please try again with a valid document.')}</p>
@@ -52,12 +52,12 @@ const Authenticate = () => (
             />
         </div>
 
-        <div id='document_verification_failed' className='center-text gr-padding-20 invisible'>
+        <div id='idv_document_failed' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
             <h1 className='gr-padding-10'>{it.L('Verification of document number failed')}</h1>
             <p>{it.L('We were unable to verify you identity based on the details you entered.')}</p>
             <Button
-                id='try_again'
+                id='idv_document_failed_try_again'
                 className='button'
                 href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                 text={it.L('Try again')}
@@ -76,7 +76,7 @@ const Authenticate = () => (
             />
         </div>
 
-        <div id='proof_of_address_needed' className='center-text gr-padding-20 invisible'>
+        <div id='idv_document_verified_need_poa' className='center-text gr-padding-20 invisible'>
             <img className='gr-padding-20' src={it.url_for('images/pages/authenticate/verification_passed.svg')} />
             <h1 className='gr-padding-10'>{it.L('Your document number has been verified')}</h1>
             <p>{it.L('Next, we\'ll need your proof of address')}</p>

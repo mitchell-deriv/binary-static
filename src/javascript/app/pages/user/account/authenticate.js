@@ -1154,29 +1154,28 @@ const Authenticate = (() => {
 
         switch (status) {
             case 'pending':
-                // TODO: IDV Upload Complete Page
-                $('#idv_upload_complete').setVisibility(1);
+                // TODO: IDV Document Pending Page
+                if (needs_poa) {
+                    $('#idv_document_pending').setVisibility(1);
+                } else {
+                    $('#idv_document_pending_need_poa').setVisibility(1);
+                }
                 break;
             case 'rejected':
+                $('#idv_document_failed').setVisibility(1);
                 if (Number(submissions_left < 1)) {
-                    // TODO: IDV Rejected No Submissions Left
-                    $('#idv_limited').setVisibility(1);
-                    // TODO: Handle [Upload Identity Document] Buton
-                } else {
-                    // TODO: IDV Rejected
-                    $('#idv_rejected').setVisibility(1);
-                    // TODO: Handle [Try Again] Button
+                    $('#idv_document_failed_try_again').setVisibility(0);
                 }
                 break;
             case 'verified':
-                // TODO: IDV Verified
-                $('#idv_verified').setVisibility(1);
                 if (needs_poa) {
-                    // Handle [Submit Proof of Address] Button
+                    $('idv_document_verified_need_poa').setVisibility(1);
+                } else {
+                    $('#idv_document_verified').setVisibility(1);
                 }
                 break;
             case 'expired':
-                $('#idv_expired').setVisibility(1);
+                $('#idv_document_expired').setVisibility(1);
                 break;
             default:
                 break;
