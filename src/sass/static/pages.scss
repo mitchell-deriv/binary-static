@@ -1125,13 +1125,13 @@ body #not_authenticated_financial ul.checked > li {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 328px;
 
     .idv-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
+        min-height: 382px;
 
         &__main-icon {
             width: 140px;

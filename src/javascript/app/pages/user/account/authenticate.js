@@ -6,7 +6,7 @@ const onfido_phrases          = require('./onfido_phrases');
 const Client                  = require('../../../base/client');
 const Header                  = require('../../../base/header');
 const BinarySocket            = require('../../../base/socket');
-// const isAuthenticationAllowed = require('../../../../_common/base/client_base').isAuthenticationAllowed;
+const isAuthenticationAllowed = require('../../../../_common/base/client_base').isAuthenticationAllowed;
 const CompressImage           = require('../../../../_common/image_utility').compressImg;
 const ConvertToBase64         = require('../../../../_common/image_utility').convertToBase64;
 const isImageType             = require('../../../../_common/image_utility').isImageType;
@@ -1229,6 +1229,7 @@ const Authenticate = (() => {
     const handleOnfido = async () => {
         $('#idv-container').setVisibility(0);
         $('#authentication_tab').setVisibility(1);
+
         const service_token_response = await getOnfidoServiceToken();
         let has_personal_details_error = false;
 
@@ -1362,17 +1363,7 @@ const Authenticate = (() => {
     };
 
     const initAuthentication = async () => {
-        // const account_status = await getAccountStatus();
-        // idv_none - Initial document verification for idv supported country
-        // idv_none_poa - Initial document verification for idv supported country that needs POA
-        // idv_result_pass - Idv verification pass
-        // idv_result_pass_poa - Idv verification pass and needs POA
-        // idv_result_expired - Idv verification expired
-        // idv_result_rejected - Idv verification rejected have submissions left
-        // idv_result_rejected_limited - Idv verification rejected but no submissions left
-        // Usage Guide:
-        // const account_status = figmaAccountStatus('idv_result_rejected_limited');
-        account_status = figmaAccountStatus('onfido').authentication;
+        account_status = figmaAccountStatus('idv_none').authentication;
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
@@ -1382,9 +1373,6 @@ const Authenticate = (() => {
         const { document, identity, needs_verification } = account_status;
         const identity_status = identity.status;
         const identity_last_attempt = identity.attempts.latest;
-        
-        // const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
-        // const needs_poi = needs_verification.length && needs_verification.includes('identity');
 
         const is_fully_authenticated = identity.status === 'verified' && document.status === 'verified';
         const should_allow_resubmission = needs_verification.includes('identity') || needs_verification.includes('document');
@@ -1422,13 +1410,13 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        account_status = figmaAccountStatus('onfido').authentication;
+        account_status = figmaAccountStatus('idv_none').authentication;
         const is_required = checkIsRequired(account_status);
-        // if (!isAuthenticationAllowed()) {
-        //     $('#authentication_tab').setVisibility(0);
-        //     $('#authentication_loading').setVisibility(0);
-        //     $('#authentication_unneeded').setVisibility(1);
-        // }
+        if (!isAuthenticationAllowed()) {
+            $('#authentication_tab').setVisibility(0);
+            $('#authentication_loading').setVisibility(0);
+            $('#authentication_unneeded').setVisibility(1);
+        }
         const has_svg_account = Client.hasSvgAccount();
         if (is_required || has_svg_account){
             initTab();
