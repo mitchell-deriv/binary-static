@@ -12,7 +12,6 @@ const ConvertToBase64         = require('../../../../_common/image_utility').con
 const isImageType             = require('../../../../_common/image_utility').isImageType;
 const getLanguage             = require('../../../../_common/language').get;
 const localize                = require('../../../../_common/localize').localize;
-// const State                   = require('../../../../_common/storage').State;
 const makeOption              = require('../../../../_common/common_functions').makeOption;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
