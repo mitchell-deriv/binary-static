@@ -225,7 +225,7 @@ const ClientBase = (() => {
         !/crs_tin_information/.test((State.getResponse('get_account_status') || {}).status);
 
     const isAuthenticationAllowed = () => {
-        const authentication = State.getResponse('get_account_status');
+        const { authentication } = State.getResponse('get_account_status');
         return authentication.needs_verification.length;
     };
 
