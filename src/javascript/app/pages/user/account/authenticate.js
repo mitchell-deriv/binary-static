@@ -868,39 +868,38 @@ const Authenticate = (() => {
             $('#onfido').setVisibility(1);
 
             const onfido_documents = Object.keys(documents_supported).map(d => documents_supported[d].display_name);
-            const onfido_init_config = {
-                containerId: 'onfido',
-                language   : {
-                    locale       : getLanguage().toLowerCase() || 'en',
-                    phrases      : onfido_phrases,
-                    mobilePhrases: onfido_phrases,
-                },
-                token   : sdk_token,
-                useModal: false,
-                onComplete(data) {
-                    handleComplete(data);
-                },
-                steps: [
-                    {
-                        type   : 'document',
-                        options: {
-                            documentTypes: {
-                                passport       : onfido_documents.some(doc => /Passport/g.test(doc)),
-                                driving_licence: onfido_documents.some(doc => /Driving Licence/g.test(doc)) ? {
-                                    'country': country_code,
-                                } : false,
-                                national_identity_card: onfido_documents.some(doc => /National Identity Card/g.test(doc)) ? {
-                                    'country': country_code,
-                                } : false,
-                            },
-                        },
-                    },
-                    'face',
-                ],
-            };
 
             try {
-                onfido = Onfido.init(onfido_init_config);
+                onfido = Onfido.init({
+                    containerId: 'onfido',
+                    language   : {
+                        locale       : getLanguage().toLowerCase() || 'en',
+                        phrases      : onfido_phrases,
+                        mobilePhrases: onfido_phrases,
+                    },
+                    token   : sdk_token,
+                    useModal: false,
+                    onComplete(data) {
+                        handleComplete(data);
+                    },
+                    steps: [
+                        {
+                            type   : 'document',
+                            options: {
+                                documentTypes: {
+                                    passport       : onfido_documents.some(doc => /Passport/g.test(doc)),
+                                    driving_licence: onfido_documents.some(doc => /Driving Licence/g.test(doc)) ? {
+                                        'country': country_code,
+                                    } : false,
+                                    national_identity_card: onfido_documents.some(doc => /National Identity Card/g.test(doc)) ? {
+                                        'country': country_code,
+                                    } : false,
+                                },
+                            },
+                        },
+                        'face',
+                    ],
+                });
                 $('#authentication_loading').setVisibility(0);
             } catch (err) {
                 $('#error_occured').setVisibility(1);
