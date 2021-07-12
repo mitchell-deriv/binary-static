@@ -101,9 +101,8 @@ const Authenticate = () => (
                 <h1 className='idv-container__header'>{it.L('Verification of document number failed')}</h1>
                 <p>{it.L('It looks like your identity document has expired. Please try again with a valid document.')}</p>
                 <Button
-                    id='try_again'
+                    id='idv_expired_btn'
                     className='button'
-                    href={`${it.url_for('user/authenticate')}?authentication_tab=poi`}
                     text={it.L('Try again')}
                 />
             </div>

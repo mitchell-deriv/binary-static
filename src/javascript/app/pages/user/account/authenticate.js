@@ -2,7 +2,6 @@ const DocumentUploader        = require('@binary-com/binary-document-uploader');
 const Cookies                 = require('js-cookie');
 const Onfido                  = require('onfido-sdk-ui');
 const getCountryISO3          = require('country-iso-2-to-3');
-const figmaAccountStatus      = require('./mock/account.status.mock').figmaAccountStatus;
 const onfido_phrases          = require('./onfido_phrases');
 const Client                  = require('../../../base/client');
 const Header                  = require('../../../base/header');
@@ -852,22 +851,10 @@ const Authenticate = (() => {
     };
 
     const getAccountStatus = () => new Promise((resolve) => {
-        // TODO: Enable this once Backend API is ready
-        // BinarySocket.wait('get_account_status').then((response) => {
-        //     const authentication_response = response.authentication;
-        //     resolve(authentication_response);
-        // });
-        // idv_none - Initial document verification for idv supported country
-        // idv_none_poa - Initial document verification for idv supported country that needs POA
-        // idv_result_pass - Idv verification pass
-        // idv_result_pass_poa - Idv verification pass and needs POA
-        // idv_result_expired - Idv verification expired
-        // idv_result_rejected - Idv verification rejected have submissions left
-        // idv_result_rejected_limited - Idv verification rejected but no submissions left
-        // onfido
-        // Usage Guide:
-        // const account_status = figmaAccountStatus('idv_result_rejected_limited');
-        resolve(figmaAccountStatus('idv_none_poa').authentication);
+        BinarySocket.wait('get_account_status').then((response) => {
+            const authentication_response = response.authentication;
+            resolve(authentication_response);
+        });
     });
 
     const getSelectedCountry = async (country_code) => {
@@ -1270,6 +1257,10 @@ const Authenticate = (() => {
                 break;
             case 'expired':
                 $('#idv_document_expired').setVisibility(1);
+                $('#idv_expired_btn').on('click', () => {
+                    $('#idv_document_expired').setVisibility(0);
+                    handleIdvCountrySelector();
+                });
                 break;
             default:
                 break;
