@@ -1,6 +1,7 @@
 const DocumentUploader        = require('@binary-com/binary-document-uploader');
 const Cookies                 = require('js-cookie');
 const Onfido                  = require('onfido-sdk-ui');
+const getCountryISO3          = require('country-iso-2-to-3');
 const figmaAccountStatus      = require('./mock/account.status.mock').figmaAccountStatus;
 const onfido_phrases          = require('./onfido_phrases');
 const Client                  = require('../../../base/client');
@@ -850,50 +851,53 @@ const Authenticate = (() => {
         TabSelector.onLoad();
     };
 
-    // Enable when BE API is ready (latest_attempt)
-    // const getAccountStatus = () => new Promise((resolve) => {
-    //     check update account status
-    //     BinarySocket.wait('get_account_status').then(() => {
-    //         const authentication_response = State.getResponse('get_account_status.authentication');
-    //         resolve(authentication_response);
-    //     });
-    // });
+    const getAccountStatus = () => new Promise((resolve) => {
+        // TODO: Enable this once Backend API is ready
+        // BinarySocket.wait('get_account_status').then((response) => {
+        //     const authentication_response = response.authentication;
+        //     resolve(authentication_response);
+        // });
+        resolve(figmaAccountStatus('idv_none').authentication);
+    });
 
     const initOnfido = async (sdk_token, documents_supported, country_code) => {
         if (!$('#onfido').is(':parent')) {
             $('#onfido').setVisibility(1);
 
-            try {
-                onfido = Onfido.init({
-                    containerId: 'onfido',
-                    language   : {
-                        locale       : getLanguage().toLowerCase() || 'en',
-                        phrases      : onfido_phrases,
-                        mobilePhrases: onfido_phrases,
-                    },
-                    token   : sdk_token,
-                    useModal: false,
-                    onComplete(data) {
-                        handleComplete(data);
-                    },
-                    steps: [
-                        {
-                            type   : 'document',
-                            options: {
-                                documentTypes: {
-                                    passport       : documents_supported.some(doc => /Passport/g.test(doc)),
-                                    driving_licence: documents_supported.some(doc => /Driving Licence/g.test(doc)) ? {
-                                        country: country_code,
-                                    } : false,
-                                    national_identity_card: documents_supported.some(doc => /National Identity Card/g.test(doc)) ? {
-                                        country: country_code,
-                                    } : false,
-                                },
+            const onfido_documents = Object.keys(documents_supported).map(d => documents_supported[d].display_name);
+            const onfido_init_config = {
+                containerId: 'onfido',
+                language   : {
+                    locale       : getLanguage().toLowerCase() || 'en',
+                    phrases      : onfido_phrases,
+                    mobilePhrases: onfido_phrases,
+                },
+                token   : sdk_token,
+                useModal: false,
+                onComplete(data) {
+                    handleComplete(data);
+                },
+                steps: [
+                    {
+                        type   : 'document',
+                        options: {
+                            documentTypes: {
+                                passport       : onfido_documents.some(doc => /Passport/g.test(doc)),
+                                driving_licence: onfido_documents.some(doc => /Driving Licence/g.test(doc)) ? {
+                                    'country': country_code,
+                                } : false,
+                                national_identity_card: onfido_documents.some(doc => /National Identity Card/g.test(doc)) ? {
+                                    'country': country_code,
+                                } : false,
                             },
                         },
-                        'face',
-                    ],
-                });
+                    },
+                    'face',
+                ],
+            };
+
+            try {
+                onfido = Onfido.init(onfido_init_config);
                 $('#authentication_loading').setVisibility(0);
             } catch (err) {
                 $('#error_occured').setVisibility(1);
@@ -1044,8 +1048,10 @@ const Authenticate = (() => {
                     $('#idv_country_selector').setVisibility(0);
                     if (selected_country.identity.services.idv.is_country_supported) {
                         handleIdvDocumentSubmit();
-                    } else {
+                    } else if (selected_country.identity.services.onfido.is_country_supported) {
                         handleOnfido();
+                    } else {
+                        handleManual();
                     }
                 }
             });
@@ -1276,6 +1282,8 @@ const Authenticate = (() => {
                 },
                 value: country_code,
             } = selected_country;
+
+            const onfido_country_code = getCountryISO3(country_code.toUpperCase());
     
             switch (status) {
                 case 'none':
@@ -1285,7 +1293,7 @@ const Authenticate = (() => {
                         $('#not_authenticated_uns').setVisibility(1);
                         initUnsupported();
                     } else {
-                        initOnfido(service_token_response.token, documents_supported, country_code);
+                        initOnfido(service_token_response.token, documents_supported, onfido_country_code);
                     }
                     break;
                 case 'pending':
@@ -1313,7 +1321,7 @@ const Authenticate = (() => {
                                 $('#not_authenticated_uns').setVisibility(1);
                                 initUnsupported();
                             } else {
-                                initOnfido(service_token_response.token, documents_supported, country_code);
+                                initOnfido(service_token_response.token, documents_supported, onfido_country_code);
                             }
                         });
                         if (has_minimum_reasons) {
@@ -1337,7 +1345,6 @@ const Authenticate = (() => {
                                 });
                             });
                         }
-                        $('#unverified').setVisibility(1);
                     }
                     break;
                 case 'verified':
@@ -1363,7 +1370,7 @@ const Authenticate = (() => {
     };
 
     const initAuthentication = async () => {
-        account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = await getAccountStatus();
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
@@ -1377,7 +1384,6 @@ const Authenticate = (() => {
         const is_fully_authenticated = identity.status === 'verified' && document.status === 'verified';
         const should_allow_resubmission = needs_verification.includes('identity') || needs_verification.includes('document');
 
-        // Country Selector
         if (identity_status === 'none') {
             $('#authentication_tab').setVisibility(0);
             handleIdvCountrySelector();
@@ -1407,10 +1413,7 @@ const Authenticate = (() => {
 
     const onLoad = async () => {
         cleanElementVisibility();
-        // const authentication_status = await getAccountStatus();
-        // TODO: Remove when API is ready
-        // Mock Data for now
-        account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = await getAccountStatus();
         const is_required = checkIsRequired(account_status);
         if (!isAuthenticationAllowed()) {
             $('#authentication_tab').setVisibility(0);

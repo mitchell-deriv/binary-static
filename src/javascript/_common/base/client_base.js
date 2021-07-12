@@ -225,8 +225,10 @@ const ClientBase = (() => {
         !/crs_tin_information/.test((State.getResponse('get_account_status') || {}).status);
 
     const isAuthenticationAllowed = () => {
-        const { authentication } = State.getResponse('get_account_status');
-        return authentication.needs_verification.length;
+        const { status, authentication } = State.getResponse('get_account_status');
+        const has_allow_document_upload = /allow_document_upload/.test(status);
+        const has_verification_flags = authentication.needs_verification.length;
+        return has_allow_document_upload || has_verification_flags;
     };
 
     // * MT5 login list returns these:
