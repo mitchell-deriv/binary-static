@@ -1003,6 +1003,7 @@ const Authenticate = (() => {
         if (!selected_country) {
             next_button.classList.add('button-disabled');
         }
+
         $('#authentication_loading').setVisibility(0);
  
         if (residence_list.length > 0) {
@@ -1041,7 +1042,11 @@ const Authenticate = (() => {
             next_button.addEventListener('click', () => {
                 if (selected_country) {
                     $('#idv_country_selector').setVisibility(0);
-                    handleIdvDocumentSubmit();
+                    if (selected_country.identity.services.idv.is_country_supported) {
+                        handleIdvDocumentSubmit();
+                    } else {
+                        handleOnfido();
+                    }
                 }
             });
         }
@@ -1058,7 +1063,6 @@ const Authenticate = (() => {
         verify_button.classList.add('button-disabled');
         document_input.disabled = true;
 
-        // Deconstruct required data from selected_country
         const {
             value: country_code,
             identity: {
@@ -1072,7 +1076,6 @@ const Authenticate = (() => {
         } = selected_country;
         const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
 
-        // Contains data from dropdown selection
         let document_type,
             document_number;
 
@@ -1224,6 +1227,8 @@ const Authenticate = (() => {
     };
 
     const handleOnfido = async () => {
+        $('#idv-container').setVisibility(0);
+        $('#authentication_tab').setVisibility(1);
         const service_token_response = await getOnfidoServiceToken();
         let has_personal_details_error = false;
 
@@ -1254,7 +1259,7 @@ const Authenticate = (() => {
         if (has_personal_details_error) {
             $('#personal_details_error').setVisibility(1);
         } else {
-            onfido = account_status.identity.services;
+            onfido = account_status.identity.services.onfido;
             const needs_poa = account_status.needs_verification.length && account_status.needs_verification.includes('document');
             const {
                 status,
@@ -1367,7 +1372,7 @@ const Authenticate = (() => {
         // idv_result_rejected_limited - Idv verification rejected but no submissions left
         // Usage Guide:
         // const account_status = figmaAccountStatus('idv_result_rejected_limited');
-        account_status = figmaAccountStatus('idv_result_rejected_limited').authentication;
+        account_status = figmaAccountStatus('onfido').authentication;
         if (!account_status || account_status.error) {
             $('#authentication_tab').setVisibility(0);
             $('#error_occured').setVisibility(1);
@@ -1417,7 +1422,7 @@ const Authenticate = (() => {
         // const authentication_status = await getAccountStatus();
         // TODO: Remove when API is ready
         // Mock Data for now
-        account_status = figmaAccountStatus('idv_none').authentication;
+        account_status = figmaAccountStatus('onfido').authentication;
         const is_required = checkIsRequired(account_status);
         // if (!isAuthenticationAllowed()) {
         //     $('#authentication_tab').setVisibility(0);

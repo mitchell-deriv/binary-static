@@ -41,7 +41,7 @@ export const reference_account_status = {
                 latest: {
                     id          : 1,
                     service     : 'idv',
-                    country_code: 'za',
+                    country_code: 'gbr',
                     time        : 166321,
                 },
                 count: 1,
@@ -78,6 +78,7 @@ export const reference_account_status = {
 // idv_result_expired - Idv verification expired
 // idv_result_rejected - Idv verification rejected have submissions left
 // idv_result_rejected_limited - Idv verification rejected but no submissions left
+// onfido
 // Usage Guide:
 // const account_status = figmaAccountStatus('idv_result_rejected_limited');
 export const figmaAccountStatus = type => {
@@ -502,6 +503,8 @@ export const figmaAccountStatus = type => {
                 ],
             };
         }
+        case 'onfido':
+            return reference_account_status;
         default:
             return {};
     }

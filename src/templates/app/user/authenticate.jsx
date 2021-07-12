@@ -35,7 +35,7 @@ const Authenticate = () => (
             <h1 className='gr-padding-10'>{it.L('Your account has been verified successfully')}</h1>
         </div>
 
-        <div className='idv-main-container'>
+        <div id='idv-container' className='idv-main-container'>
             <div id='idv_country_selector' className='idv-container country-selector invisible'>
                 <h1 className='idv-container__header'>{it.L('Verify Your Identity')}</h1>
                 <p>{it.L('In which country was your document issued?')}</p>
