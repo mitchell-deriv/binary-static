@@ -857,8 +857,25 @@ const Authenticate = (() => {
         //     const authentication_response = response.authentication;
         //     resolve(authentication_response);
         // });
-        resolve(figmaAccountStatus('idv_none').authentication);
+        // idv_none - Initial document verification for idv supported country
+        // idv_none_poa - Initial document verification for idv supported country that needs POA
+        // idv_result_pass - Idv verification pass
+        // idv_result_pass_poa - Idv verification pass and needs POA
+        // idv_result_expired - Idv verification expired
+        // idv_result_rejected - Idv verification rejected have submissions left
+        // idv_result_rejected_limited - Idv verification rejected but no submissions left
+        // onfido
+        // Usage Guide:
+        // const account_status = figmaAccountStatus('idv_result_rejected_limited');
+        resolve(figmaAccountStatus('idv_none_poa').authentication);
     });
+
+    const getSelectedCountry = async (country_code) => {
+        let residence_list;
+        await BinarySocket.send({ residence_list: 1 })
+            .then(response => residence_list = response.residence_list);
+        return residence_list.find(r => r.value === country_code);
+    };
 
     const initOnfido = async (sdk_token, documents_supported, country_code) => {
         if (!$('#onfido').is(':parent')) {
@@ -1184,6 +1201,14 @@ const Authenticate = (() => {
                         $('#idv_document_submit').setVisibility(0);
                         if (needs_poa) {
                             $('#idv_submit_pending_need_poa').setVisibility(1);
+                            $('#idv_pending_submit_poa_btn').on('click', () => {
+                                $('#idv_submit_pending_need_poa').setVisibility(0);
+                                $('#authentication_tab').setVisibility(1);
+                                $('#not_authenticated').setVisibility(1);
+                                $('#poi').setVisibility(0);
+                                Url.updateParamsWithoutReload({ authentication_tab: 'poa' }, true);
+                                TabSelector.updateTabDisplay();
+                            });
                         } else {
                             $('#idv_submit_pending').setVisibility(1);
                         }
@@ -1202,6 +1227,14 @@ const Authenticate = (() => {
             case 'pending':
                 if (needs_poa) {
                     $('#idv_submit_pending_need_poa').setVisibility(1);
+                    $('#idv_pending_submit_poa_btn').on('click', () => {
+                        $('#idv_submit_pending_need_poa').setVisibility(0);
+                        $('#authentication_tab').setVisibility(1);
+                        $('#not_authenticated').setVisibility(1);
+                        $('#poi').setVisibility(0);
+                        Url.updateParamsWithoutReload({ authentication_tab: 'poa' }, true);
+                        TabSelector.updateTabDisplay();
+                    });
                 } else {
                     $('#idv_submit_pending').setVisibility(1);
                 }
@@ -1214,12 +1247,23 @@ const Authenticate = (() => {
                         handleIdvCountrySelector();
                     });
                 } else {
-                    $('#idv_document_failed_try_again_btn').setVisibility(0);
+                    $('#idv_document_failed_try_again_btn').on('click', () => {
+                        $('#idv_document_failed').setVisibility(0);
+                        handleOnfido();
+                    });
                 }
                 break;
             case 'verified':
                 if (needs_poa) {
                     $('#idv_document_verified_need_poa').setVisibility(1);
+                    $('#idv_verified_poa_btn').on('click', () => {
+                        $('#idv_document_verified_need_poa').setVisibility(0);
+                        $('#authentication_tab').setVisibility(1);
+                        $('#not_authenticated').setVisibility(1);
+                        $('#poi').setVisibility(0);
+                        Url.updateParamsWithoutReload({ authentication_tab: 'poa' }, true);
+                        TabSelector.updateTabDisplay();
+                    });
                 } else {
                     $('#idv_document_verified').setVisibility(1);
                 }
@@ -1274,6 +1318,12 @@ const Authenticate = (() => {
                 last_rejected: rejected_reasons,
             } = onfido;
 
+            // Get country from last attempt if country is not selected
+            if (!selected_country) {
+                const identity_last_attempt = account_status.identity.attempts.latest;
+                selected_country = await getSelectedCountry(identity_last_attempt.country_code);
+            }
+                            
             const {
                 identity: {
                     services: {
@@ -1365,6 +1415,8 @@ const Authenticate = (() => {
     };
 
     const handleManual = () => {
+        $('#idv-container').setVisibility(0);
+        $('#authentication_tab').setVisibility(1);
         $('#not_authenticated_uns').setVisibility(1);
         initUnsupported();
     };

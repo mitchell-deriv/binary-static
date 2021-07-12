@@ -10,7 +10,7 @@ export const reference_account_status = {
                     // last_rejected: [],
                     reported_properties: {},
                     status             : 'rejected',
-                    submissions_left   : 2,
+                    submissions_left   : 0,
                 },
                 manual: {
                     status: 'none',
@@ -41,7 +41,7 @@ export const reference_account_status = {
                 latest: {
                     id          : 1,
                     service     : 'idv',
-                    country_code: 'gbr',
+                    country_code: 'gb',
                     time        : 166321,
                 },
                 count: 1,
