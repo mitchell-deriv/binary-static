@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-06-30 07:55\n"
+"PO-Revision-Date: 2021-07-12 08:09\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -8031,8 +8031,8 @@ msgstr "Nota: %1 no cobra tasas de transferencia."
 msgid "Note: For any enquiries regarding disabled or excluded accounts, please contact %1Customer Support%2."
 msgstr "Nota: Para cualquier consulta relacionada a cuentas deshabilitadas o excluidas, póngase en contacto con nuestro servicio de %1atención al cliente%."
 
-msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC. Transactions are accepted only in US dollars."
-msgstr "Nota: Las transferencias con Agentes de Pago sólo están disponibles para cuentas registradas con Deriv (SVG) LLC. Se aceptan sólo las transacciones en dólares estadounidenses."
+msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC."
+msgstr "Nota: Las transferencias de agentes de pago solo están disponibles para cuentas registradas con Deriv (SVG) LLC."
 
 msgid "Note: You are limited to one fiat currency account. The currency of your fiat account can be changed before you deposit into your fiat account for the first time or create an MT5 account. You may also open one account for each supported cryptocurrency."
 msgstr "Nota: Puede abrir solo una cuenta de moneda fiat. La moneda de su cuenta fiat se puede cambiar antes de depositar por primera vez o antes de crear una cuenta MT5. Además, puede abrir una cuenta para cada criptomoneda disponible."
@@ -10355,6 +10355,9 @@ msgstr "Lo sentimos, esta función no está disponible en su jurisdicción."
 
 msgid "Sorry, withdrawals for this currency are currently disabled."
 msgstr "Lo sentimos, los retiros para esta moneda están actualmente deshabilitados."
+
+msgid "Sorry, your account is not authorised for any further contract purchases."
+msgstr "Lo sentimos, su cuenta no está autorizada para continuar con la compra de contratos."
 
 msgid "Source of income"
 msgstr "Fuente de ingresos"
@@ -14574,6 +14577,9 @@ msgstr "Tiene posiciones abiertas en estas cuentas Binary:"
 msgid "You have open positions in these MT5 accounts:"
 msgstr "Tiene posiciones abiertas en estas cuentas MT5:"
 
+msgid "You have pending withdrawal(s) in these Binary accounts:"
+msgstr ""
+
 msgid "You have probably seen the terms 'going long' and 'going short' being used by a lot of forex brokers and traders. Let's compare the differences between the two terms:"
 msgstr "Es probable que usted haya visto los términos \"asumir una posición larga\" y \"asumir una posición corta\" utilizados por muchos agentes y operadores forex. Comparemos las diferencias entre estos dos términos:"
 
@@ -15084,6 +15090,9 @@ msgstr "o suba una foto, no se aceptan escaneos ni fotocopias"
 msgid "paysafecard offers a voucher-based online payment method that does not require a bank account, credit card, or other personal information. For more information, please visit %1."
 msgstr "paysafecard ofrece un método de pago en línea basado en cupones que no requiere una cuenta bancaria, tarjeta de crédito u otra información personal. Para más información, visite %1."
 
+msgid "position(s)"
+msgstr ""
+
 msgid "ratio of Account Equity to Total Margin, expressed as a percentage"
 msgstr "relación entre el Capital de la Cuenta y el Margen Total, expresado en porcentaje"
 
@@ -15149,6 +15158,9 @@ msgstr "hoy"
 
 msgid "today, Fridays"
 msgstr "hoy, los viernes"
+
+msgid "withdrawal(s)"
+msgstr ""
 
 msgid "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
 msgstr "Sin embargo, Binary Investments (Europe) Ltd ha evaluado su conocimiento y experiencia y considera el producto apropiado para usted."

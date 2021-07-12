@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-06-30 07:55\n"
+"PO-Revision-Date: 2021-07-12 08:09\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -8030,8 +8030,8 @@ msgstr "Catatan: %1 tidak membebankan biaya transfer."
 msgid "Note: For any enquiries regarding disabled or excluded accounts, please contact %1Customer Support%2."
 msgstr "Nota: Untuk pertanyaan mengenai akun non aktif atau pembatalan akun, silahkan hubungi %1Customer Support%2."
 
-msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC. Transactions are accepted only in US dollars."
-msgstr "Catatan: transfer agen pembayaran hanya tersedia untuk akun yang terdaftar pada Deriv (SVG) LLC. Transaksi diterima hanya dalam mata uang dolar AS."
+msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC."
+msgstr "Catatan: Transfer Agen Pembayaran hanya tersedia untuk akun yang terdaftar di Deriv (SVG) LLC."
 
 msgid "Note: You are limited to one fiat currency account. The currency of your fiat account can be changed before you deposit into your fiat account for the first time or create an MT5 account. You may also open one account for each supported cryptocurrency."
 msgstr "Catatan: Anda hanya dapat memiliki satu akun dalam mata uang fiat. Mata uang akun fiat Anda dapat dirubah jika Anda belum melakukan deposit perdana atau mendaftar akun MT5. Anda juga dapat mendaftar pada setiap akun mata uang kripto yang tersedia."
@@ -10354,6 +10354,9 @@ msgstr "Maaf, fitur ini tidak tersedia di yurisdiksi Anda."
 
 msgid "Sorry, withdrawals for this currency are currently disabled."
 msgstr "Maaf, penarikan untuk mata uang ini sedang dinonaktifkan."
+
+msgid "Sorry, your account is not authorised for any further contract purchases."
+msgstr "Maaf, akun Anda tidak dapat membeli kontrak selanjutnya."
 
 msgid "Source of income"
 msgstr "Sumber penghasilan"
@@ -14574,6 +14577,9 @@ msgstr "Anda memiliki posisi berjalan pada akun Binary ini:"
 msgid "You have open positions in these MT5 accounts:"
 msgstr "Anda memiliki posisi berjalan pada akun MT5 ini:"
 
+msgid "You have pending withdrawal(s) in these Binary accounts:"
+msgstr ""
+
 msgid "You have probably seen the terms 'going long' and 'going short' being used by a lot of forex brokers and traders. Let's compare the differences between the two terms:"
 msgstr "Anda mungkin pernah melihat istilah 'going long' dan 'going short' digunakan oleh banyak broker dan trader forex. Mari bandingkan perbedaan antara kedua istilah tersebut:"
 
@@ -15084,6 +15090,9 @@ msgstr "atau meng-upload foto - bukan scan atau fotokopi"
 msgid "paysafecard offers a voucher-based online payment method that does not require a bank account, credit card, or other personal information. For more information, please visit %1."
 msgstr "paysafecard menawarkan metode pembayaran online berbasis voucher yang tidak memerlukan rekening bank, kartu kredit, atau informasi pribadi lainnya. Untuk informasi lebih lanjut, silakan kunjungi %1."
 
+msgid "position(s)"
+msgstr ""
+
 msgid "ratio of Account Equity to Total Margin, expressed as a percentage"
 msgstr "rasio dari Akun Ekuitas pada Total Margin, dinyatakan dalam persen"
 
@@ -15149,6 +15158,9 @@ msgstr "hari ini"
 
 msgid "today, Fridays"
 msgstr "hari ini, Jumat"
+
+msgid "withdrawal(s)"
+msgstr ""
 
 msgid "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
 msgstr "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."

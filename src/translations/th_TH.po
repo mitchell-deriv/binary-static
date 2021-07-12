@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-06-30 07:55\n"
+"PO-Revision-Date: 2021-07-12 08:09\n"
 "Last-Translator: \n"
 "Language-Team: Thai\n"
 "MIME-Version: 1.0\n"
@@ -8031,8 +8031,8 @@ msgstr "หมายเหตุ %1ไม่เรียกเก็บค่า
 msgid "Note: For any enquiries regarding disabled or excluded accounts, please contact %1Customer Support%2."
 msgstr "หมายเหตุ: สำหรับคำถามใดๆ เกี่ยวกับบัญชีถูกปิดใช้งาน หรือ บัญชีที่ถูกตัดออก โปรดติดต่อ %1ฝ่ายลูกค้าสัมพันธ์%2"
 
-msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC. Transactions are accepted only in US dollars."
-msgstr "หมายเหตุ: การโอนเงินจากตัวแทนการชำระเงินจะใช้ได้เฉพาะกับบัญชีที่ลงทะเบียนกับ Deriv (SVG) LLC การทำธุรกรรมได้รับการยอมรับในสกุลเงินดอลลาร์สหรัฐเท่านั้น"
+msgid "Note: Payment Agent transfers are only available for accounts registered with Deriv (SVG) LLC."
+msgstr "หมายเหตุ: การโอนเงินจากตัวแทนการชำระเงินจะใช้ได้เฉพาะกับบัญชีที่ลงทะเบียนกับ Deriv (SVG) LLC"
 
 msgid "Note: You are limited to one fiat currency account. The currency of your fiat account can be changed before you deposit into your fiat account for the first time or create an MT5 account. You may also open one account for each supported cryptocurrency."
 msgstr "หมายเหตุ: ท่านถูกจำกัดสิทธิ์ไว้ที่สกุลเงิน fiat หนึ่งบัญชี สกุลเงินของบัญชีเงิน fiat ของท่านสามารถเปลี่ยนแปลงได้ก่อนที่ท่านจะฝากเข้าบัญชีเงิน fiat ของท่านเป็นครั้งแรก หรือ ก่อนเปิดบัญชี MT5 ท่านสามารถเปิดได้เพียงหนึ่งบัญชีสำหรับแต่ละสกุลเงินดิจิทัลที่รองรับ"
@@ -10355,6 +10355,9 @@ msgstr "ขออภัย ฟังก์ชันนี้ไม่พร้�
 
 msgid "Sorry, withdrawals for this currency are currently disabled."
 msgstr "ขออภัย การถอนเงินสำหรับสกุลเงินนี้ ขณะนี้ถูกปิดการใช้งาน"
+
+msgid "Sorry, your account is not authorised for any further contract purchases."
+msgstr "ขออภัย บัญชีของท่านไม่ได้รับอนุญาตในการซื้อสัญญาเพิ่ม"
 
 msgid "Source of income"
 msgstr "แหล่งที่มาของรายได้"
@@ -14576,6 +14579,9 @@ msgstr "คุณมีตําแหน่งที่เปิดในบั
 msgid "You have open positions in these MT5 accounts:"
 msgstr "คุณมีตําแหน่งที่เปิดในบัญชี MT5 เหล่านี้:"
 
+msgid "You have pending withdrawal(s) in these Binary accounts:"
+msgstr ""
+
 msgid "You have probably seen the terms 'going long' and 'going short' being used by a lot of forex brokers and traders. Let's compare the differences between the two terms:"
 msgstr "คุณอาจจะเห็นโบรกเกอร์และนักลงทุนฟอเร็กซ์หลายคนใช้คำว่า 'ไปยาว' และ 'ไปสั้น' เรามาเปรียบเทียบความแตกต่างระหว่างสองคำนี้:"
 
@@ -15086,6 +15092,9 @@ msgstr "หรืออัปโหลดรูปภาพ – ไม่อน�
 msgid "paysafecard offers a voucher-based online payment method that does not require a bank account, credit card, or other personal information. For more information, please visit %1."
 msgstr "paysafecard เสนอวิธีการชำระเงินออนไลน์แบบใช้ใบสำคัญแทนการรับจ่ายเงินที่ไม่ต้องใช้บัญชีธนาคาร บัตรเครดิต หรือ ข้อมูลส่วนบุคคลอื่นๆ สำหรับข้อมูลเพิ่มเติม โปรดศึกษาจาก %1"
 
+msgid "position(s)"
+msgstr ""
+
 msgid "ratio of Account Equity to Total Margin, expressed as a percentage"
 msgstr "อัตราของทุนของบัญชีต่อมาร์จินรวม แสดงในรูปร้อยละ"
 
@@ -15151,6 +15160,9 @@ msgstr "วันนี้"
 
 msgid "today, Fridays"
 msgstr "วันนี้วันศุกร์"
+
+msgid "withdrawal(s)"
+msgstr ""
 
 msgid "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
 msgstr "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
