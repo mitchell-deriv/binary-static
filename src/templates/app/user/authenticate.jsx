@@ -110,7 +110,7 @@ const Authenticate = () => (
             <div id='idv_document_failed' className='idv-container invisible'>
                 <img className='idv-container__main-icon' src={it.url_for('images/pages/authenticate/verification_failed.svg')} />
                 <h1 className='idv-container__header'>{it.L('Verification of document number failed')}</h1>
-                <p>{it.L('We were unable to verify you identity based on the details you entered.')}</p>
+                <p>{it.L('We were unable to verify your identity based on the details you entered.')}</p>
                 <Button
                     id='idv_document_failed_try_again_btn'
                     className='button'
@@ -326,4 +326,3 @@ const Authenticate = () => (
 );
 
 export default Authenticate;
-
