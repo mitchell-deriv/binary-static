@@ -17,7 +17,7 @@ const toTitleCase             = require('../../../../_common/string_util').toTit
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
 const showLoadingImage        = require('../../../../_common/utility').showLoadingImage;
-const getDocumentData        = require('../../../../_common/utility').getDocumentData;
+const getDocumentData         = require('../../../../_common/utility').getDocumentData;
 
 /*
     To handle onfido unsupported country, we handle the functions separately,
