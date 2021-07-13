@@ -26,7 +26,7 @@ const getDocumentData         = require('../../../../_common/utility').getDocume
 const Authenticate = (() => {
     let is_any_upload_failed     = false;
     let is_any_upload_failed_uns = false;
-    const onfido_unsupported       = false;
+    const onfido_unsupported     = false;
     let authentication_object    = {};
     let file_checks          = {};
     let file_checks_uns      = {};
