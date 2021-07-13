@@ -1202,6 +1202,15 @@ body #not_authenticated_financial ul.checked > li {
         }
         &__button-wrapper {
             display: inline-flex;
+
+            .child-span {
+                padding: 10px 15px;
+            
+                img {
+                    height: 18px;
+                    padding-right: 8px;
+                }
+            }
         }
     }
     .country-selector {

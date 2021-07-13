@@ -450,15 +450,6 @@ button .barspinner.white {
     align-self: center;
 }
 
-.child-span {
-    padding: 10px 15px !important;
-
-    img {
-        height: 18px;
-        padding-right: 8px;
-    }
-}
-
 .align-start {
     @include BIDIR_VALUE (text-align, left, right);
 }

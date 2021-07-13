@@ -7,12 +7,12 @@ const Client                  = require('../../../base/client');
 const Header                  = require('../../../base/header');
 const BinarySocket            = require('../../../base/socket');
 const isAuthenticationAllowed = require('../../../../_common/base/client_base').isAuthenticationAllowed;
+const makeOption              = require('../../../../_common/common_functions').makeOption;
 const CompressImage           = require('../../../../_common/image_utility').compressImg;
 const ConvertToBase64         = require('../../../../_common/image_utility').convertToBase64;
 const isImageType             = require('../../../../_common/image_utility').isImageType;
 const getLanguage             = require('../../../../_common/language').get;
 const localize                = require('../../../../_common/localize').localize;
-const makeOption              = require('../../../../_common/common_functions').makeOption;
 const toTitleCase             = require('../../../../_common/string_util').toTitleCase;
 const TabSelector             = require('../../../../_common/tab_selector');
 const Url                     = require('../../../../_common/url');
@@ -889,10 +889,10 @@ const Authenticate = (() => {
                                 documentTypes: {
                                     passport       : onfido_documents.some(doc => /Passport/g.test(doc)),
                                     driving_licence: onfido_documents.some(doc => /Driving Licence/g.test(doc)) ? {
-                                        'country': country_code,
+                                        country: country_code,
                                     } : false,
                                     national_identity_card: onfido_documents.some(doc => /National Identity Card/g.test(doc)) ? {
-                                        'country': country_code,
+                                        country: country_code,
                                     } : false,
                                 },
                             },
