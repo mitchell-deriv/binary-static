@@ -1309,7 +1309,7 @@ const Authenticate = (() => {
 
             // Get country from last attempt if country is not selected
             if (!selected_country) {
-                const identity_last_attempt = account_status.identity.attempts.latest;
+                const identity_last_attempt = account_status.attempts.latest;
                 selected_country = await getSelectedCountry(identity_last_attempt.country_code);
             }
                             
@@ -1418,9 +1418,9 @@ const Authenticate = (() => {
             return;
         }
 
-        const { document, identity, needs_verification } = account_status;
+        const { attempts, document, identity, needs_verification } = account_status;
         const identity_status = identity.status;
-        const identity_last_attempt = identity.attempts.latest;
+        const identity_last_attempt = attempts.latest;
 
         const is_fully_authenticated = identity.status === 'verified' && document.status === 'verified';
         const should_allow_resubmission = needs_verification.includes('identity') || needs_verification.includes('document');
