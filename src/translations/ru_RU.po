@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-07-12 08:09\n"
+"PO-Revision-Date: 2021-07-13 11:27\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -4864,11 +4864,8 @@ msgstr "F. Маржа и кредитное плечо"
 msgid "FIX API"
 msgstr "FIX API"
 
-msgid "FX-majors (standard), FX-minors, Commodities, Cryptocurrencies"
-msgstr "Основные валютные пары (стандартные), минорные валютные пары, сырьевые товары, криптовалюты"
-
-msgid "FX-majors (standard/micro lots), FX-minors, Commodities, Cryptocurrencies"
-msgstr "Основные валютные пары (стандартные/микро лоты), минорные валютные пары, сырьевые товары, криптовалюты"
+msgid "FX-majors (standard/micro lots), FX-minors, Commodities, Cryptocurrencies, Stocks, and Stock Indices"
+msgstr ""
 
 msgid "FX-majors, FX-minors, FX-exotics, Cryptocurrencies"
 msgstr "Основные пары FX, минорные пары FX, экзотические пары FX, криптовалюты"
@@ -11558,11 +11555,11 @@ msgstr "Финансовые продукты, предлагаемые DIEL, я
 msgid "The Financial Straight-Through Processing (STP) account is a 100% A Book account where your trades are passed straight through to the market, giving you direct access to forex liquidity providers. Trade major, minor, exotic currency pairs, and cryptocurrencies with tight spreads and higher trade volumes."
 msgstr "Финансовый STP счет (Straight-Through Processing — технология сквозной обработки) работает исключительно по модели A-book, а это значит, что мы передаем ваши контракты напрямую нашим поставщикам ликвидности. Такой счет позволяет вам торговать основными, минорными, экзотическими и криптовалютными парами в больших объемах и с более узкими спредами."
 
-msgid "The Financial account (available in EUR and GBP) is suitable for a wide range of traders, both new or experienced. Trade commodities, cryptocurrencies, major and minor currency pairs with tight and variable spreads without commissions and a minimum deposit."
-msgstr "Финансовый счет (доступен в EUR и GBP) подходит для широкого круга трейдеров, как начинающих, так и опытных. Торгуйте сырьевыми товарами, криптовалютами, основными и второстепенными валютными парами с узкими и переменными спредами без комиссий и минимального депозита."
+msgid "The Financial account (available in EUR and GBP) is suitable for a wide range of traders, both new or experienced. Trade major (standard and micro-lots) and minor currency pairs, stocks, stock indices, commodities, and cryptocurrencies."
+msgstr ""
 
-msgid "The Financial account offers new and experienced traders high leverage and variable spreads for maximum flexibility. Trade commodities, cryptocurrencies, major (standard and micro-lots), and minor currency pairs with high leverage."
-msgstr "Финансовый счет подходит как для новичков, так и для опытных трейдеров. Переменные спреды и гибкие настройки счета позволят вам покупать контракты с высоким кредитным плечом на сырьевых товарах, криптовалютах, минорных и основных валютных парах (стандартные и микро лоты)."
+msgid "The Financial account offers new and experienced traders high leverage and variable spreads for maximum flexibility. Trade major (standard and micro-lots) and minor currency pairs, stocks, stock indices, commodities, and cryptocurrencies with high leverage."
+msgstr ""
 
 msgid "The Foreign Exchange Market (forex) is the world's largest and most liquid market – where anyone can buy, sell, and exchange currencies."
 msgstr "Рынок обмена иностранных валют (forex) – крупнейший и наиболее ликвидный мировой рынок, на котором любой желающий может покупать, продавать и обменивать валюты."
@@ -14577,7 +14574,7 @@ msgid "You have open positions in these MT5 accounts:"
 msgstr "У вас есть открытые позиции на этих счетах  MT5:"
 
 msgid "You have pending withdrawal(s) in these Binary accounts:"
-msgstr ""
+msgstr "У вас есть незавершенные выводы на этих счетах Binary:"
 
 msgid "You have probably seen the terms 'going long' and 'going short' being used by a lot of forex brokers and traders. Let's compare the differences between the two terms:"
 msgstr "Вероятно, вам уже встречались термины \"короткая позиция\" и \"длинная позиция.\" Их часто применяют трейдеры и брокеры forex. Давайте сравним эти термины:"
@@ -15090,10 +15087,19 @@ msgid "paysafecard offers a voucher-based online payment method that does not re
 msgstr "Paysafecard предоставляет способ онлайн оплаты на основе ваучера, который не требует указания банковского счёта, кредитной карты или иной личной информации. Более подробная информация: %1."
 
 msgid "position(s)"
-msgstr ""
+msgstr "позиция(и)"
 
 msgid "ratio of Account Equity to Total Margin, expressed as a percentage"
 msgstr "соотношение остатка на счете с общей маржей, выраженное в процентах"
+
+msgid "regulated by the Malta Financial Services Authority (MFSA),"
+msgstr ""
+
+msgid "regulated by the Malta Gaming Authority,"
+msgstr ""
+
+msgid "regulated by the UK Gaming Commission (UKGC),"
+msgstr ""
 
 msgid "second"
 msgstr "сек."
@@ -15159,7 +15165,7 @@ msgid "today, Fridays"
 msgstr "сегодня, по пятницам"
 
 msgid "withdrawal(s)"
-msgstr ""
+msgstr "вывод(ы)"
 
 msgid "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
 msgstr "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
