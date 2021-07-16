@@ -851,7 +851,7 @@ const Authenticate = (() => {
 
     const getAccountStatus = () => new Promise((resolve) => {
         BinarySocket.wait('get_account_status').then((response) => {
-            const authentication_response = response.authentication;
+            const authentication_response = response.get_account_status.authentication;
             resolve(authentication_response);
         });
     });
