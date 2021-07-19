@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: binary-static\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-07-13 11:27\n"
+"PO-Revision-Date: 2021-07-15 08:44\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -4865,7 +4865,7 @@ msgid "FIX API"
 msgstr "FIX API"
 
 msgid "FX-majors (standard/micro lots), FX-minors, Commodities, Cryptocurrencies, Stocks, and Stock Indices"
-msgstr ""
+msgstr "Główne-FX (standardowe/mikro partie), Drugorzędne-FX, Towary, Kryptowaluty, Akcje, i Wskaźniki giełdowe"
 
 msgid "FX-majors, FX-minors, FX-exotics, Cryptocurrencies"
 msgstr "FX-pary główne, FX-pary drugorzędne, FX-pary egzotyczne, Kryptowaluty"
@@ -8359,6 +8359,9 @@ msgstr "Przewidujemy, że nasza baza aktywnych klientów będzie liczyć 790 000
 msgid "Our business is founded on collaboration and we aim to build long-term, mutually beneficial relationships with our partners. However, we will never compromise our commitment to business integrity. In cases where our partners are unwilling or unable to abide by our principles, we reserve the right to withdraw from the business relationship."
 msgstr "Nasza firma jest oparta na współpracy i dążymy do zbudowania długoterminowej relacji z naszymi partnerami korzystnej dla obu stron. Jednak nigdy kosztem naszego zobowiązania do zachowania uczciwości biznesowej. Jeśli nasi partnerzy są niechętni do przestrzegania naszych zasad lub nie mogą ich przestrzegać, zastrzegamy sobie prawo do wycofania się z relacji biznesowej."
 
+msgid "Our cashier is temporarily down due to system maintenance. You can access the cashier as soon as the maintenance is complete."
+msgstr ""
+
 msgid "Our commission structure is a simple 2-tiered plan."
 msgstr "Struktura naszych prowizji to prosty 2-poziomowy plan."
 
@@ -8367,6 +8370,9 @@ msgstr "Przywiązujemy dużą wagę do rzetelności i uczciwości, dlatego zawsz
 
 msgid "Our company continues to thrive and obtains a license in the Isle of Man to better service our UK clients."
 msgstr "Nasz firma rozwija się i zdobywa licencję na Wyspie Man, aby jeszcze lepiej służyć klientom z Wielkiej Brytanii."
+
+msgid "Our cryptocurrency cashier is temporarily down due to system maintenance. You can access the cashier as soon as the maintenance is complete."
+msgstr ""
 
 msgid "Our customers clearly like us. In mid-2014, %1 has over 100 million historical transactions and over 130,000 new daily transactions."
 msgstr "Nasi klienci ewidentnie nas lubią. W połowie 2014 r. %1 ma ponad 100 mln. transakcji historycznych i ponad 130 tys. nowych transakcji dziennie."
@@ -13964,6 +13970,9 @@ msgstr "Dobrze rozwinięte umiejętności organizacyjne, administracyjne i rachu
 msgid "We’ll update your limits. Click %1Agree and accept%2 to acknowledge that you are fully responsible for your actions, and we are not liable for any addiction or loss."
 msgstr "Zaktualizujemy Twoje limity. Kliknij %1Zgadzam się i akceptuję%2, aby potwierdzić, że w pełni odpowiadasz za swoje działania i że nie ponosimy odpowiedzialności za uzależnienie ani straty."
 
+msgid "We’re updating our cashier system and it’ll be back online soon. Please see our %1status page%2 for updates."
+msgstr ""
+
 msgid "We’ve sent you an email"
 msgstr "Wysłaliśmy Ci wiadomość e-mail"
 
@@ -14574,7 +14583,7 @@ msgid "You have open positions in these MT5 accounts:"
 msgstr "Masz otwarte pozycje na tych kontach MT5:"
 
 msgid "You have pending withdrawal(s) in these Binary accounts:"
-msgstr ""
+msgstr "Masz oczekujące wypłaty na tych kontach Binary:"
 
 msgid "You have probably seen the terms 'going long' and 'going short' being used by a lot of forex brokers and traders. Let's compare the differences between the two terms:"
 msgstr "Spotkałeś się już pewnie z określeniem „zająć pozycję długą” i „zająć pozycję krótką”, których używają brokerzy oraz gracze forex. Porównajmy te dwa określenia:"
@@ -15087,19 +15096,19 @@ msgid "paysafecard offers a voucher-based online payment method that does not re
 msgstr "paysafecard oferuje elektroniczną metodę płatności opartą na systemie pre-paid, która nie wymaga posiadania konta bankowego, karty kredytowej ani podawania danych osobowych. Odwiedź %1, aby uzyskać więcej informacji."
 
 msgid "position(s)"
-msgstr ""
+msgstr "orientacja(y)"
 
 msgid "ratio of Account Equity to Total Margin, expressed as a percentage"
 msgstr "stosunek środków na koncie do całkowitej kwoty marży wyrażony w procentach"
 
 msgid "regulated by the Malta Financial Services Authority (MFSA),"
-msgstr ""
+msgstr "regulacjami instytucji Malta Financial Services Authority (MFSA),"
 
 msgid "regulated by the Malta Gaming Authority,"
-msgstr ""
+msgstr "regulacjami instytucji Malta Gaming Authority"
 
 msgid "regulated by the UK Gaming Commission (UKGC),"
-msgstr ""
+msgstr "regulacjami instytucji UK Gaming Commission (UKGC),"
 
 msgid "second"
 msgstr "sekunda"
@@ -15165,7 +15174,7 @@ msgid "today, Fridays"
 msgstr "dziś, piątki"
 
 msgid "withdrawal(s)"
-msgstr ""
+msgstr "wypłat(y)"
 
 msgid "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
 msgstr "{SPAIN ONLY}However, Binary Investments (Europe) Ltd has assessed your knowledge and experience and deems the product appropriate for you."
